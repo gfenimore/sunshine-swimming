@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunshine Swimming — HoneyBook Build Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ocean: #0c4a6e;
+    --ocean-mid: #0369a1;
+    --ocean-light: #e0f2fe;
+    --ocean-glow: #bae6fd;
+    --ink: #1e293b;
+    --text: #334155;
+    --muted: #64748b;
+    --white: #ffffff;
+    --paper: #f8fafc;
+    --border: #e2e8f0;
+    --emerald: #059669;
+    --emerald-light: #ecfdf5;
+    --amber: #d97706;
+    --amber-light: #fffbeb;
+    --coral: #e11d48;
+    --coral-light: #fff1f2;
+    --violet: #7c3aed;
+    --violet-light: #f5f3ff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--ocean);
+    color: var(--white);
+    padding: 16px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+  .topbar-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .topbar-brand {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .topbar-brand span { font-weight: 400; color: var(--ocean-glow); font-style: italic; }
+  .topbar-nav {
+    display: flex;
+    gap: 2px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 7px;
+    padding: 3px;
+    flex-wrap: wrap;
+  }
+  .topbar-nav button {
+    padding: 6px 14px;
+    border-radius: 5px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-family: 'Outfit', sans-serif;
+  }
+  .topbar-nav button:hover { color: rgba(255,255,255,0.85); }
+  .topbar-nav button.active { background: rgba(255,255,255,0.15); color: var(--white); }
+
+  .main { max-width: 1000px; margin: 0 auto; padding: 0 32px; }
+
+  /* INTRO */
+  .intro {
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .intro h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .intro p { font-size: 14px; color: var(--muted); max-width: 700px; }
+  .intro-meta {
+    margin-top: 12px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .intro-meta-item {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: var(--ocean-light);
+    color: var(--ocean);
+  }
+
+  /* CHAPTERS */
+  .chapter { display: none; padding: 32px 0 48px; animation: fadeIn 0.25s ease; }
+  .chapter.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+  .ch-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ocean-mid);
+    margin-bottom: 8px;
+  }
+  .ch-title {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .ch-lead { font-size: 14px; color: var(--muted); max-width: 560px; margin-bottom: 28px; }
+
+  /* STEP CARDS */
+  .step {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 16px;
+    position: relative;
+    transition: all 0.25s;
+  }
+  .step:hover { border-color: var(--ocean-mid); box-shadow: 0 2px 12px rgba(3,105,161,0.06); }
+  .step-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .step-num {
+    width: 32px;
+    height: 32px;
+    background: var(--ocean);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .step-header-text h3 { font-size: 15px; font-weight: 700; }
+  .step-header-text .step-time { font-size: 11px; color: var(--muted); font-weight: 600; }
+  .step p, .step li { font-size: 13px; color: var(--text); line-height: 1.55; }
+  .step ul { margin-left: 16px; margin-top: 4px; }
+  .step li { margin-bottom: 4px; }
+
+  /* CODE / CONFIG BLOCKS */
+  .config-block {
+    background: #f1f5f9;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre-wrap;
+  }
+
+  /* EMAIL TEMPLATE */
+  .email-preview {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .email-bar {
+    background: #f1f5f9;
+    padding: 10px 16px;
+    font-size: 11px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 16px;
+  }
+  .email-bar strong { color: var(--ink); }
+  .email-body {
+    padding: 20px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .email-body p { margin-bottom: 12px; }
+  .email-body h4 { font-size: 14px; margin: 16px 0 6px; color: var(--ink); }
+
+  /* TEST DATA TABLE */
+  .data-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 12px;
+    background: var(--white);
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    min-width: 900px;
+  }
+  .data-table thead th {
+    padding: 8px 10px;
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    border-bottom: 2px solid var(--border);
+    background: #f8f9fa;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .data-table tbody td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #f1f3f5;
+    vertical-align: top;
+  }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+
+  /* TAGS */
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+  .tag-qual { background: var(--emerald-light); color: var(--emerald); }
+  .tag-decline { background: var(--coral-light); color: var(--coral); }
+  .tag-nonprofit { background: var(--violet-light); color: var(--violet); }
+
+  /* AUTOMATION FLOW DIAGRAM */
+  .flow-diagram {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-top: 12px;
+  }
+  .flow-node {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .flow-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+  .flow-trigger { background: var(--ocean-light); color: var(--ocean); }
+  .flow-condition { background: var(--amber-light); color: var(--amber); }
+  .flow-action-yes { background: var(--emerald-light); color: var(--emerald); }
+  .flow-action-no { background: var(--coral-light); color: var(--coral); }
+  .flow-text { font-size: 13px; }
+  .flow-text strong { color: var(--ink); }
+  .flow-text span { color: var(--muted); }
+  .flow-indent { margin-left: 40px; }
+  .flow-branch-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 8px 0 4px 40px;
+  }
+  .flow-branch-yes { color: var(--emerald); }
+  .flow-branch-no { color: var(--coral); }
+  .flow-divider {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 16px 0;
+  }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; margin-top: 8px; }
+  .checklist li {
+    font-size: 13px;
+    padding: 6px 0 6px 28px;
+    position: relative;
+    border-bottom: 1px solid #f1f3f5;
+    color: var(--text);
+  }
+  .checklist li:last-child { border: none; }
+  .checklist li::before {
+    content: "☐";
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  /* NAV BUTTONS */
+  .ch-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .ch-nav-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+    transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+  }
+  .ch-nav-btn:hover { border-color: var(--ocean-mid); color: var(--ocean-mid); }
+  .ch-nav-spacer { flex:1; }
+
+  .footer { text-align:center; padding:24px 0 32px; font-size:11px; color:#94a3b8; }
+
+  /* RESPONSIVE */
+  @media (max-width:768px) {
+    .main { padding: 0 16px; }
+    .topbar { padding: 12px 16px; }
+    .topbar-inner { flex-direction: column; gap: 10px; }
+    .topbar-nav { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">Sunshine Swimming <span>· Build Plan</span></div>
+    <nav class="topbar-nav" id="mainNav">
+      <button class="active" onclick="showCh('setup',this)">1. Setup</button>
+      <button onclick="showCh('form',this)">2. Intake Form</button>
+      <button onclick="showCh('auto',this)">3. Automations</button>
+      <button onclick="showCh('email',this)">4. Emails</button>
+      <button onclick="showCh('sched',this)">5. Scheduling</button>
+      <button onclick="showCh('data',this)">6. Test Data</button>
+      <button onclick="showCh('demo',this)">7. Demo Script</button>
+    </nav>
+  </div>
+</div>
+
+<div class="main">
+  <div class="intro">
+    <h1>HoneyBook Implementation Plan</h1>
+    <p>Step-by-step build guide for the Sunshine Swimming working solution model. Everything you need to build the prototype on the free trial before the client meeting.</p>
+    <div class="intro-meta">
+      <span class="intro-meta-item">Est. build time: 4–5 hours</span>
+      <span class="intro-meta-item">Platform: HoneyBook Essentials</span>
+      <span class="intro-meta-item">Internal use only</span>
+    </div>
+  </div>
+
+  <!-- ========== CH1: SETUP ========== -->
+  <div class="chapter active" id="ch-setup">
+    <div class="ch-label">Phase 1</div>
+    <div class="ch-title">Account Setup & Configuration</div>
+    <p class="ch-lead">Get the HoneyBook trial running and configure the basics. ~30 minutes.</p>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <div class="step-header-text">
+          <h3>Create HoneyBook Account</h3>
+          <div class="step-time">5 minutes</div>
+        </div>
+      </div>
+      <ul>
+        <li>Go to <strong>honeybook.com</strong> → Start Free Trial</li>
+        <li>Use YOUR email (you're building the prototype — Amanda gets her own account later)</li>
+        <li>No credit card required for 7-day trial</li>
+        <li>Business name: <strong>Sunshine Swimming</strong></li>
+        <li>Industry: select <strong>Coach</strong> or <strong>Personal Services</strong></li>
+        <li>When asked about team size: <strong>Just me</strong></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <div class="step-header-text">
+          <h3>Configure Business Profile</h3>
+          <div class="step-time">10 minutes</div>
+        </div>
+      </div>
+      <ul>
+        <li>Settings → Company Settings → Business name: <strong>Sunshine Swimming</strong></li>
+        <li>Location: Bradenton, FL</li>
+        <li>Time zone: Eastern</li>
+        <li>Connect Google Calendar (use a test calendar if you don't want to pollute your own)</li>
+        <li>Upload a placeholder logo (or skip — Amanda will add hers later)</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <div class="step-header-text">
+          <h3>Set Up Project Types</h3>
+          <div class="step-time">5 minutes</div>
+        </div>
+      </div>
+      <p>Project types represent the <strong>services Amanda offers</strong> — not lead routing categories. Settings → Company Settings → scroll to <strong>Project Types</strong> section.</p>
+      <div class="config-block">+ Add project type: "30-Min Swim Lesson"          → Set as DEFAULT
++ Add project type: "1-Hour Swim Lesson (Siblings)"
++ Add project type: "Free Water Safety Lesson"</div>
+      <p style="margin-top:8px;font-size:13px;color:var(--text);">Lead routing (qualified vs. declined vs. nonprofit) is handled by <strong>tags</strong>, not project types. Project types answer "what service?" — tags answer "what do we do with this lead?"</p>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">3b</div>
+        <div class="step-header-text">
+          <h3>Create Tags</h3>
+          <div class="step-time">5 minutes</div>
+        </div>
+      </div>
+      <p>Tags are a <strong>separate feature</strong> from project types. They're created in Company Settings and then used inside automations for routing logic.</p>
+      <p>Settings → Company Settings → scroll to <strong>Tags</strong> section.</p>
+      <div class="config-block">+ Create tag: "qualified"     → Color: Green
++ Create tag: "declined"      → Color: Red
++ Create tag: "nonprofit"     → Color: Purple
++ Create tag: "pool-issue"    → Color: Orange</div>
+      <p style="margin-top:8px;font-size:13px;color:var(--text);">Tags can be applied to projects manually (from the project sidebar) or automatically via automations. In the automation workflow, we'll use "tag added" as a trigger condition to route leads into the right email sequence.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <div class="step-header-text">
+          <h3>Create Pipeline Stages</h3>
+          <div class="step-time">5 minutes</div>
+        </div>
+      </div>
+      <p>For the "30-Min Swim Lesson" project type, set up these pipeline stages grouped under Opportunities and Projects:</p>
+      <div class="config-block"><strong>── OPPORTUNITIES ──</strong>
+Stage 1: New Inquiry          ⚡ (automation-linked)
+Stage 2: Qualified             ⚡ (automation-linked)
+Stage 3: Call Scheduled
+
+<strong>── PROJECTS ──</strong>
+Stage 4: Active Client         ⚡ (automation-linked)
+Stage 5: Lesson(s) Complete    ⚡ (automation-linked)
+Stage 6: Review & Feedback
+Stage 7: Project Closed</div>
+    </div>
+
+    <div class="ch-nav">
+      <div class="ch-nav-spacer"></div>
+      <button class="ch-nav-btn" onclick="showCh('form',navBtn('form'))">Intake Form →</button>
+    </div>
+  </div>
+
+  <!-- ========== CH2: INTAKE FORM ========== -->
+  <div class="chapter" id="ch-form">
+    <div class="ch-label">Phase 2</div>
+    <div class="ch-title">Smart Intake Form</div>
+    <p class="ch-lead">Build the lead qualification form with dropdown routing. ~45 minutes.</p>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">5</div>
+        <div class="step-header-text">
+          <h3>Create the Lead Form</h3>
+          <div class="step-time">5 minutes</div>
+        </div>
+      </div>
+      <ul>
+        <li>Tools → Lead Forms → Create New</li>
+        <li>Name it: <strong>Sunshine Swimming — Swim Lesson Inquiry</strong></li>
+        <li>This is the form you'll link from Facebook responses</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">6</div>
+        <div class="step-header-text">
+          <h3>Add Form Fields</h3>
+          <div class="step-time">30 minutes</div>
+        </div>
+      </div>
+      <p>Build the form with these fields in order. Logic: <strong>Route first</strong> (disqualify fast) → <strong>Meet the swimmer</strong> (who Amanda cares about) → <strong>Parent contact info</strong> (only if they're a fit) → <strong>Logistics</strong> (low-friction wrap-up).</p>
+
+      <div class="config-block"><strong>── 1. ROUTING (disqualify fast — save everyone's time) ──</strong>
+
+Field 1: "Where do you live?"
+  Type: Dropdown (Single Select)
+  Options:
+    • Bradenton
+    • Lakewood Ranch  
+    • Palmetto
+    • Parrish / Ellenton
+    • Terra Ceia
+    • Outside Manatee County
+  Required: YES
+
+Field 2: "What type of lessons are you interested in?"
+  Type: Dropdown (Single Select)
+  Options:
+    • Private swim lessons (paid)
+    • Free water safety program (nonprofit)
+  Required: YES
+
+Field 3: "Is your pool heated?"
+  Type: Dropdown (Single Select)
+  Options:
+    • Yes
+    • No
+    • I don't know
+    • Using a neighborhood/clubhouse pool
+  Required: YES
+
+<strong>── 2. THE SWIMMER (who Amanda actually cares about) ──</strong>
+
+Field 4: "Swimmer's name"
+  Type: Short Text
+  Required: YES
+
+Field 5: "Swimmer's birthday"
+  Type: Date
+  Required: YES
+
+Field 6: "How old is your swimmer?"
+  Type: Dropdown (Single Select)
+  Options:
+    • Under 6 months
+    • 6 months – 2 years
+    • 2 – 4 years  
+    • 5 – 7 years
+    • 8+ years
+    • Adult
+  Required: YES
+
+Field 7: "Has your swimmer had previous lessons?"
+  Type: Dropdown
+  Options: Yes / No / A little
+  Required: YES
+
+Field 8: "Comfort level in water (1–5)"
+  Type: Dropdown
+  Options: 1 – Very Nervous / 2 / 3 / 4 / 5 – Loves It
+  Required: YES
+
+Field 9: "Medical conditions, allergies, or special needs?"
+  Type: Long Text
+  Required: NO
+  Placeholder: "Anything I should know to keep your child safe"
+
+Field 10: "Prior injuries affecting swimming?"
+  Type: Short Text
+  Required: NO
+
+Field 11: "Additional swimmers"
+  Type: Long Text
+  Required: NO
+  Placeholder: "List names, ages, and comfort levels"
+
+<strong>── 3. PARENT / CONTACT INFO ──</strong>
+
+Field 12: "Parent/Guardian name(s)"
+  Type: Short Text
+  Required: YES
+
+Field 13: "Phone number"
+  Type: Phone
+  Required: YES
+
+Field 14: "Email"
+  Type: Email  
+  Required: YES
+
+Field 15: "Home address"
+  Type: Long Text
+  Required: YES
+
+Field 16: "Lesson location (if different from home)"
+  Type: Short Text
+  Required: NO
+  Placeholder: "e.g., neighborhood pool, neighbor's pool"
+
+<strong>── 4. LOGISTICS & SOURCE ──</strong>
+
+Field 17: "Preferred days/times"
+  Type: Long Text
+  Required: NO
+
+Field 18: "How did you hear about Sunshine Swimming?"
+  Type: Dropdown (Multi-Select)
+  Options:
+    • Word of Mouth
+    • Facebook
+    • Instagram
+    • Google Search
+    • Other
+  Required: YES
+
+Field 19: "Anything else to make lessons great?"
+  Type: Long Text
+  Required: NO</div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">7</div>
+        <div class="step-header-text">
+          <h3>Configure Form Settings</h3>
+          <div class="step-time">10 minutes</div>
+        </div>
+      </div>
+      <ul>
+        <li>Thank-you message: <em>"Thanks! I've received your info and will be in touch soon. In the meantime, check your email for some helpful information about getting ready for lessons."</em></li>
+        <li>Auto-create project: <strong>ON</strong> → creates a new project for each submission</li>
+        <li>Default project type: <strong>Paid Swim Lessons</strong> (the automation will re-route if needed)</li>
+        <li>Notification: <strong>ON</strong> → Amanda gets notified on her phone for each new inquiry</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('setup',navBtn('setup'))">← Setup</button>
+      <button class="ch-nav-btn" onclick="showCh('auto',navBtn('auto'))">Automations →</button>
+    </div>
+  </div>
+
+  <!-- ========== CH3: AUTOMATIONS ========== -->
+  <div class="chapter" id="ch-auto">
+    <div class="ch-label">Phase 3</div>
+    <div class="ch-title">Automation Workflows</div>
+    <p class="ch-lead">Build the three core automations. This is the brain of the system. ~60 minutes.</p>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">8</div>
+        <div class="step-header-text">
+          <h3>Automation #1 — Qualified Lead: Welcome Sequence</h3>
+          <div class="step-time">25 minutes</div>
+        </div>
+      </div>
+      <p>This fires when a lead submits the form and meets qualification criteria. Since HoneyBook branches on events (not field values), we'll use <strong>separate lead forms</strong> or <strong>manual tagging</strong> as the routing mechanism. The simplest approach for the prototype:</p>
+
+      <div class="flow-diagram">
+        <div class="flow-node">
+          <div class="flow-icon flow-trigger">⚡</div>
+          <div class="flow-text"><strong>Trigger:</strong> <span>Lead form submitted → Project created</span></div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-icon flow-action-yes">→</div>
+          <div class="flow-text"><strong>Action 1:</strong> <span>Move pipeline to "Qualified"</span></div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-icon flow-action-yes">✉</div>
+          <div class="flow-text"><strong>Action 2:</strong> <span>Send Welcome Email (Email Template #1)</span></div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-icon flow-condition">⏳</div>
+          <div class="flow-text"><strong>Wait:</strong> <span>1 day</span></div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-icon flow-action-yes">✉</div>
+          <div class="flow-text"><strong>Action 3:</strong> <span>Send Water Safety Email (Email Template #2)</span></div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-icon flow-condition">⏳</div>
+          <div class="flow-text"><strong>Wait:</strong> <span>1 day</span></div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-icon flow-action-yes">✉</div>
+          <div class="flow-text"><strong>Action 4:</strong> <span>Send "Ready to Book?" Email (Email Template #3)</span></div>
+        </div>
+      </div>
+
+      <p style="margin-top:12px;font-size:12px;color:var(--muted);">
+        <strong>Routing note:</strong> For the prototype, this automation runs on ALL form submissions. During the live demo, we'll show Amanda how "Outside Service Area" and "Nonprofit" responses would trigger different flows. For the full production build, we'll create separate forms per inquiry type OR use the tag-based routing approach.
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">9</div>
+        <div class="step-header-text">
+          <h3>Automation #2 — Declined Lead: Referral Email</h3>
+          <div class="step-time">15 minutes</div>
+        </div>
+      </div>
+      <p>For the production build, this fires when a lead selects "Outside Manatee County" or is otherwise unqualified. For the prototype, we'll build the email template and trigger it manually to show Amanda.</p>
+
+      <div class="flow-diagram">
+        <div class="flow-node">
+          <div class="flow-icon flow-trigger">⚡</div>
+          <div class="flow-text"><strong>Trigger:</strong> <span>Tag "declined" added to project</span></div>
+        </div>
+        <div class="flow-node">
+          <div class="flow-icon flow-action-no">✉</div>
+          <div class="flow-text"><strong>Action:</strong> <span>Send Referral Email (Email Template #4)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">10</div>
+        <div class="step-header-text">
+          <h3>Automation #3 — Session Reminders</h3>
+          <div class="step-time">10 minutes</div>
+        </div>
+      </div>
+      <p>This is built into HoneyBook's Scheduler, not the Automations builder.</p>
+      <ul>
+        <li>Go to <strong>Tools → Scheduler → Settings</strong></li>
+        <li>Enable <strong>SMS reminders</strong>: 24 hours before + 1 hour before</li>
+        <li>Enable <strong>Email reminders</strong>: 24 hours before</li>
+        <li>Customize reminder text: <em>"Hi {client_name}! Just a reminder — swim lesson tomorrow at {time}. See you at the pool! 🏊‍♀️ — Amanda"</em></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">11</div>
+        <div class="step-header-text">
+          <h3>Activate Automations</h3>
+          <div class="step-time">10 minutes</div>
+        </div>
+      </div>
+      <ul>
+        <li>Tools → Automations → locate each automation</li>
+        <li>Toggle <strong>ON</strong> for Automation #1 (Welcome Sequence)</li>
+        <li>Set it to apply to project type: <strong>Paid Swim Lessons</strong></li>
+        <li>Automation #2 (Decline) → keep OFF for prototype; demonstrate manually</li>
+        <li>Test by submitting a test form entry and verifying the email fires</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('form',navBtn('form'))">← Intake Form</button>
+      <button class="ch-nav-btn" onclick="showCh('email',navBtn('email'))">Emails →</button>
+    </div>
+  </div>
+
+  <!-- ========== CH4: EMAIL TEMPLATES ========== -->
+  <div class="chapter" id="ch-email">
+    <div class="ch-label">Phase 4</div>
+    <div class="ch-title">Email Templates</div>
+    <p class="ch-lead">Four email templates to build. Content synthesized from Amanda's described workflows. ~45 minutes.</p>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">12</div>
+        <div class="step-header-text">
+          <h3>Email #1 — Welcome & Policies</h3>
+          <div class="step-time">15 minutes</div>
+        </div>
+      </div>
+      <p>Triggered immediately when a qualified lead submits the form. This replaces Amanda's manual copy-paste email.</p>
+
+      <div class="email-preview">
+        <div class="email-bar">
+          <span><strong>From:</strong> Amanda @ Sunshine Swimming</span>
+          <span><strong>Subject:</strong> Welcome to Sunshine Swimming! Here's everything you need to know 🏊‍♀️</span>
+        </div>
+        <div class="email-body">
+          <p>Hi {client_first_name}!</p>
+          <p>Thank you so much for reaching out about swim lessons for {swimmer_name}! I'm excited to work with your family.</p>
+          <p>Before we get started, here are a few things to know:</p>
+
+          <h4>📋 How Lessons Work</h4>
+          <p>Each lesson is 30 minutes, one-on-one with your child in your pool (or the location you listed). I come to you — no need to drive anywhere! Sessions are typically once or twice per week, and most swimmers see real progress in 4–6 lessons.</p>
+
+          <h4>💰 Pricing & Payment</h4>
+          <p>Lessons are $60 per 30-minute session. I don't require packages — you book as you go, and there's never pressure to commit to a set number. If it's not working out, no hard feelings!</p>
+
+          <h4>🌧️ Rain Policy</h4>
+          <p>Florida weather! If it's raining at lesson time, we reschedule — no charge. I'll text you if we need to call it. I do makeup sessions once or twice a month on weekends if needed.</p>
+
+          <h4>📍 My Service Area</h4>
+          <p>I serve Bradenton, Lakewood Ranch, Palmetto, Parrish, Ellenton, and Terra Ceia. I keep my route tight so I can give each family my full energy and not spend the day driving!</p>
+
+          <h4>🏊 Pool Requirements</h4>
+          <p>Your pool should be heated to at least 85°F for little ones — cold water makes it hard to learn and isn't safe for infants and toddlers. If you're using a neighborhood or clubhouse pool, just make sure I'll have access.</p>
+
+          <p>I'll give you a call in the next day or two to chat and get you on the calendar. In the meantime, keep an eye out for another email from me tomorrow with some important water safety tips!</p>
+
+          <p>Looking forward to meeting {swimmer_name}! 💙</p>
+          <p>— Amanda<br>Sunshine Swimming</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">13</div>
+        <div class="step-header-text">
+          <h3>Email #2 — Water Safety Do's & Don'ts</h3>
+          <div class="step-time">10 minutes</div>
+        </div>
+      </div>
+      <p>Sent automatically 1 day after the welcome email. Pre-answers the questions Amanda says she gets asked constantly.</p>
+
+      <div class="email-preview">
+        <div class="email-bar">
+          <span><strong>From:</strong> Amanda @ Sunshine Swimming</span>
+          <span><strong>Subject:</strong> Before our first lesson — important water safety tips 🛟</span>
+        </div>
+        <div class="email-body">
+          <p>Hi {client_first_name}!</p>
+          <p>As we get ready for {swimmer_name}'s first lesson, here are some things that will make a big difference:</p>
+
+          <h4>🚫 Please Don't Use</h4>
+          <p><strong>Life jackets, puddle jumpers, or arm floaties</strong> — I know they feel safe, but they actually teach kids the wrong body position in the water. They create a false sense of confidence and make it harder to learn real swimming skills. If your child has been using them, that's OK — we'll work through it together!</p>
+
+          <h4>✅ Do This Before Lessons</h4>
+          <p><strong>Practice in the bathtub!</strong> Get your child comfortable with water on their face. Pour water gently over their head, practice blowing bubbles, let them splash. The more comfortable they are with water on their face, the faster lessons go.</p>
+          <p><strong>Swim diapers</strong> are required for any child not fully potty trained. Regular diapers swell up like a balloon in the pool — not fun for anyone!</p>
+          <p><strong>Sunscreen</strong> — apply at least 15 minutes before the lesson so it absorbs. Slippery, freshly-sunscreened kids are hard to hold onto!</p>
+
+          <h4>👀 During Lessons</h4>
+          <p>You're welcome to watch! For toddlers, sometimes having a parent nearby helps them feel safe. Sometimes it doesn't — we'll figure out what works for {swimmer_name}. If your child cries the first lesson, that's completely normal. It almost always gets better by lesson 2 or 3.</p>
+
+          <p>Questions? Just reply to this email or text me anytime.</p>
+          <p>— Amanda</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">14</div>
+        <div class="step-header-text">
+          <h3>Email #3 — Ready to Book?</h3>
+          <div class="step-time">10 minutes</div>
+        </div>
+      </div>
+      <p>Sent 2 days after the welcome email. Gentle nudge if Amanda hasn't already called them.</p>
+
+      <div class="email-preview">
+        <div class="email-bar">
+          <span><strong>From:</strong> Amanda @ Sunshine Swimming</span>
+          <span><strong>Subject:</strong> Ready to get {swimmer_name} in the water? 🌊</span>
+        </div>
+        <div class="email-body">
+          <p>Hi {client_first_name}!</p>
+          <p>Just checking in — I'd love to get {swimmer_name} on the calendar! My schedule fills up fast, especially from April through the summer.</p>
+          <p>If we haven't connected yet, the easiest way is to reply to this email or text me directly. I'll find a day and time that works for your family.</p>
+          <p>Talk soon!</p>
+          <p>— Amanda</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">15</div>
+        <div class="step-header-text">
+          <h3>Email #4 — Polite Decline with Referrals</h3>
+          <div class="step-time">10 minutes</div>
+        </div>
+      </div>
+      <p>Sent to leads outside the service area or otherwise not a fit. Keeps Amanda professional and helpful even when she can't take them.</p>
+
+      <div class="email-preview">
+        <div class="email-bar">
+          <span><strong>From:</strong> Amanda @ Sunshine Swimming</span>
+          <span><strong>Subject:</strong> Thanks for reaching out! A few swim school recommendations for your area</span>
+        </div>
+        <div class="email-body">
+          <p>Hi {client_first_name}!</p>
+          <p>Thank you so much for your interest in Sunshine Swimming! Unfortunately, your location is outside my current service area, so I'm not able to take on lessons at this time.</p>
+          <p>But I don't want to leave you without options! Here are a few swim schools I'd recommend in your area:</p>
+          <p>
+            <strong>[Swim School A]</strong> — [phone/website]<br>
+            <strong>[Swim School B]</strong> — [phone/website]<br>
+            <strong>[Swim School C]</strong> — [phone/website]
+          </p>
+          <p>I hope you find a great fit for {swimmer_name}! Water safety is so important, and I'm glad you're making it a priority. 💙</p>
+          <p>— Amanda<br>Sunshine Swimming</p>
+        </div>
+      </div>
+      <p style="margin-top:8px;font-size:12px;color:var(--amber);font-weight:600;">⚠️ Amanda needs to provide her referral swim school names — use [placeholders] for the prototype.</p>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('auto',navBtn('auto'))">← Automations</button>
+      <button class="ch-nav-btn" onclick="showCh('sched',navBtn('sched'))">Scheduling →</button>
+    </div>
+  </div>
+
+  <!-- ========== CH5: SCHEDULING ========== -->
+  <div class="chapter" id="ch-sched">
+    <div class="ch-label">Phase 5</div>
+    <div class="ch-title">Scheduling & Calendar</div>
+    <p class="ch-lead">Set up the session types and booking availability. ~20 minutes.</p>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">16</div>
+        <div class="step-header-text">
+          <h3>Create Session Types</h3>
+          <div class="step-time">10 minutes</div>
+        </div>
+      </div>
+      <p>Tools → Scheduler → Session Types. Create two:</p>
+      <div class="config-block">Session Type 1: "30-Minute Swim Lesson"
+  Duration: 30 minutes
+  Buffer time: 30 minutes (travel between homes)
+  Price: $60
+  Color: Blue
+
+Session Type 2: "1-Hour Swim Lesson (2 kids)"
+  Duration: 60 minutes
+  Buffer time: 30 minutes
+  Price: $110 (or whatever her 2-kid rate is)
+  Color: Green</div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">17</div>
+        <div class="step-header-text">
+          <h3>Set Availability</h3>
+          <div class="step-time">5 minutes</div>
+        </div>
+      </div>
+      <div class="config-block">Monday – Friday: 9:00 AM – 6:00 PM
+Saturday: OFF (rain makeup only)
+Sunday: OFF
+
+Minimum scheduling notice: 24 hours
+Maximum advance booking: 4 weeks</div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">18</div>
+        <div class="step-header-text">
+          <h3>Configure Reminders</h3>
+          <div class="step-time">5 minutes</div>
+        </div>
+      </div>
+      <ul>
+        <li><strong>SMS reminder #1:</strong> 24 hours before → "Hi! Just a reminder — swim lesson tomorrow at {time}. See you at the pool! 🏊‍♀️ — Amanda"</li>
+        <li><strong>SMS reminder #2:</strong> 1 hour before → "See you soon! I'm on my way. — Amanda"</li>
+        <li><strong>Email reminder:</strong> 24 hours before (automated with session details)</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('email',navBtn('email'))">← Emails</button>
+      <button class="ch-nav-btn" onclick="showCh('data',navBtn('data'))">Test Data →</button>
+    </div>
+  </div>
+
+  <!-- ========== CH6: TEST DATA ========== -->
+  <div class="chapter" id="ch-data">
+    <div class="ch-label">Phase 6</div>
+    <div class="ch-title">Test Data — LOTR Edition</div>
+    <p class="ch-lead">Anonymized test records with real Manatee County addresses. Use these to demo the system end-to-end.</p>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">19</div>
+        <div class="step-header-text">
+          <h3>Test Records — Load These Into the Prototype</h3>
+          <div class="step-time">15 minutes</div>
+        </div>
+      </div>
+      <p>Submit each through the intake form to trigger the automations and populate the CRM.</p>
+
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Swimmer</th>
+              <th>Parent</th>
+              <th>Area</th>
+              <th>Age</th>
+              <th>Pool Heated</th>
+              <th>Type</th>
+              <th>Address</th>
+              <th>Expected Route</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Frodo Baggins</strong></td>
+              <td>Bilbo Baggins</td>
+              <td>Bradenton</td>
+              <td>2 – 4 yrs</td>
+              <td>Yes</td>
+              <td>Paid</td>
+              <td>5750 12th Street S, Bradenton 34208</td>
+              <td><span class="tag tag-qual">✓ Qualified</span></td>
+            </tr>
+            <tr>
+              <td><strong>Samwise Gamgee</strong></td>
+              <td>Hamfast Gamgee</td>
+              <td>Lakewood Ranch</td>
+              <td>6mo – 2 yrs</td>
+              <td>Yes</td>
+              <td>Paid</td>
+              <td>16539 Arbor Ridge Trail, Lakewood Ranch 34211</td>
+              <td><span class="tag tag-qual">✓ Qualified</span></td>
+            </tr>
+            <tr>
+              <td><strong>Pippin Took</strong></td>
+              <td>Paladin Took</td>
+              <td>Parrish / Ellenton</td>
+              <td>2 – 4 yrs</td>
+              <td>Neighborhood pool</td>
+              <td>Paid</td>
+              <td>10632 High Noon Trail, Parrish 34219</td>
+              <td><span class="tag tag-qual">✓ Qualified</span></td>
+            </tr>
+            <tr>
+              <td><strong>Merry Brandybuck</strong></td>
+              <td>Saradoc Brandybuck</td>
+              <td>Palmetto</td>
+              <td>5 – 7 yrs</td>
+              <td>Yes</td>
+              <td>Paid</td>
+              <td>1011 14th St W, Palmetto 34221</td>
+              <td><span class="tag tag-qual">✓ Qualified</span></td>
+            </tr>
+            <tr>
+              <td><strong>Arwen Undómiel</strong></td>
+              <td>Elrond</td>
+              <td>Outside Manatee County</td>
+              <td>2 – 4 yrs</td>
+              <td>Yes</td>
+              <td>Paid</td>
+              <td>5356 35th Terrace N, St Petersburg 33710</td>
+              <td><span class="tag tag-decline">✗ Decline → Referral</span></td>
+            </tr>
+            <tr>
+              <td><strong>Éowyn</strong></td>
+              <td>Théoden</td>
+              <td>Bradenton</td>
+              <td>2 – 4 yrs</td>
+              <td>No</td>
+              <td>Paid</td>
+              <td>3605 Riverview Blvd, Bradenton 34205</td>
+              <td><span class="tag tag-decline">✗ Decline → Pool not heated</span></td>
+            </tr>
+            <tr>
+              <td><strong>Legolas Greenleaf</strong></td>
+              <td>Thranduil</td>
+              <td>Bradenton</td>
+              <td>Under 6 months</td>
+              <td>Yes</td>
+              <td>Paid</td>
+              <td>3934 75th St W, Bradenton 34209</td>
+              <td><span class="tag tag-decline">✗ Decline → Too young</span></td>
+            </tr>
+            <tr>
+              <td><strong>Gandalf Grey</strong></td>
+              <td>N/A (adult)</td>
+              <td>Bradenton</td>
+              <td>Adult</td>
+              <td>Yes</td>
+              <td>Paid</td>
+              <td>2543 River Preserve Ct, Bradenton 34208</td>
+              <td><span class="tag tag-qual">✓ Qualified (triathlete)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Galadriel</strong></td>
+              <td>Celeborn</td>
+              <td>Lakewood Ranch</td>
+              <td>6mo – 2 yrs</td>
+              <td>Yes</td>
+              <td>Nonprofit</td>
+              <td>14231 Cattle Egret Pl, Lakewood Ranch 34202</td>
+              <td><span class="tag tag-nonprofit">→ Nonprofit flow</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">20</div>
+        <div class="step-header-text">
+          <h3>What Each Test Record Proves</h3>
+          <div class="step-time">Reference</div>
+        </div>
+      </div>
+      <ul>
+        <li><strong>Frodo + Sam + Pippin + Merry</strong> → Standard qualified leads. Trigger welcome sequence. Shows the happy path.</li>
+        <li><strong>Arwen</strong> → Outside service area (St. Pete). Should receive referral email, not welcome sequence.</li>
+        <li><strong>Éowyn</strong> → Pool not heated. Amanda can't teach there — demonstrates the pool qualification filter.</li>
+        <li><strong>Legolas</strong> → Under 6 months. Too young for lessons — demonstrates age filter.</li>
+        <li><strong>Gandalf</strong> → Adult learner (triathlete). Shows Amanda's secondary market works in the system.</li>
+        <li><strong>Galadriel</strong> → Nonprofit inquiry. Routes to separate nonprofit pipeline.</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('sched',navBtn('sched'))">← Scheduling</button>
+      <button class="ch-nav-btn" onclick="showCh('demo',navBtn('demo'))">Demo Script →</button>
+    </div>
+  </div>
+
+  <!-- ========== CH7: DEMO SCRIPT ========== -->
+  <div class="chapter" id="ch-demo">
+    <div class="ch-label">Phase 7</div>
+    <div class="ch-title">Demo Script — Live Walkthrough</div>
+    <p class="ch-lead">Exactly what to say and show during the demo with Amanda. ~15 minute meeting segment.</p>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">21</div>
+        <div class="step-header-text">
+          <h3>Pre-Demo Checklist</h3>
+          <div class="step-time">Before the meeting</div>
+        </div>
+      </div>
+      <ul class="checklist">
+        <li>All 4 email templates built and reviewed</li>
+        <li>Automation #1 (Welcome Sequence) is active</li>
+        <li>At least 4 test records already in the system (Frodo, Sam, Pippin, Merry)</li>
+        <li>Have the intake form URL ready to share on screen</li>
+        <li>Open HoneyBook in one browser tab, your email in another</li>
+        <li>Have the client-facing proposal (amanda-systems-plan.html) ready as context</li>
+        <li>Clear any test notifications so the demo feels fresh</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">22</div>
+        <div class="step-header-text">
+          <h3>Demo Flow — What You Say</h3>
+          <div class="step-time">15 minutes</div>
+        </div>
+      </div>
+
+      <p><strong style="color:var(--ocean-mid);">OPEN (2 min):</strong></p>
+      <p><em>"Amanda, remember when you told me you want a system that filters people in and out before they call you? I built it. Let me show you — this is running live right now on a free trial."</em></p>
+
+      <p style="margin-top:16px;"><strong style="color:var(--ocean-mid);">SHOW THE FORM (3 min):</strong></p>
+      <p>Pull up the intake form. Walk through the fields. Point out the service area dropdown: <em>"See this? If someone from St. Pete fills this out, they never reach you — the system handles it."</em></p>
+
+      <p style="margin-top:16px;"><strong style="color:var(--ocean-mid);">LIVE SUBMISSION (3 min):</strong></p>
+      <p>Fill out the form live as "Arwen Undómiel" — select "Outside Manatee County." Submit it. Then switch to HoneyBook and show:</p>
+      <ul>
+        <li>The new project appeared in the pipeline</li>
+        <li>Show how you'd tag it "declined" and the referral email fires</li>
+        <li>Switch to your email — show the referral email that arrived</li>
+      </ul>
+
+      <p style="margin-top:16px;"><strong style="color:var(--ocean-mid);">SHOW THE PIPELINE (3 min):</strong></p>
+      <p>Show the CRM with the test records already loaded: <em>"Look — here are your qualified leads. Frodo, Sam, Pippin, Merry. Each one already received the welcome email, the water safety tips, and the booking nudge — automatically. You didn't touch a thing."</em></p>
+
+      <p style="margin-top:16px;"><strong style="color:var(--ocean-mid);">SHOW AN EMAIL (2 min):</strong></p>
+      <p>Open one of the welcome emails that was sent. <em>"This is your content — your policies, your FAQ, your voice. It just sends itself now."</em></p>
+
+      <p style="margin-top:16px;"><strong style="color:var(--ocean-mid);">SHOW THE SCHEDULER (2 min):</strong></p>
+      <p>Show the scheduling page, the 30-min slots, the availability. Mention SMS reminders: <em>"Every client gets a text 24 hours before and 1 hour before. No more no-shows, no more 'I forgot.'"</em></p>
+
+      <p style="margin-top:16px;"><strong style="color:var(--ocean-mid);">CLOSE:</strong></p>
+      <p><em>"This is a working prototype — not a presentation. If you like what you see, I'll build the final version on YOUR HoneyBook account with your real branding, your referral list, and your actual schedule. And we'll do it together so you own it completely."</em></p>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">23</div>
+        <div class="step-header-text">
+          <h3>Post-Demo: What to Ask Amanda</h3>
+          <div class="step-time">After the demo</div>
+        </div>
+      </div>
+      <ul>
+        <li>"Does this welcome email sound like you? What would you change?"</li>
+        <li>"Which swim schools do you refer people to? I need 2–3 names for the decline email."</li>
+        <li>"Is there anything in your current copy-paste email that I'm missing?"</li>
+        <li>"Are there any other scenarios I should handle? Like someone who's a fit but you're fully booked?"</li>
+        <li>"Do you want to start your own HoneyBook trial this week, or should we wait until I have everything dialed in?"</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">24</div>
+        <div class="step-header-text">
+          <h3>Build Completion Checklist</h3>
+          <div class="step-time">Final review</div>
+        </div>
+      </div>
+      <ul class="checklist">
+        <li>HoneyBook account created</li>
+        <li>Business profile configured (name, location, timezone)</li>
+        <li>3 project types created (Paid, Nonprofit, Outside Area)</li>
+        <li>Pipeline stages set up</li>
+        <li>Intake form with 19 fields built and tested</li>
+        <li>Email Template #1 — Welcome & Policies</li>
+        <li>Email Template #2 — Water Safety Do's & Don'ts</li>
+        <li>Email Template #3 — Ready to Book?</li>
+        <li>Email Template #4 — Polite Decline with Referrals</li>
+        <li>Automation #1 — Welcome Sequence (active)</li>
+        <li>Automation #2 — Decline Flow (built, inactive for demo)</li>
+        <li>Scheduler configured with session types</li>
+        <li>SMS + email reminders enabled</li>
+        <li>9 test records submitted through the form</li>
+        <li>End-to-end test: form → automation → email → calendar</li>
+        <li>Demo script rehearsed once</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('data',navBtn('data'))">← Test Data</button>
+      <div class="ch-nav-spacer"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Internal Build Plan — Garry Fenimore · Sunshine Swimming · April 2026</div>
+
+<script>
+const navMap = { setup:0, form:1, auto:2, email:3, sched:4, data:5, demo:6 };
+function showCh(id, btn) {
+  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+  document.getElementById('ch-' + id).classList.add('active');
+  document.querySelectorAll('.topbar-nav button').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: document.querySelector('.intro').offsetTop + document.querySelector('.intro').offsetHeight - 10, behavior: 'smooth' });
+}
+function navBtn(id) {
+  return document.querySelectorAll('.topbar-nav button')[navMap[id]];
+}
+</script>
+
+</body>
+</html>

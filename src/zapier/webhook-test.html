@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zapier Webhook Test Harness — Sunshine Swimming</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f172a; --text: #334155; --muted: #64748b; --faint: #94a3b8;
+  --white: #fff; --paper: #f8fafc; --border: #e2e8f0;
+  --ocean: #0369a1; --ocean-light: #e0f2fe;
+  --emerald: #059669; --emerald-light: #ecfdf5;
+  --coral: #e11d48; --coral-light: #fff1f2;
+  --amber: #d97706; --amber-light: #fffbeb;
+  --violet: #7c3aed; --violet-light: #f5f3ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Outfit',sans-serif; background:var(--paper); color:var(--ink); line-height:1.6; padding:24px; }
+.container { max-width:900px; margin:0 auto; }
+h1 { font-size:22px; font-weight:700; margin-bottom:4px; }
+.subtitle { font-size:14px; color:var(--muted); margin-bottom:24px; }
+
+.config-section {
+  background:var(--white); border:1px solid var(--border); border-radius:10px;
+  padding:20px; margin-bottom:16px;
+}
+.config-section h2 { font-size:15px; font-weight:700; margin-bottom:10px; }
+.config-section label { font-size:13px; font-weight:600; color:var(--text); display:block; margin-bottom:4px; }
+.config-section input[type="text"] {
+  width:100%; padding:10px 12px; border:2px solid var(--border); border-radius:6px;
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink);
+}
+.config-section input:focus { outline:none; border-color:var(--ocean); }
+
+.test-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+@media (max-width:640px) { .test-grid { grid-template-columns:1fr; } }
+
+.test-card {
+  background:var(--white); border:1px solid var(--border); border-radius:10px;
+  padding:16px; cursor:pointer; transition:all 0.2s;
+}
+.test-card:hover { border-color:var(--ocean); box-shadow:0 2px 8px rgba(3,105,161,0.08); }
+.test-card.running { border-color:var(--amber); }
+.test-card.success { border-color:var(--emerald); }
+.test-card.failed { border-color:var(--coral); }
+
+.test-card h3 { font-size:14px; font-weight:700; margin-bottom:2px; }
+.test-card .expected { font-size:11px; font-weight:600; margin-bottom:6px; }
+.tag { display:inline-block; padding:1px 7px; border-radius:4px; font-size:10px; font-weight:700; }
+.tag-qual { background:var(--emerald-light); color:var(--emerald); }
+.tag-decline { background:var(--coral-light); color:var(--coral); }
+.tag-nonprofit { background:var(--violet-light); color:var(--violet); }
+
+.test-card .details { font-size:12px; color:var(--muted); }
+.test-card .status { margin-top:8px; font-size:12px; font-weight:600; }
+.status-idle { color:var(--faint); }
+.status-running { color:var(--amber); }
+.status-success { color:var(--emerald); }
+.status-failed { color:var(--coral); }
+
+.btn-row { display:flex; gap:10px; margin-bottom:16px; }
+.btn {
+  padding:10px 18px; border-radius:6px; font-size:14px; font-weight:700;
+  cursor:pointer; border:none; font-family:'Outfit',sans-serif; transition:all 0.2s;
+}
+.btn-primary { background:var(--ocean); color:var(--white); }
+.btn-primary:hover { background:#075985; }
+.btn-secondary { background:var(--white); color:var(--text); border:2px solid var(--border); }
+.btn-secondary:hover { border-color:var(--ocean); color:var(--ocean); }
+
+.log-section {
+  background:#1e293b; border-radius:10px; padding:16px; margin-top:16px;
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:#e2e8f0;
+  max-height:400px; overflow-y:auto;
+}
+.log-section .log-title { color:var(--faint); font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+.log-entry { margin-bottom:4px; white-space:pre-wrap; word-break:break-all; }
+.log-ts { color:#64748b; }
+.log-info { color:#38bdf8; }
+.log-ok { color:#34d399; }
+.log-err { color:#fb7185; }
+.log-data { color:#fbbf24; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🧪 Zapier Webhook Test Harness</h1>
+  <p class="subtitle">Fire LOTR test payloads at your Zapier webhook and verify the connection to HoneyBook.</p>
+
+  <div class="config-section">
+    <h2>Webhook URL</h2>
+    <label>Paste your Zapier Catch Hook URL here:</label>
+    <input type="text" id="webhookUrl" placeholder="https://hooks.zapier.com/hooks/catch/XXXXXX/XXXXXXX/">
+    <p style="font-size:11px;color:var(--faint);margin-top:4px;">Get this from Zapier: Create new Zap → Trigger: Webhooks by Zapier → Event: Catch Hook → Copy URL</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="runAll()">▶ Run All Tests</button>
+    <button class="btn btn-secondary" onclick="clearLog()">Clear Log</button>
+  </div>
+
+  <div class="test-grid" id="testGrid"></div>
+
+  <div class="log-section">
+    <div class="log-title">Event Log</div>
+    <div id="logOutput"><span class="log-entry log-info">Ready. Configure webhook URL and run tests.</span></div>
+  </div>
+</div>
+
+<script>
+// ── Test Scenarios (LOTR themed) ─────────────────────────────
+const TESTS = [
+  {
+    id: 'frodo',
+    name: 'Frodo Baggins',
+    subtitle: 'Parent: Bilbo · Bradenton · Heated pool · Paid',
+    expected: 'qualified',
+    payload: {
+      lead_type: 'qualified', tag: 'qualified',
+      location: 'Bradenton', lesson_type: 'Private swim lessons (paid)', pool_heated: 'Yes',
+      swimmer_name: 'Frodo Baggins', swimmer_age: '2 – 4 years',
+      previous_lessons: 'No', comfort_level: '2',
+      medical: 'None', injuries: '', additional_swimmers: '',
+      parent_name: 'Bilbo Baggins', phone: '(941) 555-0001',
+      email: 'bilbo@theshire.test', address: '5750 12th Street S, Bradenton FL 34208',
+      lesson_location: '', preferred_times: 'Weekday mornings',
+      referral_source: 'Word of Mouth', anything_else: 'Loves second breakfast.',
+      submitted_at: new Date().toISOString(), form_version: '1.0'
+    }
+  },
+  {
+    id: 'sam',
+    name: 'Samwise Gamgee',
+    subtitle: 'Parent: Hamfast · Lakewood Ranch · Heated · Paid',
+    expected: 'qualified',
+    payload: {
+      lead_type: 'qualified', tag: 'qualified',
+      location: 'Lakewood Ranch', lesson_type: 'Private swim lessons (paid)', pool_heated: 'Yes',
+      swimmer_name: 'Samwise Gamgee', swimmer_age: '6 months – 2 years',
+      previous_lessons: 'No', comfort_level: '1 – Very Nervous',
+      medical: 'None', injuries: '', additional_swimmers: '',
+      parent_name: 'Hamfast Gamgee', phone: '(941) 555-0002',
+      email: 'hamfast@theshire.test', address: '16539 Arbor Ridge Trail, Lakewood Ranch FL 34211',
+      lesson_location: '', preferred_times: 'Tue/Thu afternoons',
+      referral_source: 'Facebook', anything_else: 'Very protective of gardens.',
+      submitted_at: new Date().toISOString(), form_version: '1.0'
+    }
+  },
+  {
+    id: 'arwen',
+    name: 'Arwen Undómiel',
+    subtitle: 'Parent: Elrond · Outside Manatee County · Paid',
+    expected: 'decline-area',
+    note: 'This should NOT be sent — form declines client-side. Sending anyway to test webhook error handling.',
+    payload: {
+      lead_type: 'declined', tag: 'declined',
+      location: 'Outside Manatee County', lesson_type: 'Private swim lessons (paid)', pool_heated: 'Yes',
+      swimmer_name: 'Arwen Undómiel', swimmer_age: '2 – 4 years',
+      parent_name: 'Elrond', phone: '(727) 555-0003',
+      email: 'elrond@rivendell.test', address: '5356 35th Terrace N, St Petersburg FL 33710',
+      decline_reason: 'Outside service area',
+      submitted_at: new Date().toISOString(), form_version: '1.0'
+    }
+  },
+  {
+    id: 'eowyn',
+    name: 'Éowyn',
+    subtitle: 'Parent: Théoden · Bradenton · Pool NOT heated · Paid',
+    expected: 'decline-pool',
+    note: 'This should NOT be sent — form declines client-side.',
+    payload: {
+      lead_type: 'declined', tag: 'declined',
+      location: 'Bradenton', lesson_type: 'Private swim lessons (paid)', pool_heated: 'No',
+      swimmer_name: 'Éowyn', swimmer_age: '2 – 4 years',
+      parent_name: 'Théoden', phone: '(941) 555-0004',
+      email: 'theoden@rohan.test', address: '3605 Riverview Blvd, Bradenton FL 34205',
+      decline_reason: 'Pool not heated',
+      submitted_at: new Date().toISOString(), form_version: '1.0'
+    }
+  },
+  {
+    id: 'galadriel',
+    name: 'Galadriel',
+    subtitle: 'Parent: Celeborn · Lakewood Ranch · Nonprofit',
+    expected: 'nonprofit',
+    payload: {
+      lead_type: 'nonprofit', tag: 'nonprofit',
+      location: 'Lakewood Ranch', lesson_type: 'Free water safety program (nonprofit)',
+      pool_heated: 'Yes',
+      parent_name: 'Celeborn', phone: '(941) 555-0005',
+      email: 'celeborn@lothlorien.test', address: '14231 Cattle Egret Pl, Lakewood Ranch FL 34202',
+      lesson_location: '',
+      submitted_at: new Date().toISOString(), form_version: '1.0'
+    }
+  }
+];
+
+// ── Render ────────────────────────────────────────────────────
+function renderTests() {
+  const grid = document.getElementById('testGrid');
+  grid.innerHTML = TESTS.map(t => {
+    const tagClass = t.expected === 'qualified' ? 'tag-qual' 
+      : t.expected === 'nonprofit' ? 'tag-nonprofit' : 'tag-decline';
+    const tagLabel = t.expected === 'qualified' ? '✓ Qualified'
+      : t.expected === 'nonprofit' ? '→ Nonprofit' : '✗ Decline';
+    return `
+      <div class="test-card" id="card-${t.id}" onclick="runSingle('${t.id}')">
+        <h3>${t.name}</h3>
+        <div class="expected"><span class="tag ${tagClass}">${tagLabel}</span></div>
+        <div class="details">${t.subtitle}</div>
+        <div class="status status-idle" id="status-${t.id}">Click to send</div>
+      </div>`;
+  }).join('');
+}
+
+// ── Logging ───────────────────────────────────────────────────
+function log(msg, cls = 'log-info') {
+  const ts = new Date().toLocaleTimeString();
+  const el = document.getElementById('logOutput');
+  el.innerHTML += `\n<span class="log-entry"><span class="log-ts">[${ts}]</span> <span class="${cls}">${msg}</span></span>`;
+  el.parentElement.scrollTop = el.parentElement.scrollHeight;
+}
+
+function clearLog() {
+  document.getElementById('logOutput').innerHTML = '<span class="log-entry log-info">Log cleared.</span>';
+}
+
+// ── Send ──────────────────────────────────────────────────────
+async function sendPayload(test) {
+  const url = document.getElementById('webhookUrl').value.trim();
+  if (!url) {
+    log('ERROR: No webhook URL configured.', 'log-err');
+    return false;
+  }
+
+  const card = document.getElementById('card-' + test.id);
+  const status = document.getElementById('status-' + test.id);
+  
+  card.className = 'test-card running';
+  status.className = 'status status-running';
+  status.textContent = 'Sending...';
+  
+  log(`→ Sending: ${test.name} (${test.expected})`, 'log-info');
+  log(`  Payload: ${JSON.stringify(test.payload).substring(0, 120)}...`, 'log-data');
+
+  try {
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(test.payload),
+      mode: 'no-cors'  // Zapier webhooks don't support CORS
+    });
+
+    // no-cors means we can't read the response, but if we got here it sent
+    card.className = 'test-card success';
+    status.className = 'status status-success';
+    status.textContent = '✓ Sent (check Zapier)';
+    log(`✓ ${test.name}: Payload sent. Verify in Zapier task history.`, 'log-ok');
+    return true;
+
+  } catch (err) {
+    card.className = 'test-card failed';
+    status.className = 'status status-failed';
+    status.textContent = '✗ Failed';
+    log(`✗ ${test.name}: ${err.message}`, 'log-err');
+    return false;
+  }
+}
+
+async function runSingle(id) {
+  const test = TESTS.find(t => t.id === id);
+  if (test) await sendPayload(test);
+}
+
+async function runAll() {
+  const url = document.getElementById('webhookUrl').value.trim();
+  if (!url) {
+    log('ERROR: Configure the webhook URL first.', 'log-err');
+    return;
+  }
+
+  log('═══ Running all 5 test scenarios ═══', 'log-info');
+  
+  let passed = 0;
+  for (const test of TESTS) {
+    const ok = await sendPayload(test);
+    if (ok) passed++;
+    await new Promise(r => setTimeout(r, 500)); // pace requests
+  }
+  
+  log(`═══ Complete: ${passed}/${TESTS.length} sent ═══`, passed === TESTS.length ? 'log-ok' : 'log-err');
+  log('Check Zapier task history to verify all payloads arrived.', 'log-info');
+}
+
+// ── Init ──────────────────────────────────────────────────────
+renderTests();
+</script>
+</body>
+</html>

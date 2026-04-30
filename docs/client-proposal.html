@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunshine Swimming — Systems Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ocean: #0c4a6e;
+    --ocean-mid: #0369a1;
+    --ocean-light: #e0f2fe;
+    --ocean-glow: #bae6fd;
+    --ink: #1e293b;
+    --text: #334155;
+    --muted: #64748b;
+    --white: #ffffff;
+    --paper: #f8fafc;
+    --border: #e2e8f0;
+    --coral: #e11d48;
+    --coral-light: #fff1f2;
+    --emerald: #059669;
+    --emerald-light: #ecfdf5;
+    --amber: #d97706;
+    --amber-light: #fffbeb;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* === TOP BAR === */
+  .topbar {
+    background: var(--ocean);
+    color: var(--white);
+    padding: 20px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+  .topbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .topbar-brand {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .topbar-brand span {
+    font-weight: 400;
+    color: var(--ocean-glow);
+    font-style: italic;
+  }
+
+  /* === NAV TABS in top bar === */
+  .topbar-nav {
+    display: flex;
+    gap: 2px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 3px;
+  }
+  .topbar-nav button {
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.55);
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-family: 'Outfit', sans-serif;
+  }
+  .topbar-nav button:hover { color: rgba(255,255,255,0.85); }
+  .topbar-nav button.active {
+    background: rgba(255,255,255,0.15);
+    color: var(--white);
+  }
+
+  /* === MAIN CONTAINER === */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* === INTRO SECTION (always visible) === */
+  .intro {
+    padding: 40px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+  }
+  .intro h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(26px, 3.5vw, 36px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .intro h1 em {
+    font-style: italic;
+    color: var(--ocean-mid);
+    font-weight: 700;
+  }
+  .intro p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 680px;
+    line-height: 1.65;
+  }
+
+  /* === CHAPTER PANELS === */
+  .chapter {
+    display: none;
+    padding: 36px 0 48px;
+    animation: panelIn 0.3s ease;
+  }
+  .chapter.active { display: block; }
+
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === SHARED CHAPTER STYLES === */
+  .ch-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ocean-mid);
+    margin-bottom: 10px;
+  }
+  .ch-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .ch-lead {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 560px;
+    margin-bottom: 32px;
+  }
+
+  /* Inter-chapter nav */
+  .ch-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .ch-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+    transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+  }
+  .ch-nav-btn:hover {
+    border-color: var(--ocean-mid);
+    color: var(--ocean-mid);
+  }
+  .ch-nav-spacer { flex: 1; }
+
+  /* ============================================
+     CHAPTER 1: WHAT I HEARD
+     ============================================ */
+  .heard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .heard-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+    transition: all 0.25s;
+  }
+  .heard-card:hover {
+    border-color: var(--ocean-mid);
+    box-shadow: 0 2px 12px rgba(3,105,161,0.06);
+  }
+  .heard-icon { font-size: 18px; margin-bottom: 8px; }
+  .heard-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .heard-card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  .heard-quote {
+    margin-top: 24px;
+    background: var(--ocean-light);
+    border-left: 3px solid var(--ocean-mid);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+  }
+  .heard-quote p {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--ocean);
+    line-height: 1.55;
+  }
+  .heard-quote cite {
+    display: block;
+    margin-top: 6px;
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* ============================================
+     CHAPTER 2: RESEARCH
+     ============================================ */
+  .sub-tabs {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 20px;
+    background: #e8eaed;
+    border-radius: 7px;
+    padding: 3px;
+    width: fit-content;
+  }
+  .sub-tab {
+    padding: 7px 16px;
+    border-radius: 5px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+  }
+  .sub-tab:hover { color: var(--ink); }
+  .sub-tab.active {
+    background: var(--white);
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .sub-panel { display: none; }
+  .sub-panel.active { display: block; }
+
+  .cmp-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--white);
+  }
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    min-width: 680px;
+  }
+  .cmp-table thead th {
+    padding: 10px 12px;
+    font-weight: 700;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--muted);
+    border-bottom: 2px solid var(--border);
+    background: #f8f9fa;
+    text-align: left;
+  }
+  .cmp-table thead th.w { background: var(--ocean-light); color: var(--ocean-mid); }
+  .cmp-table tbody td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #f1f3f5;
+    vertical-align: top;
+  }
+  .cmp-table tbody tr:last-child td { border-bottom: none; }
+  .cmp-table tbody tr:hover { background: #fafbfc; }
+  .cmp-table td:first-child { font-weight: 600; min-width: 120px; }
+  .cmp-table td.wc { background: rgba(3,105,161,0.025); }
+  .sr td {
+    background: #f4f5f2 !important;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 7px 12px !important;
+  }
+  .ck { color: var(--emerald); font-weight: 700; }
+  .pt { color: var(--amber); font-weight: 700; }
+  .no { color: var(--coral); font-weight: 700; }
+  .b { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10.5px; font-weight: 600; }
+  .bg { background: var(--emerald-light); color: var(--emerald); }
+  .ba { background: var(--amber-light); color: var(--amber); }
+  .br { background: var(--coral-light); color: var(--coral); }
+
+  .cost-bars { display: flex; flex-direction: column; gap: 12px; }
+  .cost-row { display: flex; align-items: center; gap: 12px; }
+  .cost-lbl { width: 120px; font-size: 13px; font-weight: 600; text-align: right; flex-shrink: 0; }
+  .cost-bar-w { flex: 1; background: #eef0f2; border-radius: 5px; height: 30px; overflow: hidden; }
+  .cost-bar {
+    height: 100%;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .c-hb { background: var(--ocean-mid); }
+  .c-ghl { background: #6366f1; }
+  .c-jb { background: #059669; }
+  .c-cc { background: #9ca3af; }
+  .c-db { background: #ec4899; }
+  .cost-note { font-size: 11px; color: var(--muted); margin-left: 132px; margin-top: 1px; }
+
+  /* ============================================
+     CHAPTER 3: RECOMMENDATION
+     ============================================ */
+  .rec-card {
+    background: linear-gradient(135deg, var(--ocean-light) 0%, #f0f9ff 100%);
+    border: 2px solid var(--ocean-mid);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .rec-badge {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--ocean-mid);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .rec-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+  .rec-price {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--ocean-mid);
+    margin: 10px 0;
+  }
+  .rec-price span { font-size: 14px; font-weight: 400; color: var(--muted); }
+  .rec-card > p { font-size: 14px; color: var(--text); line-height: 1.6; }
+  .rec-feats {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 20px;
+    list-style: none;
+  }
+  .rec-feats li {
+    font-size: 12.5px;
+    padding: 3px 0 3px 18px;
+    position: relative;
+    color: var(--text);
+  }
+  .rec-feats li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--emerald);
+    font-weight: 700;
+  }
+
+  .roi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .roi-item {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+  }
+  .roi-num {
+    font-family: 'Fraunces', serif;
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--ocean-mid);
+  }
+  .roi-lbl { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  .roi-box {
+    background: var(--ocean);
+    color: var(--white);
+    border-radius: 10px;
+    padding: 20px 24px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .roi-box strong { color: var(--ocean-glow); }
+
+  /* ROI Expandable */
+  .roi-expand {
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border: 2px solid #f59e0b;
+    box-shadow: 0 2px 12px rgba(245,158,11,0.12);
+    transition: all 0.3s;
+  }
+  .roi-expand:hover { box-shadow: 0 4px 20px rgba(245,158,11,0.18); }
+  .roi-expand-btn {
+    width: 100%;
+    padding: 18px 22px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Outfit', sans-serif;
+    text-align: left;
+    gap: 12px;
+  }
+  .roi-expand-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .roi-expand-icon {
+    font-size: 24px;
+    width: 44px;
+    height: 44px;
+    background: rgba(245,158,11,0.15);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .roi-expand-title {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: #92400e;
+  }
+  .roi-expand-hint {
+    display: block;
+    font-size: 12.5px;
+    color: #b45309;
+    margin-top: 1px;
+  }
+  .roi-expand-arrow {
+    font-size: 22px;
+    font-weight: 300;
+    color: #d97706;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .roi-expand.open .roi-expand-arrow { transform: rotate(45deg); }
+  .roi-expand-body {
+    display: none;
+    padding: 0 22px 22px;
+    background: var(--white);
+    border-top: 1px solid #fde68a;
+  }
+  .roi-expand.open .roi-expand-body { display: block; }
+
+  /* ============================================
+     CHAPTER 4: WORKING MODEL
+     ============================================ */
+  .model-banner {
+    background: var(--white);
+    border: 2px solid var(--emerald);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 28px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .model-banner-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--emerald);
+    color: var(--white);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .model-banner h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .model-banner p { font-size: 13.5px; color: var(--text); line-height: 1.55; }
+
+  .ba-grid {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 0;
+    align-items: stretch;
+    margin-bottom: 28px;
+  }
+  .ba-card { border-radius: 10px; padding: 20px; }
+  .ba-before { background: var(--coral-light); border: 1px solid #fecaca; }
+  .ba-after { background: var(--emerald-light); border: 2px solid var(--emerald); }
+  .ba-card h4 {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .ba-before h4 { color: var(--coral); }
+  .ba-after h4 { color: var(--emerald); }
+  .ba-card ul { list-style: none; }
+  .ba-card li {
+    font-size: 12.5px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    color: var(--text);
+  }
+  .ba-card li:last-child { border: none; }
+  .ba-arrow { display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: #cbd5e1; }
+
+  .build-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .build-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.25s;
+  }
+  .build-card:hover { border-color: var(--ocean-mid); box-shadow: 0 2px 12px rgba(3,105,161,0.06); }
+  .build-num {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ocean-glow);
+    margin-bottom: 4px;
+  }
+  .build-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .build-card p { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .build-tags { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+  .build-tag {
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 14px;
+    background: var(--ocean-light);
+    color: var(--ocean);
+  }
+
+  /* Demo flow */
+  .demo-step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .demo-step:last-child { margin-bottom: 0; }
+  .demo-dot-col { display: flex; flex-direction: column; align-items: center; width: 32px; flex-shrink: 0; }
+  .demo-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .d-p { background: var(--ocean-light); color: var(--ocean); }
+  .d-s { background: var(--emerald-light); color: var(--emerald); }
+  .d-y { background: var(--amber-light); color: var(--amber); }
+  .demo-line { flex: 1; width: 2px; background: var(--border); margin: 2px 0; }
+  .demo-step:last-child .demo-line { display: none; }
+  .demo-content { flex: 1; }
+  .demo-actor {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+  .da-p { color: var(--ocean-mid); }
+  .da-s { color: var(--emerald); }
+  .da-y { color: var(--amber); }
+  .demo-content h4 { font-size: 13.5px; font-weight: 600; margin-bottom: 2px; }
+  .demo-content p { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+
+  /* ============================================
+     CHAPTER 5: NEXT STEPS
+     ============================================ */
+  .next-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .next-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+    text-align: center;
+    transition: all 0.25s;
+  }
+  .next-card:hover { border-color: var(--ocean-mid); transform: translateY(-2px); box-shadow: 0 4px 14px rgba(3,105,161,0.07); }
+  .next-num {
+    width: 32px;
+    height: 32px;
+    background: var(--ocean-light);
+    color: var(--ocean);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 auto 10px;
+  }
+  .next-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+  .next-card p { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .next-hint { margin-top: 8px; font-size: 11.5px; font-weight: 600; color: var(--ocean-mid); }
+
+  .timeline-bar {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .tl-item h4 { font-size: 12px; font-weight: 700; color: var(--ocean-mid); margin-bottom: 3px; }
+  .tl-item p { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+  .closing-box {
+    background: var(--ocean);
+    color: var(--white);
+    border-radius: 10px;
+    padding: 28px;
+    text-align: center;
+  }
+  .closing-box .cq {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--ocean-glow);
+    max-width: 560px;
+    margin: 0 auto 14px;
+    line-height: 1.55;
+  }
+  .closing-box .cn {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* === FOOTER === */
+  .footer {
+    text-align: center;
+    padding: 24px 0 32px;
+    font-size: 11px;
+    color: #94a3b8;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    .topbar { padding: 14px 16px; }
+    .topbar-inner { flex-direction: column; gap: 12px; }
+    .topbar-nav { flex-wrap: wrap; justify-content: center; }
+    .main { padding: 0 16px; }
+    .intro { padding: 28px 0 24px; }
+    .heard-grid, .build-grid, .roi-row, .next-grid { grid-template-columns: 1fr; }
+    .ba-grid { grid-template-columns: 1fr; gap: 10px; }
+    .ba-arrow { transform: rotate(90deg); }
+    .timeline-bar { grid-template-columns: 1fr 1fr; }
+    .cost-lbl { width: 90px; font-size: 12px; }
+    .cost-note { margin-left: 102px; }
+    .rec-feats { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR with nav -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">Sunshine Swimming <span>· Systems Plan</span></div>
+    <nav class="topbar-nav" id="mainNav">
+      <button class="active" onclick="showCh('heard', this)">What I Heard</button>
+      <button onclick="showCh('research', this)">Research</button>
+      <button onclick="showCh('rec', this)">Recommendation</button>
+      <button onclick="showCh('model', this)">Working Model</button>
+      <button onclick="showCh('next', this)">Next Steps</button>
+    </nav>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- INTRO (always visible) -->
+  <div class="intro">
+    <h1>Stop answering phones. Start <em>just teaching.</em></h1>
+    <p>Amanda — I dug into your business after our first call. Below is everything: what I heard, what I researched, my recommendation, and a plan to build you a working solution model before you spend a dime. Navigate to whatever interests you most.</p>
+  </div>
+
+  <!-- ====== CH1: WHAT I HEARD ====== -->
+  <div class="chapter active" id="ch-heard">
+    <div class="ch-label">Chapter 1</div>
+    <div class="ch-title">You don't need more clients. You need fewer interruptions.</div>
+    <p class="ch-lead">From our conversation, four things stood out. These aren't guesses — they're your words.</p>
+
+    <div class="heard-grid">
+      <div class="heard-card">
+        <div class="heard-icon">📞</div>
+        <h3>Unqualified calls consume your day</h3>
+        <p>Out-of-area families, wrong age groups, nonprofit inquiries — everyone reaches you directly before you can filter them.</p>
+      </div>
+      <div class="heard-card">
+        <div class="heard-icon">✉️</div>
+        <h3>Every welcome email is manual</h3>
+        <p>You copy-paste the same policies, FAQ, and forms to every new client. Every. Single. Time.</p>
+      </div>
+      <div class="heard-card">
+        <div class="heard-icon">🔁</div>
+        <h3>Same questions on repeat</h3>
+        <p>"Is your pool heated?" "No life jackets." "What ages?" — answered over and over when they could be handled before anyone calls.</p>
+      </div>
+      <div class="heard-card">
+        <div class="heard-icon">📅</div>
+        <h3>No system keeps the calendar flowing</h3>
+        <p>No automated reminders, no structured booking. Rain makeups and cancellations are all manual while you're at the pool.</p>
+      </div>
+    </div>
+
+    <div class="heard-quote">
+      <p>"I want to have a system that filters them in and out. I want to collect all the information before they call me."</p>
+      <cite>— Amanda, first call</cite>
+    </div>
+
+    <div class="ch-nav">
+      <div class="ch-nav-spacer"></div>
+      <button class="ch-nav-btn" onclick="showCh('research', navBtn('research'))">Research →</button>
+    </div>
+  </div>
+
+  <!-- ====== CH2: RESEARCH ====== -->
+  <div class="chapter" id="ch-research">
+    <div class="ch-label">Chapter 2</div>
+    <div class="ch-title">Six platforms evaluated. One clear winner.</div>
+    <p class="ch-lead">Each tested against your priorities: fewest tools, easiest solo maintenance, strongest automation, then cost.</p>
+
+    <div class="sub-tabs">
+      <button class="sub-tab active" onclick="showSub('feat', this)">Features</button>
+      <button class="sub-tab" onclick="showSub('cost', this)">True Costs</button>
+    </div>
+
+    <div class="sub-panel active" id="sp-feat">
+      <div class="cmp-wrap">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th class="w">HoneyBook ★</th>
+              <th>Go High Level</th>
+              <th>Jobber</th>
+              <th>Constant Contact</th>
+              <th>Dubsado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="sr"><td colspan="6">Core Needs</td></tr>
+            <tr>
+              <td>Smart intake forms</td>
+              <td class="wc"><span class="ck">✓</span> w/ logic</td>
+              <td><span class="ck">✓</span> Powerful</td>
+              <td><span class="no">✗</span> Basic</td>
+              <td><span class="no">✗</span> No logic</td>
+              <td><span class="pt">~</span> Code needed</td>
+            </tr>
+            <tr>
+              <td>Auto email sequences</td>
+              <td class="wc"><span class="ck">✓</span> If/then</td>
+              <td><span class="ck">✓</span> Multi-channel</td>
+              <td><span class="no">✗</span></td>
+              <td><span class="pt">~</span> $80/mo tier</td>
+              <td><span class="ck">✓</span></td>
+            </tr>
+            <tr>
+              <td>Scheduling + SMS</td>
+              <td class="wc"><span class="ck">✓</span> Both included</td>
+              <td><span class="ck">✓</span> Pay per text</td>
+              <td><span class="pt">~</span> $97+ plan</td>
+              <td><span class="no">✗</span> None</td>
+              <td><span class="no">✗</span> No SMS</td>
+            </tr>
+            <tr>
+              <td>CRM / contacts</td>
+              <td class="wc"><span class="ck">✓</span> Pipeline</td>
+              <td><span class="ck">✓</span> Full CRM</td>
+              <td><span class="pt">~</span> Basic</td>
+              <td><span class="no">✗</span> List only</td>
+              <td><span class="ck">✓</span></td>
+            </tr>
+            <tr>
+              <td>Lead routing</td>
+              <td class="wc"><span class="ck">✓</span> Native</td>
+              <td><span class="ck">✓</span> Advanced</td>
+              <td><span class="no">✗</span></td>
+              <td><span class="no">✗</span></td>
+              <td><span class="pt">~</span></td>
+            </tr>
+            <tr class="sr"><td colspan="6">Maintenance Burden</td></tr>
+            <tr>
+              <td>Setup time</td>
+              <td class="wc"><span class="b bg">3–6 hrs</span></td>
+              <td><span class="b br">20–40 hrs</span></td>
+              <td><span class="b bg">4–8 hrs</span></td>
+              <td><span class="b bg">2–4 hrs</span></td>
+              <td><span class="b br">15–30 hrs</span></td>
+            </tr>
+            <tr>
+              <td>Extra tools needed</td>
+              <td class="wc"><span class="b bg">0</span></td>
+              <td><span class="b bg">0</span></td>
+              <td><span class="b ba">2–3</span></td>
+              <td><span class="b br">3–4</span></td>
+              <td><span class="b bg">0–1</span></td>
+            </tr>
+            <tr>
+              <td>Mobile app</td>
+              <td class="wc"><span class="b bg">Excellent</span></td>
+              <td><span class="b ba">OK</span></td>
+              <td><span class="b bg">Excellent</span></td>
+              <td><span class="b ba">OK</span></td>
+              <td><span class="b br">Weak</span></td>
+            </tr>
+            <tr>
+              <td>Run it solo?</td>
+              <td class="wc"><span class="b bg">Yes, day 1</span></td>
+              <td><span class="b ba">After training</span></td>
+              <td><span class="b bg">Yes</span></td>
+              <td><span class="b ba">Partially</span></td>
+              <td><span class="b ba">After training</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sub-panel" id="sp-cost">
+      <h3 style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:16px;">What you'll actually pay each month</h3>
+      <div class="cost-bars">
+        <div class="cost-row"><div class="cost-lbl">HoneyBook</div><div class="cost-bar-w"><div class="cost-bar c-hb" style="width:32%;">$49/mo</div></div></div>
+        <div class="cost-note">All-in-one. No add-ons. Payment processing extra only if you use their invoicing.</div>
+        <div class="cost-row"><div class="cost-lbl">Dubsado</div><div class="cost-bar-w"><div class="cost-bar c-db" style="width:29%;">$44/mo</div></div></div>
+        <div class="cost-note">Cheapest — but no SMS, weak mobile app, most users hire a specialist ($500+).</div>
+        <div class="cost-row"><div class="cost-lbl">Jobber</div><div class="cost-bar-w"><div class="cost-bar c-jb" style="width:55%;">$97–149/mo</div></div></div>
+        <div class="cost-note">Great route optimization. But no email automation without expensive add-ons.</div>
+        <div class="cost-row"><div class="cost-lbl">Go High Level</div><div class="cost-bar-w"><div class="cost-bar c-ghl" style="width:60%;">$105–115/mo</div></div></div>
+        <div class="cost-note">Most powerful. But base + SMS credits + phone + registration fees. Built for agencies.</div>
+        <div class="cost-row"><div class="cost-lbl">Constant Contact</div><div class="cost-bar-w"><div class="cost-bar c-cc" style="width:52%;">$80–100+/mo</div></div></div>
+        <div class="cost-note">Need Premium ($80) for automations. Still missing scheduling, CRM, forms. Worst value.</div>
+      </div>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('heard', navBtn('heard'))">← What I Heard</button>
+      <button class="ch-nav-btn" onclick="showCh('rec', navBtn('rec'))">Recommendation →</button>
+    </div>
+  </div>
+
+  <!-- ====== CH3: RECOMMENDATION ====== -->
+  <div class="chapter" id="ch-rec">
+    <div class="ch-label">Chapter 3</div>
+    <div class="ch-title">HoneyBook Essentials</div>
+    <p class="ch-lead">One platform. One login. One app. Everything you need — nothing you don't.</p>
+
+    <div class="rec-card">
+      <div class="rec-badge">Recommended</div>
+      <h3>HoneyBook Essentials</h3>
+      <div class="rec-price">$49<span>/mo (annual)</span></div>
+      <p>Replaces Google Forms, manual emails, and scattered scheduling with a single dashboard. Built for solo service providers. Excellent mobile app for managing from poolside.</p>
+      <ul class="rec-feats">
+        <li>Intake forms with conditional logic</li>
+        <li>Automated email sequences (if/then)</li>
+        <li>Scheduling with SMS reminders</li>
+        <li>CRM with pipeline tracking</li>
+        <li>Invoicing and payments</li>
+        <li>AI workflow builder</li>
+        <li>Contracts and e-signatures</li>
+        <li>Free template conversion from your docs</li>
+        <li>7-day free trial, no credit card required</li>
+        <li>60-day money-back guarantee on all plans</li>
+      </ul>
+    </div>
+
+    <div class="roi-row">
+      <div class="roi-item">
+        <div class="roi-num">30+</div>
+        <div class="roi-lbl">minutes saved per day</div>
+      </div>
+      <div class="roi-item">
+        <div class="roi-num">$0</div>
+        <div class="roi-lbl">cost to try it</div>
+      </div>
+      <div class="roi-item">
+        <div class="roi-num">1</div>
+        <div class="roi-lbl">tool to manage</div>
+      </div>
+    </div>
+
+    <!-- Expandable ROI math -->
+    <div class="roi-expand" id="roiExpand">
+      <button class="roi-expand-btn" onclick="document.getElementById('roiExpand').classList.toggle('open');">
+        <div class="roi-expand-left">
+          <span class="roi-expand-icon">📊</span>
+          <div>
+            <span class="roi-expand-title">See the Math — ROI Estimate</span>
+            <span class="roi-expand-hint">What does 30 minutes a day actually mean in dollars?</span>
+          </div>
+        </div>
+        <span class="roi-expand-arrow">＋</span>
+      </button>
+      <div class="roi-expand-body">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:8px 0;color:var(--muted);">Capacity</td>
+              <td style="padding:8px 0;text-align:right;font-weight:600;">~9 clients/day max</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:8px 0;color:var(--muted);">Estimate at 80%</td>
+              <td style="padding:8px 0;text-align:right;font-weight:600;">~7 clients/day</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:8px 0;color:var(--muted);">Avg session rate</td>
+              <td style="padding:8px 0;text-align:right;font-weight:600;">$60</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:8px 0;color:var(--muted);">Weekly revenue (M–F)</td>
+              <td style="padding:8px 0;text-align:right;font-weight:600;">$2,100/week</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:8px 0;color:var(--muted);">Monthly revenue (est.)</td>
+              <td style="padding:8px 0;text-align:right;font-weight:600;">$8,400/month</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);background:var(--ocean-light);">
+              <td style="padding:10px 0 10px 8px;font-weight:600;color:var(--ocean);">Time saved by automation</td>
+              <td style="padding:10px 8px 10px 0;text-align:right;font-weight:700;color:var(--ocean);">~30 min/day</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:8px 0;color:var(--muted);">Weekly time recovered</td>
+              <td style="padding:8px 0;text-align:right;font-weight:600;">2.5 hours</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:8px 0;color:var(--muted);">That's equivalent to</td>
+              <td style="padding:8px 0;text-align:right;font-weight:600;">~4 additional sessions/week</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:8px 0;color:var(--muted);">Recovered capacity value</td>
+              <td style="padding:8px 0;text-align:right;font-weight:600;">$240/week · $960/month</td>
+            </tr>
+            <tr style="background:var(--emerald-light);">
+              <td style="padding:10px 0 10px 8px;font-weight:700;color:var(--emerald);">Tool cost vs. recovered value</td>
+              <td style="padding:10px 8px 10px 0;text-align:right;font-weight:700;color:var(--emerald);">$49 vs. $960 → ~20:1 return</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5;">
+          * Uses 80% capacity (7 of 9 slots), $60/session avg, M–F only. Even if you never fill the recovered time slots, you're buying back 10+ hours/month for family, your nonprofit, or your digital products — for the cost of one lesson.
+        </p>
+      </div>
+    </div>
+
+    <div class="roi-box">
+      At $49/month, that's <strong>less than one swim lesson</strong> paying for a system that handles your entire intake, communication, and scheduling — <strong>so you can just teach.</strong>
+    </div>
+
+    <!-- DISCLOSURES -->
+    <div style="margin-top:24px;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px;">
+      <h3 style="font-family:'Fraunces',serif;font-size:17px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:18px;">📋</span> Things you should know
+      </h3>
+
+      <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+        <div style="font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:4px;">Payment processing is optional — and separate</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.55;">HoneyBook can collect payments from clients, but it charges 2.9% + $0.25 per card transaction (~$2 on a $60 lesson). If you'd rather keep using Venmo, Zelle, or cash for payments — which most of your clients likely prefer anyway — you skip this fee entirely. You only pay the $49/mo subscription. We'll set this up whichever way works best for you.</p>
+      </div>
+
+      <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+        <div style="font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:4px;">Free trial is 7 days — but you're covered for 67</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.55;">HoneyBook's free trial is 7 days (no credit card required). But every paid plan also includes a 60-day money-back guarantee. That means you have a full 67 days to test the system risk-free — more than enough time to run it through a real swim season ramp-up. I'll have the working model built and demoed within the 7-day trial window so you can see it working before any commitment.</p>
+      </div>
+
+      <div>
+        <div style="font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:4px;">Annual billing saves money — but you pay year-round</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.55;">The $49/mo rate requires annual billing ($588/year). Monthly billing is $59/mo and can be paused in the off-season. If you go annual, you're paying ~$245 during the Nov–Mar off-season when you're not teaching — but you can use that time for waitlist management, rebooking campaigns, and growing your digital products. We'll decide together which makes more sense once you've seen the system working.</p>
+      </div>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('research', navBtn('research'))">← Research</button>
+      <button class="ch-nav-btn" onclick="showCh('model', navBtn('model'))">Working Model →</button>
+    </div>
+  </div>
+
+  <!-- ====== CH4: WORKING MODEL ====== -->
+  <div class="chapter" id="ch-model">
+    <div class="ch-label">Chapter 4</div>
+    <div class="ch-title">I build it first. You decide after.</div>
+    <p class="ch-lead">No reports. I'll build a real, functioning prototype using HoneyBook's free trial — so you can see it working before you spend a dollar.</p>
+
+    <div class="model-banner">
+      <div class="model-banner-icon">⚡</div>
+      <div>
+        <h3>How this works</h3>
+        <p>I take your existing intake questions, your welcome email, and your qualification criteria — and wire them into a working system. Then I demo it live. You submit a fake lead, watch the automation fire, see the emails arrive. If you love it, we finish building. If you don't, you've lost nothing.</p>
+      </div>
+    </div>
+
+    <div class="ba-grid">
+      <div class="ba-card ba-before">
+        <h4>❌ Today</h4>
+        <ul>
+          <li>Google Form → Google Sheet</li>
+          <li>Manually read every submission</li>
+          <li>Decide if they're qualified</li>
+          <li>Copy-paste welcome email</li>
+          <li>Answer same safety questions</li>
+          <li>Manually schedule and remind</li>
+          <li><strong>6+ manual steps per lead</strong></li>
+        </ul>
+      </div>
+      <div class="ba-arrow">→</div>
+      <div class="ba-card ba-after">
+        <h4>✓ After</h4>
+        <ul>
+          <li>Smart form qualifies automatically</li>
+          <li>Out-of-area → auto-redirected</li>
+          <li>Qualified → welcome email fires</li>
+          <li>FAQ + policies sent automatically</li>
+          <li>Scheduling link w/ SMS reminders</li>
+          <li>Only talk to people worth your time</li>
+          <li><strong>1 step: pick up the phone</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:14px;">What I'll build in the free trial</h3>
+    <div class="build-grid">
+      <div class="build-card">
+        <div class="build-num">01</div>
+        <h3>Smart Intake Form</h3>
+        <p>Replaces Google Forms. Simple dropdowns for service area, age group, and pool type — routes leads automatically based on selections. Faster for parents than typing, zero ambiguity for the system.</p>
+        <div class="build-tags">
+          <span class="build-tag">Area dropdown</span>
+          <span class="build-tag">Age group</span>
+          <span class="build-tag">Heated pool</span>
+          <span class="build-tag">Nonprofit vs. paid</span>
+        </div>
+      </div>
+      <div class="build-card">
+        <div class="build-num">02</div>
+        <h3>Welcome Sequence</h3>
+        <p>Your copy-paste email becomes a 3-step auto sequence: welcome → FAQ → booking link.</p>
+        <div class="build-tags">
+          <span class="build-tag">Policies</span>
+          <span class="build-tag">Do's & don'ts</span>
+          <span class="build-tag">Book CTA</span>
+        </div>
+      </div>
+      <div class="build-card">
+        <div class="build-num">03</div>
+        <h3>Decline & Referral Flow</h3>
+        <p>Unqualified leads get a warm auto-response with referrals to other swim schools.</p>
+        <div class="build-tags">
+          <span class="build-tag">Out-of-area</span>
+          <span class="build-tag">Wrong age</span>
+          <span class="build-tag">Referrals</span>
+        </div>
+      </div>
+      <div class="build-card">
+        <div class="build-num">04</div>
+        <h3>Scheduling + Reminders</h3>
+        <p>Booking page with your availability. SMS + email reminders 24hr and 1hr before.</p>
+        <div class="build-tags">
+          <span class="build-tag">30-min slots</span>
+          <span class="build-tag">M-F 9–6</span>
+          <span class="build-tag">SMS + Email</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:14px;">How it looks with a real lead</h3>
+    <div class="demo-flow">
+      <div class="demo-step">
+        <div class="demo-dot-col"><div class="demo-dot d-p">1</div><div class="demo-line"></div></div>
+        <div class="demo-content">
+          <div class="demo-actor da-p">A parent on Facebook</div>
+          <h4>Asks for swim lesson recommendations</h4>
+          <p>You're tagged. You reply with your intake form link instead of your phone number.</p>
+        </div>
+      </div>
+      <div class="demo-step">
+        <div class="demo-dot-col"><div class="demo-dot d-p">2</div><div class="demo-line"></div></div>
+        <div class="demo-content">
+          <div class="demo-actor da-p">Parent fills out form</div>
+          <h4>Name, zip, child's age (18mo), heated pool (yes)</h4>
+          <p>Takes 90 seconds. You haven't lifted a finger.</p>
+        </div>
+      </div>
+      <div class="demo-step">
+        <div class="demo-dot-col"><div class="demo-dot d-s">3</div><div class="demo-line"></div></div>
+        <div class="demo-content">
+          <div class="demo-actor da-s">System — automatic</div>
+          <h4>Qualified → welcome sequence fires</h4>
+          <p>Manatee County ✓ Right age ✓ Heated pool ✓ — Policies, FAQ, and scheduling link sent instantly.</p>
+        </div>
+      </div>
+      <div class="demo-step">
+        <div class="demo-dot-col"><div class="demo-dot d-s">4</div><div class="demo-line"></div></div>
+        <div class="demo-content">
+          <div class="demo-actor da-s">System — day 2</div>
+          <h4>Water safety email arrives automatically</h4>
+          <p>No life jackets, pool prep tips, what to wear. Questions they'd call about? Already answered.</p>
+        </div>
+      </div>
+      <div class="demo-step">
+        <div class="demo-dot-col"><div class="demo-dot d-y">5</div><div class="demo-line"></div></div>
+        <div class="demo-content">
+          <div class="demo-actor da-y">You — when you're ready</div>
+          <h4>Call a qualified, informed lead</h4>
+          <p>They know your policies, read the FAQ, have a heated pool in your area. 3-minute call, not 15.</p>
+        </div>
+      </div>
+      <div class="demo-step">
+        <div class="demo-dot-col"><div class="demo-dot d-s">6</div></div>
+        <div class="demo-content">
+          <div class="demo-actor da-s">System — after booking</div>
+          <h4>SMS + email reminders go out automatically</h4>
+          <p>24 hours and 1 hour before. No more no-shows.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('rec', navBtn('rec'))">← Recommendation</button>
+      <button class="ch-nav-btn" onclick="showCh('next', navBtn('next'))">Next Steps →</button>
+    </div>
+  </div>
+
+  <!-- ====== CH5: NEXT STEPS ====== -->
+  <div class="chapter" id="ch-next">
+    <div class="ch-label">Chapter 5</div>
+    <div class="ch-title">Three things I need from you</div>
+    <p class="ch-lead">I'll handle everything else. These are quick — you already have most of them.</p>
+
+    <div class="next-grid">
+      <div class="next-card">
+        <div class="next-num">1</div>
+        <h3>Your welcome email</h3>
+        <p>The document you currently copy-paste to new clients. I'll turn it into the automated sequence.</p>
+        <div class="next-hint">You said you already have this written</div>
+      </div>
+      <div class="next-card">
+        <div class="next-num">2</div>
+        <h3>Your Google Sheet</h3>
+        <p>Intake form responses. I want to see what you're collecting and identify any gaps.</p>
+        <div class="next-hint">Share it or download a copy</div>
+      </div>
+      <div class="next-card">
+        <div class="next-num">3</div>
+        <h3>Your referral list</h3>
+        <p>Swim schools you send people to when they're not a fit. I'll build them into the auto-decline.</p>
+        <div class="next-hint">Even 2–3 names is enough</div>
+      </div>
+    </div>
+
+    <div class="timeline-bar">
+      <div class="tl-item"><h4>This Week</h4><p>You send me the three items above</p></div>
+      <div class="tl-item"><h4>Next Week</h4><p>I build the working model on the free trial</p></div>
+      <div class="tl-item"><h4>Week After</h4><p>Live demo — test it with a fake lead</p></div>
+      <div class="tl-item"><h4>Before Season</h4><p>Final build, go live with real leads</p></div>
+    </div>
+
+    <div class="closing-box">
+      <p class="cq">"The only people who reach you will be the ones you actually want to teach — and they'll already know everything they need to know before you pick up the phone."</p>
+      <p class="cn">No reports. No slide decks. A working system you can test with your next real lead.</p>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('model', navBtn('model'))">← Working Model</button>
+      <div class="ch-nav-spacer"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Garry Fenimore · Systems Consulting · April 2026</div>
+
+<script>
+function showCh(id, btn) {
+  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+  document.getElementById('ch-' + id).classList.add('active');
+  document.querySelectorAll('.topbar-nav button').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: document.querySelector('.intro').offsetTop + document.querySelector('.intro').offsetHeight - 10, behavior: 'smooth' });
+}
+
+function navBtn(id) {
+  const map = { heard: 0, research: 1, rec: 2, model: 3, next: 4 };
+  return document.querySelectorAll('.topbar-nav button')[map[id]];
+}
+
+function showSub(id, btn) {
+  document.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sp-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>

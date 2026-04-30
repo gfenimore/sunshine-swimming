@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Preview — Ready to Book?</title>
+<style>
+body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #f1f5f9; margin: 0; padding: 24px; }
+.meta { max-width: 600px; margin: 0 auto 12px; font-size: 11px; color: #94a3b8; }
+.meta strong { color: #64748b; }
+.email-frame {
+  max-width: 600px; margin: 0 auto; background: #fff;
+  border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;
+}
+.email-header {
+  background: linear-gradient(135deg, #0c4a6e, #0369a1);
+  padding: 28px 32px; text-align: center; color: #fff;
+}
+.email-header h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+.email-header p { font-size: 13px; opacity: 0.8; margin: 0; }
+.email-body { padding: 28px 32px; font-size: 15px; color: #334155; line-height: 1.7; }
+.email-body p { margin-bottom: 14px; }
+.email-footer {
+  background: #f8fafc; border-top: 1px solid #e2e8f0;
+  padding: 16px 32px; text-align: center; font-size: 12px; color: #94a3b8;
+}
+.tvar { background: #fef3c7; padding: 1px 4px; border-radius: 3px; font-family: monospace; font-size: 13px; color: #92400e; }
+</style>
+</head>
+<body>
+
+<div class="meta">
+  <strong>Template #3:</strong> Ready to Book? · <strong>Trigger:</strong> 2 days after welcome · <strong>Subject:</strong> Ready to get {{swimmer_name}} in the water? 🌊
+</div>
+
+<div class="email-frame">
+  <div class="email-header">
+    <h1>Sunshine Swimming</h1>
+    <p>Let's get on the calendar! 📅</p>
+  </div>
+  <div class="email-body">
+    <p>Hi <span class="tvar">{{client_first_name}}</span>!</p>
+
+    <p>Just checking in — I'd love to get <span class="tvar">{{swimmer_name}}</span> on the calendar! My schedule fills up fast, especially from April through the summer.</p>
+
+    <p>If we haven't connected yet, the easiest way is to reply to this email or text me directly. I'll find a day and time that works for your family.</p>
+
+    <p>Talk soon!</p>
+
+    <p>— Amanda</p>
+  </div>
+  <div class="email-footer">
+    Sunshine Swimming · Manatee County, FL · sunshineswimming.com
+  </div>
+</div>
+
+</body>
+</html>

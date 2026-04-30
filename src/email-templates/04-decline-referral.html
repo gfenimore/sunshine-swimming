@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Preview — Polite Decline with Referrals</title>
+<style>
+body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #f1f5f9; margin: 0; padding: 24px; }
+.meta { max-width: 600px; margin: 0 auto 12px; font-size: 11px; color: #94a3b8; }
+.meta strong { color: #64748b; }
+.email-frame {
+  max-width: 600px; margin: 0 auto; background: #fff;
+  border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;
+}
+.email-header {
+  background: linear-gradient(135deg, #0c4a6e, #0369a1);
+  padding: 28px 32px; text-align: center; color: #fff;
+}
+.email-header h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+.email-header p { font-size: 13px; opacity: 0.8; margin: 0; }
+.email-body { padding: 28px 32px; font-size: 15px; color: #334155; line-height: 1.7; }
+.email-body p { margin-bottom: 14px; }
+.email-footer {
+  background: #f8fafc; border-top: 1px solid #e2e8f0;
+  padding: 16px 32px; text-align: center; font-size: 12px; color: #94a3b8;
+}
+.tvar { background: #fef3c7; padding: 1px 4px; border-radius: 3px; font-family: monospace; font-size: 13px; color: #92400e; }
+.placeholder { background: #fee2e2; padding: 1px 4px; border-radius: 3px; font-family: monospace; font-size: 13px; color: #991b1b; }
+</style>
+</head>
+<body>
+
+<div class="meta">
+  <strong>Template #4:</strong> Polite Decline · <strong>Trigger:</strong> Manual (tag "declined" added) · <strong>Subject:</strong> Thanks for reaching out! A few swim school recommendations for your area
+</div>
+
+<div class="email-frame">
+  <div class="email-header">
+    <h1>Sunshine Swimming</h1>
+    <p>We appreciate your interest! 💙</p>
+  </div>
+  <div class="email-body">
+    <p>Hi <span class="tvar">{{client_first_name}}</span>!</p>
+
+    <p>Thank you so much for your interest in Sunshine Swimming! Unfortunately, your location is outside my current service area, so I'm not able to take on lessons at this time.</p>
+
+    <p>But I don't want to leave you without options! Here are a few swim schools I'd recommend in your area:</p>
+
+    <p>
+      <strong><span class="placeholder">[Swim School A]</span></strong> — <span class="placeholder">[phone/website]</span><br>
+      <strong><span class="placeholder">[Swim School B]</span></strong> — <span class="placeholder">[phone/website]</span><br>
+      <strong><span class="placeholder">[Swim School C]</span></strong> — <span class="placeholder">[phone/website]</span>
+    </p>
+
+    <p>I hope you find a great fit for <span class="tvar">{{swimmer_name}}</span>! Water safety is so important, and I'm glad you're making it a priority. 💙</p>
+
+    <p>— Amanda<br>Sunshine Swimming</p>
+  </div>
+  <div class="email-footer">
+    Sunshine Swimming · Manatee County, FL · sunshineswimming.com
+    <br><span style="color:#e11d48; font-weight:600;">⚠ PLACEHOLDER: Amanda needs to provide referral swim school names</span>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Preview — Welcome & Policies</title>
+<style>
+body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #f1f5f9; margin: 0; padding: 24px; }
+.meta { max-width: 600px; margin: 0 auto 12px; font-size: 11px; color: #94a3b8; }
+.meta strong { color: #64748b; }
+.email-frame {
+  max-width: 600px; margin: 0 auto; background: #fff;
+  border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;
+}
+.email-header {
+  background: linear-gradient(135deg, #0c4a6e, #0369a1);
+  padding: 28px 32px; text-align: center; color: #fff;
+}
+.email-header h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+.email-header p { font-size: 13px; opacity: 0.8; margin: 0; }
+.email-body { padding: 28px 32px; font-size: 15px; color: #334155; line-height: 1.7; }
+.email-body p { margin-bottom: 14px; }
+.email-body h3 { font-size: 16px; color: #0f172a; margin: 20px 0 8px; }
+.email-body .emoji-h { font-size: 18px; margin-right: 4px; }
+.email-footer {
+  background: #f8fafc; border-top: 1px solid #e2e8f0;
+  padding: 16px 32px; text-align: center; font-size: 12px; color: #94a3b8;
+}
+/* Template variables shown in highlight */
+.tvar { background: #fef3c7; padding: 1px 4px; border-radius: 3px; font-family: monospace; font-size: 13px; color: #92400e; }
+</style>
+</head>
+<body>
+
+<div class="meta">
+  <strong>Template #1:</strong> Welcome & Policies · <strong>Trigger:</strong> Immediate on qualified lead · <strong>Subject:</strong> Welcome to Sunshine Swimming! Here's everything you need to know 🏊‍♀️
+</div>
+
+<div class="email-frame">
+  <div class="email-header">
+    <h1>Sunshine Swimming</h1>
+    <p>Welcome to the family! 🌊</p>
+  </div>
+  <div class="email-body">
+    <p>Hi <span class="tvar">{{client_first_name}}</span>!</p>
+
+    <p>Thank you so much for reaching out about swim lessons for <span class="tvar">{{swimmer_name}}</span>! I'm excited to work with your family.</p>
+
+    <p>Before we get started, here are a few things to know:</p>
+
+    <h3><span class="emoji-h">📋</span> How Lessons Work</h3>
+    <p>Each lesson is 30 minutes, one-on-one with your child in your pool (or the location you listed). I come to you — no need to drive anywhere! Sessions are typically once or twice per week, and most swimmers see real progress in 4–6 lessons.</p>
+
+    <h3><span class="emoji-h">💰</span> Pricing & Payment</h3>
+    <p>Lessons are <span class="tvar">{{session_price}}</span> per 30-minute session. I don't require packages — you book as you go, and there's never pressure to commit to a set number. If it's not working out, no hard feelings!</p>
+
+    <h3><span class="emoji-h">🌧️</span> Rain Policy</h3>
+    <p>Florida weather! If it's raining at lesson time, we reschedule — no charge. I'll text you if we need to call it. I do makeup sessions once or twice a month on weekends if needed.</p>
+
+    <h3><span class="emoji-h">📍</span> My Service Area</h3>
+    <p>I serve Bradenton, Lakewood Ranch, Palmetto, Parrish, Ellenton, and Terra Ceia. I keep my route tight so I can give each family my full energy and not spend the day driving!</p>
+
+    <h3><span class="emoji-h">🏊</span> Pool Requirements</h3>
+    <p>Your pool should be heated to at least 85°F for little ones — cold water makes it hard to learn and isn't safe for infants and toddlers. If you're using a neighborhood or clubhouse pool, just make sure I'll have access.</p>
+
+    <p>I'll give you a call in the next day or two to chat and get you on the calendar. In the meantime, keep an eye out for another email from me tomorrow with some important water safety tips!</p>
+
+    <p>Looking forward to meeting <span class="tvar">{{swimmer_name}}</span>! 💙</p>
+
+    <p>— Amanda<br>Sunshine Swimming</p>
+  </div>
+  <div class="email-footer">
+    Sunshine Swimming · Manatee County, FL · sunshineswimming.com
+  </div>
+</div>
+
+</body>
+</html>

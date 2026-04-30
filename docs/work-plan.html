@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunshine Swimming — Implementation Work Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ocean-deep: #0c4a6e;
+  --ocean: #0369a1;
+  --ocean-mid: #0284c7;
+  --ocean-light: #e0f2fe;
+  --ocean-glow: #bae6fd;
+  --ink: #0f172a;
+  --text: #334155;
+  --muted: #64748b;
+  --faint: #94a3b8;
+  --white: #ffffff;
+  --paper: #f8fafc;
+  --border: #e2e8f0;
+  --emerald: #059669;
+  --emerald-light: #ecfdf5;
+  --amber: #d97706;
+  --amber-light: #fffbeb;
+  --coral: #e11d48;
+  --coral-light: #fff1f2;
+  --violet: #7c3aed;
+  --violet-light: #f5f3ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOP BAR */
+.topbar {
+  background: var(--ocean-deep);
+  color: var(--white);
+  padding: 14px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+.topbar-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.topbar-brand {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 700;
+}
+.topbar-brand span { font-weight: 400; color: var(--ocean-glow); font-style: italic; }
+.topbar-nav {
+  display: flex;
+  gap: 2px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 7px;
+  padding: 3px;
+  flex-wrap: wrap;
+}
+.topbar-nav button {
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: 'Outfit', sans-serif;
+}
+.topbar-nav button:hover { color: rgba(255,255,255,0.85); }
+.topbar-nav button.active { background: rgba(255,255,255,0.15); color: var(--white); }
+
+.main { max-width: 960px; margin: 0 auto; padding: 0 32px; }
+
+/* INTRO */
+.intro { padding: 28px 0 20px; border-bottom: 1px solid var(--border); }
+.intro h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.intro p { font-size: 14px; color: var(--muted); max-width: 640px; }
+.intro-meta {
+  margin-top: 10px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.intro-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 14px;
+  background: var(--ocean-light);
+  color: var(--ocean);
+}
+
+/* CHAPTERS */
+.chapter { display: none; padding: 28px 0 40px; animation: fadeIn 0.25s ease; }
+.chapter.active { display: block; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.ch-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ocean-mid);
+  margin-bottom: 6px;
+}
+.ch-title {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.ch-lead { font-size: 14px; color: var(--muted); max-width: 560px; margin-bottom: 24px; }
+
+/* CARDS */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px;
+  margin-bottom: 14px;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--ocean-mid); }
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.card-num {
+  width: 30px;
+  height: 30px;
+  background: var(--ocean);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.card-header-text h3 { font-size: 15px; font-weight: 700; }
+.card-header-text .card-time { font-size: 11px; color: var(--muted); font-weight: 600; }
+.card p, .card li { font-size: 13px; color: var(--text); line-height: 1.55; }
+.card ul { margin-left: 16px; margin-top: 4px; }
+.card li { margin-bottom: 3px; }
+
+/* CODE BLOCKS */
+.config-block {
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--text);
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+/* ALERT BOXES */
+.alert {
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.alert-amber { background: var(--amber-light); border-left: 3px solid var(--amber); color: #92400e; }
+.alert-coral { background: var(--coral-light); border-left: 3px solid var(--coral); color: #9f1239; }
+.alert-emerald { background: var(--emerald-light); border-left: 3px solid var(--emerald); color: #065f46; }
+.alert-violet { background: var(--violet-light); border-left: 3px solid var(--violet); color: #5b21b6; }
+.alert-ocean { background: var(--ocean-light); border-left: 3px solid var(--ocean); color: var(--ocean-deep); }
+.alert strong { font-weight: 700; }
+
+/* DECISION TABLE */
+.decision-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  margin-top: 10px;
+}
+.decision-table th {
+  padding: 8px 10px;
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  border-bottom: 2px solid var(--border);
+  background: #f8f9fa;
+  text-align: left;
+}
+.decision-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f1f3f5;
+  vertical-align: top;
+}
+.decision-table tr:last-child td { border-bottom: none; }
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.tag-green { background: var(--emerald-light); color: var(--emerald); }
+.tag-amber { background: var(--amber-light); color: var(--amber); }
+.tag-coral { background: var(--coral-light); color: var(--coral); }
+.tag-violet { background: var(--violet-light); color: var(--violet); }
+
+/* CHECKLIST */
+.checklist { list-style: none; margin-top: 8px; }
+.checklist li {
+  font-size: 13px;
+  padding: 5px 0 5px 26px;
+  position: relative;
+  border-bottom: 1px solid #f1f3f5;
+  color: var(--text);
+}
+.checklist li:last-child { border: none; }
+.checklist li::before {
+  content: "☐";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* FLOW DIAGRAM */
+.flow-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.flow-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+.flow-trigger { background: var(--ocean-light); color: var(--ocean); }
+.flow-action { background: var(--emerald-light); color: var(--emerald); }
+.flow-condition { background: var(--amber-light); color: var(--amber); }
+.flow-text { font-size: 12.5px; }
+.flow-text strong { color: var(--ink); }
+.flow-text span { color: var(--muted); }
+
+/* NAV */
+.ch-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.ch-nav-btn {
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text);
+  transition: all 0.2s;
+  font-family: 'Outfit', sans-serif;
+}
+.ch-nav-btn:hover { border-color: var(--ocean-mid); color: var(--ocean-mid); }
+.ch-nav-spacer { flex:1; }
+
+.footer { text-align:center; padding:20px 0 28px; font-size:11px; color:#94a3b8; }
+
+@media (max-width:768px) {
+  .main { padding: 0 16px; }
+  .topbar { padding: 10px 16px; }
+  .topbar-inner { flex-direction: column; gap: 8px; }
+  .topbar-nav { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">Sunshine Swimming <span>· Work Plan</span></div>
+    <nav class="topbar-nav" id="mainNav">
+      <button class="active" onclick="showCh('overview',this)">Overview</button>
+      <button onclick="showCh('import',this)">1. Import</button>
+      <button onclick="showCh('zapier',this)">2. Form → HB</button>
+      <button onclick="showCh('comms',this)">3. Comms</button>
+      <button onclick="showCh('gaps',this)">4. Gaps</button>
+      <button onclick="showCh('timeline',this)">5. Timeline</button>
+    </nav>
+  </div>
+</div>
+
+<div class="main">
+  <div class="intro">
+    <h1>Implementation Work Plan</h1>
+    <p>Everything needed to go from "working prototype" to "live system on Amanda's account." Internal use — tracks the remaining build work after the custom intake form is complete.</p>
+    <div class="intro-meta">
+      <span class="intro-tag">Custom Form ✓ Built</span>
+      <span class="intro-tag">HB Account → Pending</span>
+      <span class="intro-tag">Est. 6–8 hours remaining</span>
+    </div>
+  </div>
+
+  <!-- ========== OVERVIEW ========== -->
+  <div class="chapter active" id="ch-overview">
+    <div class="ch-label">Work Plan</div>
+    <div class="ch-title">Where We Stand</div>
+    <p class="ch-lead">What's done, what's left, and what we didn't know we needed until now.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num" style="background:var(--emerald);">✓</div>
+        <div class="card-header-text">
+          <h3>Completed</h3>
+        </div>
+      </div>
+      <ul>
+        <li><strong>Client-facing proposal</strong> — <code>amanda-systems-plan.html</code> — delivered, reviewed</li>
+        <li><strong>Internal build plan</strong> — <code>sunshine-swimming-build-plan.html</code> — 7 chapters, all field specs, email templates, demo script</li>
+        <li><strong>Custom intake form</strong> — <code>sunshine-intake.html</code> — mobile-first, multi-step, routing logic, webhook-ready</li>
+        <li><strong>Architecture decision</strong> — Custom form + Zapier (single webhook) + HoneyBook Essentials</li>
+        <li><strong>HoneyBook evaluated</strong> — pricing confirmed at $49/mo annual ($59/mo monthly), Essentials tier</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num" style="background:var(--amber);">!</div>
+        <div class="card-header-text">
+          <h3>Remaining Work — 5 Workstreams</h3>
+        </div>
+      </div>
+      <table class="decision-table">
+        <thead>
+          <tr>
+            <th>Workstream</th>
+            <th>Effort</th>
+            <th>Depends On</th>
+            <th>Risk</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Client import</strong> — scrub + import Amanda's 112 existing clients</td>
+            <td>1–2 hrs</td>
+            <td>Amanda's HB account</td>
+            <td><span class="tag tag-green">Low</span></td>
+          </tr>
+          <tr>
+            <td><strong>2. Form → HB linkage</strong> — Zapier webhook + project creation</td>
+            <td>1–2 hrs</td>
+            <td>Amanda's HB account + Zapier acct</td>
+            <td><span class="tag tag-amber">Medium</span></td>
+          </tr>
+          <tr>
+            <td><strong>3. Comms evaluation</strong> — SMS capabilities, texting workflow</td>
+            <td>1 hr</td>
+            <td>Research (done below)</td>
+            <td><span class="tag tag-amber">Medium</span></td>
+          </tr>
+          <tr>
+            <td><strong>4. Gaps & missing pieces</strong> — hosting, email templates, scheduling, pricing update</td>
+            <td>2–3 hrs</td>
+            <td>Various</td>
+            <td><span class="tag tag-amber">Medium</span></td>
+          </tr>
+          <tr>
+            <td><strong>5. Demo prep & go-live</strong> — end-to-end test, rehearse, deliver</td>
+            <td>1 hr</td>
+            <td>All above</td>
+            <td><span class="tag tag-green">Low</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ch-nav">
+      <div class="ch-nav-spacer"></div>
+      <button class="ch-nav-btn" onclick="showCh('import',navBtn('import'))">1. Import →</button>
+    </div>
+  </div>
+
+  <!-- ========== 1. CLIENT IMPORT ========== -->
+  <div class="chapter" id="ch-import">
+    <div class="ch-label">Workstream 1</div>
+    <div class="ch-title">Client List Import</div>
+    <p class="ch-lead">Get Amanda's 112 existing clients into HoneyBook so the CRM isn't empty on day one.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">1</div>
+        <div class="card-header-text">
+          <h3>Data Scrub — Prepare the CSV</h3>
+          <div class="card-time">45 minutes</div>
+        </div>
+      </div>
+      <p>Amanda's Google Sheet (<code>Swimmer_Questionnaire___Sunshine_Swimming_Responses.xlsx</code>) has 112 rows, 19 columns. HoneyBook's CSV import accepts: <strong>name, email, phone, address, notes</strong>. All other swimmer-specific data goes into the notes field as structured text.</p>
+
+      <div class="config-block"><strong>Source columns → HoneyBook mapping</strong>
+
+Parent/Guardian Name(s)    → Contact Name (REQUIRED)
+Email                      → Email (REQUIRED — min for import)
+Phone Number               → Phone
+Home Address               → Address
+Lesson location            → Notes (append)
+Swimmer Name               → Notes (append)
+Birthday                   → Notes (append)
+Comfort level              → Notes (append)
+Medical conditions         → Notes (append)
+Prior injuries             → Notes (append)
+Additional swimmers        → Notes (append)
+Preferred days/times       → Notes (append)
+How did you hear           → Notes (append)
+Anything else              → Notes (append)
+
+<strong>DROP:</strong> Column "x" (timestamp), "Column 19" (empty)</div>
+
+      <div class="alert alert-amber">
+        <strong>⚠️ LOTR names → real names:</strong> The test data uses LOTR character names. For the production import, use Amanda's real client data. For the demo prototype, keep LOTR names — they make it obvious this is test data and prevent any accidental exposure of real client info.
+      </div>
+
+      <div class="alert alert-ocean">
+        <strong>📋 Data quality issues found in the spreadsheet:</strong>
+        <br>• Phone numbers inconsistently formatted (some have dots, some have dashes, some are raw numbers)
+        <br>• Some addresses missing city/zip
+        <br>• Duplicate entries for siblings (e.g., "noah & navy clerfond" in one row)
+        <br>• Mix of "NaN" and blank for empty fields
+        <br>• "Kind Of" vs "A little" for previous lessons field
+        <br>Clean these before import. A Python script can handle bulk formatting.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">2</div>
+        <div class="card-header-text">
+          <h3>Build the Import Script</h3>
+          <div class="card-time">30 minutes</div>
+        </div>
+      </div>
+      <p>Write a Python script that reads the xlsx, cleans the data, and outputs a HoneyBook-ready CSV. The script should:</p>
+      <ul>
+        <li>Normalize phone numbers to <code>(XXX) XXX-XXXX</code> format</li>
+        <li>Combine swimmer details into a structured notes block per contact</li>
+        <li>Handle the duplicate/sibling rows (merge or flag)</li>
+        <li>Replace NaN/None with empty strings</li>
+        <li>Output: <code>honeybook-import.csv</code> with columns: <code>name, email, phone, address, notes</code></li>
+      </ul>
+      <div class="alert alert-emerald">
+        <strong>✅ HB import requirements (confirmed):</strong>
+        <br>• File must be .CSV
+        <br>• At minimum, an email must be included for each contact
+        <br>• Column headers can be mapped during upload (HB provides a mapping UI)
+        <br>• Duplicates are detected by email — existing contacts get an "updated" icon
+        <br>• Failed imports generate a downloadable error report
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">3</div>
+        <div class="card-header-text">
+          <h3>Import into HoneyBook</h3>
+          <div class="card-time">15 minutes</div>
+        </div>
+      </div>
+      <p>Two import paths available — choose based on whether you want projects created automatically:</p>
+      <table class="decision-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Where</th>
+            <th>Creates Projects?</th>
+            <th>Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Contacts import</strong></td>
+            <td>Clients → Contacts → Import</td>
+            <td>No — contacts only</td>
+            <td>Building a contact list without cluttering the pipeline</td>
+          </tr>
+          <tr>
+            <td><strong>Pipeline import</strong></td>
+            <td>Pipeline → Import</td>
+            <td>Yes — one project per contact</td>
+            <td>Loading active/returning clients who need projects</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-amber">
+        <strong>Recommendation:</strong> Use <strong>Contacts import</strong> for the initial bulk load. These are existing/past clients — they don't need new pipeline projects. New inquiries from the custom form will create projects via Zapier. Don't pollute the pipeline with 112 historical records.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">4</div>
+        <div class="card-header-text">
+          <h3>Post-Import: Tag & Segment</h3>
+          <div class="card-time">15 minutes</div>
+        </div>
+      </div>
+      <p>After import, apply tags to segment the contact list:</p>
+      <div class="config-block">Tag: "returning-client"     → All 112 imported contacts
+Tag: "2025-season"          → Clients from 2025 season
+Tag: "infant-toddler"       → Age range: Under 6mo, 6mo–2yrs, 2–4yrs
+Tag: "school-age"           → Age range: 5–7yrs, 8+
+Tag: "adult"                → Age range: Adult</div>
+      <p style="margin-top:8px;">Tags enable Amanda to run targeted re-engagement campaigns when the season opens — e.g., "Email all returning-client contacts with a 'Welcome back!' message."</p>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('overview',navBtn('overview'))">← Overview</button>
+      <button class="ch-nav-btn" onclick="showCh('zapier',navBtn('zapier'))">2. Form → HB →</button>
+    </div>
+  </div>
+
+  <!-- ========== 2. FORM → HB LINKAGE ========== -->
+  <div class="chapter" id="ch-zapier">
+    <div class="ch-label">Workstream 2</div>
+    <div class="ch-title">Form → HoneyBook Linkage</div>
+    <p class="ch-lead">Wire the custom intake form to HoneyBook via Zapier. One zap, one direction, only qualified leads.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">1</div>
+        <div class="card-header-text">
+          <h3>Architecture Recap</h3>
+        </div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-icon flow-trigger">1</div>
+        <div class="flow-text"><strong>Custom form</strong> <span>→ Client-side routing (JS). Unqualified leads get declined inline. Never reach Zapier.</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-icon flow-action">2</div>
+        <div class="flow-text"><strong>Qualified lead</strong> <span>→ Form POSTs JSON to Zapier webhook URL</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-icon flow-condition">3</div>
+        <div class="flow-text"><strong>Zapier</strong> <span>→ Catches webhook → Creates new client in HoneyBook</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-icon flow-action">4</div>
+        <div class="flow-text"><strong>HoneyBook</strong> <span>→ New client triggers automation → Welcome email sequence fires</span></div>
+      </div>
+
+      <div class="alert alert-coral">
+        <strong>🚨 Critical limitation discovered:</strong> HoneyBook's Zapier integration has <strong>no "Create Project" action</strong>. The only available action is <strong>"Create Client"</strong>. This means Zapier can create a contact, but NOT a pipeline project. To get a project created, you need a second step: either use HoneyBook's automation to auto-create a project when a new client is added, or have Amanda manually create the project from the new contact.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">2</div>
+        <div class="card-header-text">
+          <h3>Zapier Setup — Step by Step</h3>
+          <div class="card-time">30 minutes</div>
+        </div>
+      </div>
+
+      <p><strong>Prerequisite:</strong> Amanda needs a Zapier account (free tier: 100 tasks/month — more than enough for her volume).</p>
+
+      <div class="config-block"><strong>Zap #1: Qualified Lead → HoneyBook Client</strong>
+
+TRIGGER:
+  App: Webhooks by Zapier
+  Event: Catch Hook
+  → Generates a unique webhook URL
+  → Paste this URL into sunshine-intake.html as ZAPIER_WEBHOOK_URL
+
+ACTION:
+  App: HoneyBook
+  Event: Create Client
+  Field mapping:
+    Client Name     ← parent_name
+    Email           ← email
+    Phone           ← phone
+    Address         ← address
+    Notes           ← (build from all form fields — see template below)
+
+  <strong>Notes field template:</strong>
+  "QUALIFIED LEAD — {{submitted_at}}
+  Swimmer: {{swimmer_name}} ({{swimmer_age}})
+  Comfort level: {{comfort_level}}
+  Previous lessons: {{previous_lessons}}
+  Pool heated: {{pool_heated}}
+  Location: {{location}}
+  Lesson location: {{lesson_location}}
+  Medical: {{medical}}
+  Injuries: {{injuries}}
+  Additional swimmers: {{additional_swimmers}}
+  Preferred times: {{preferred_times}}
+  Referral source: {{referral_source}}
+  Other notes: {{anything_else}}"</div>
+
+      <div class="config-block"><strong>Zap #2: Nonprofit Inquiry → HoneyBook Client (separate zap or filter)</strong>
+
+Same webhook URL — use Zapier's Filter step:
+  Only continue if: lead_type = "nonprofit"
+
+ACTION:
+  App: HoneyBook
+  Event: Create Client
+  Notes field prefix: "NONPROFIT INQUIRY — {{submitted_at}}"</div>
+
+      <div class="alert alert-amber">
+        <strong>⚠️ Alternative approach — single zap with Paths:</strong> Instead of two zaps, use Zapier Paths (requires Starter plan, $20/mo) to branch: if <code>lead_type = "qualified"</code> → path A, if <code>lead_type = "nonprofit"</code> → path B. Same webhook, different note formatting. Saves a zap slot on the free tier.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">3</div>
+        <div class="card-header-text">
+          <h3>HoneyBook Automation — Triggered by New Client</h3>
+          <div class="card-time">30 minutes</div>
+        </div>
+      </div>
+      <p>After Zapier creates the client, HoneyBook's native automation handles everything else:</p>
+
+      <div class="flow-node">
+        <div class="flow-icon flow-trigger">⚡</div>
+        <div class="flow-text"><strong>Trigger:</strong> <span>New client created</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-icon flow-action">→</div>
+        <div class="flow-text"><strong>Action 1:</strong> <span>Create project (auto-assign to "30-Min Swim Lesson" type)</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-icon flow-action">✉</div>
+        <div class="flow-text"><strong>Action 2:</strong> <span>Send Welcome Email (Template #1)</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-icon flow-condition">⏳</div>
+        <div class="flow-text"><strong>Wait:</strong> <span>1 day</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-icon flow-action">✉</div>
+        <div class="flow-text"><strong>Action 3:</strong> <span>Send Water Safety Email (Template #2)</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-icon flow-condition">⏳</div>
+        <div class="flow-text"><strong>Wait:</strong> <span>1 day</span></div>
+      </div>
+      <div class="flow-node">
+        <div class="flow-icon flow-action">✉</div>
+        <div class="flow-text"><strong>Action 4:</strong> <span>Send "Ready to Book?" Email (Template #3)</span></div>
+      </div>
+
+      <div class="alert alert-emerald">
+        <strong>✅ Key insight:</strong> By triggering on "new client created" instead of "form submitted," we decouple the automation from any specific form. This means the welcome sequence fires whether the lead comes from the custom form (via Zapier), a Google contact import, or manual entry. Future-proof.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">4</div>
+        <div class="card-header-text">
+          <h3>Connect the HoneyBook API Key to Zapier</h3>
+          <div class="card-time">5 minutes</div>
+        </div>
+      </div>
+      <ul>
+        <li>In HoneyBook: Tools → Integrations → scroll to Zapier → Copy API Key</li>
+        <li>In Zapier: When prompted to connect HoneyBook, paste the API key</li>
+        <li>The key is account-specific — don't share it</li>
+        <li><strong>Custom fields in HoneyBook are NOT supported with Zapier</strong> — all swimmer data goes into the Notes field as structured text</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">5</div>
+        <div class="card-header-text">
+          <h3>Form Hosting — Where Does the HTML Live?</h3>
+          <div class="card-time">15 minutes</div>
+        </div>
+      </div>
+      <p>The custom form is a single HTML file. Hosting options:</p>
+      <table class="decision-table">
+        <thead>
+          <tr>
+            <th>Option</th>
+            <th>Cost</th>
+            <th>Pros</th>
+            <th>Cons</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>GitHub Pages</strong></td>
+            <td>Free</td>
+            <td>Version control, reliable, custom domain</td>
+            <td>Requires GitHub account</td>
+          </tr>
+          <tr>
+            <td><strong>Netlify</strong></td>
+            <td>Free</td>
+            <td>Drag-and-drop deploy, form handling, custom domain</td>
+            <td>Slight learning curve</td>
+          </tr>
+          <tr>
+            <td><strong>Amanda's WordPress</strong></td>
+            <td>Already paying</td>
+            <td>Same domain (sunshineswimming.com/inquiry), consistent branding</td>
+            <td>Needs wp custom HTML page or plugin</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-ocean">
+        <strong>Recommendation:</strong> Host on Amanda's existing WordPress site at <code>sunshineswimming.com/inquiry</code>. She already has hosting. Create a custom page template with the form HTML embedded. This keeps everything under one domain and one brand. Fallback: Netlify with a custom subdomain like <code>inquiry.sunshineswimming.com</code>.
+      </div>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('import',navBtn('import'))">← 1. Import</button>
+      <button class="ch-nav-btn" onclick="showCh('comms',navBtn('comms'))">3. Comms →</button>
+    </div>
+  </div>
+
+  <!-- ========== 3. COMMS EVALUATION ========== -->
+  <div class="chapter" id="ch-comms">
+    <div class="ch-label">Workstream 3</div>
+    <div class="ch-title">Communications & Texting</div>
+    <p class="ch-lead">Amanda texts her clients constantly. What can HoneyBook actually do — and what can't it?</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">1</div>
+        <div class="card-header-text">
+          <h3>HoneyBook SMS — What It Actually Does</h3>
+        </div>
+      </div>
+      <p>After thorough research, here's the reality of HoneyBook's SMS capabilities:</p>
+      <table class="decision-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Available?</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Session reminders via SMS</td>
+            <td><span class="tag tag-green">Yes</span></td>
+            <td>Auto-sends 24hr and 1hr before sessions. Configurable in Scheduler settings.</td>
+          </tr>
+          <tr>
+            <td>Payment reminders via SMS</td>
+            <td><span class="tag tag-green">Yes</span></td>
+            <td>Auto-sends when invoices are due or overdue.</td>
+          </tr>
+          <tr>
+            <td>Clients can reply to SMS</td>
+            <td><span class="tag tag-coral">No</span></td>
+            <td><strong>Clients CANNOT reply to HoneyBook SMS.</strong> They get an error message telling them to email the business. Sent from an unattended number.</td>
+          </tr>
+          <tr>
+            <td>Custom/ad-hoc text messages</td>
+            <td><span class="tag tag-coral">No</span></td>
+            <td>No way to send arbitrary texts to clients from within HoneyBook.</td>
+          </tr>
+          <tr>
+            <td>Two-way text conversation</td>
+            <td><span class="tag tag-coral">No</span></td>
+            <td>Not available at all. HoneyBook SMS is one-way, automated reminders only.</td>
+          </tr>
+          <tr>
+            <td>Weekend/holiday sends</td>
+            <td><span class="tag tag-amber">Partial</span></td>
+            <td>Some SMS reminders won't send on weekends/holidays — delayed to next business day. Session reminders still go out.</td>
+          </tr>
+          <tr>
+            <td>Client opt-in required</td>
+            <td><span class="tag tag-green">Yes</span></td>
+            <td>Clients must opt in when filling out forms/scheduling. Required by telecom regulations.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">2</div>
+        <div class="card-header-text">
+          <h3>The Texting Gap — Amanda's Real Workflow</h3>
+        </div>
+      </div>
+      <p>Amanda's current communication pattern (from our discovery call):</p>
+      <ul>
+        <li><strong>Rain cancellations</strong> → texts clients directly from her phone ("It's raining, we'll reschedule")</li>
+        <li><strong>Running late</strong> → texts "On my way, be there in 10!"</li>
+        <li><strong>Schedule changes</strong> → texts to confirm/move lesson times</li>
+        <li><strong>Quick check-ins</strong> → "How did Sammy do in the bath this week?"</li>
+        <li><strong>Initial contact</strong> → calls new leads after reviewing their form submission</li>
+      </ul>
+
+      <div class="alert alert-coral">
+        <strong>🚨 HoneyBook does NOT replace Amanda's personal texting.</strong> Its SMS is limited to automated session/payment reminders from an unattended number. All of Amanda's real-time, conversational texting stays on her personal phone. This is actually fine — her personal touch IS her brand. But we need to set expectations clearly: HoneyBook automates the <em>reminders</em> so she doesn't have to remember. It doesn't replace her phone.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">3</div>
+        <div class="card-header-text">
+          <h3>Options If She Wants More Texting Capability</h3>
+        </div>
+      </div>
+      <table class="decision-table">
+        <thead>
+          <tr>
+            <th>Option</th>
+            <th>Cost</th>
+            <th>What It Adds</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Keep using personal phone</strong></td>
+            <td>$0</td>
+            <td>Nothing new — but it works. Clients like texting a real person.</td>
+            <td><span class="tag tag-green">Recommended</span></td>
+          </tr>
+          <tr>
+            <td><strong>Google Voice</strong></td>
+            <td>Free</td>
+            <td>Separate business number, text from app or web. Keeps personal # private.</td>
+            <td><span class="tag tag-green">Good option</span></td>
+          </tr>
+          <tr>
+            <td><strong>TextMagic via Zapier</strong></td>
+            <td>~$10/mo</td>
+            <td>Auto-send texts when HB project stage changes. One-way but customizable.</td>
+            <td><span class="tag tag-amber">Overkill</span></td>
+          </tr>
+          <tr>
+            <td><strong>Go High Level</strong></td>
+            <td>$97/mo</td>
+            <td>Full two-way SMS from a business number, automated sequences. Replaces everything.</td>
+            <td><span class="tag tag-coral">Too expensive</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-emerald">
+        <strong>Recommendation:</strong> Don't add complexity. HoneyBook handles the automated reminders (the part she forgets). Amanda keeps texting clients from her phone (the part that makes her business personal). If she wants a separate business number later, Google Voice is free and takes 5 minutes to set up. Raise this as a "Phase 2" conversation, not a blocker.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">4</div>
+        <div class="card-header-text">
+          <h3>Email Deliverability Warning</h3>
+        </div>
+      </div>
+      <p>Multiple reviewers across G2, Capterra, and GetApp report HoneyBook emails landing in spam. This could undermine the welcome sequence.</p>
+      <ul>
+        <li><strong>Mitigation 1:</strong> Amanda should tell clients to check spam/promotions during her initial phone call</li>
+        <li><strong>Mitigation 2:</strong> Test the welcome email flow with multiple email providers (Gmail, Yahoo, Outlook) during the prototype phase</li>
+        <li><strong>Mitigation 3:</strong> If deliverability is poor, we can move email to a dedicated sender (Flodesk, Mailchimp) triggered by Zapier — but this adds stack complexity</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('zapier',navBtn('zapier'))">← 2. Form → HB</button>
+      <button class="ch-nav-btn" onclick="showCh('gaps',navBtn('gaps'))">4. Gaps →</button>
+    </div>
+  </div>
+
+  <!-- ========== 4. GAPS ========== -->
+  <div class="chapter" id="ch-gaps">
+    <div class="ch-label">Workstream 4</div>
+    <div class="ch-title">Gaps & Missing Pieces</div>
+    <p class="ch-lead">Things we didn't cover in the original build plan that need attention before go-live.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num" style="background:var(--coral);">!</div>
+        <div class="card-header-text">
+          <h3>Pricing Discrepancy — Needs Addressing</h3>
+        </div>
+      </div>
+      <p>The client-facing proposal quotes <strong>$49/mo</strong> (HoneyBook Essentials, annual billing). This is the annual rate. Monthly billing is <strong>$59/mo</strong>.</p>
+      <p>However, the February 2025 price increase raised plans significantly. Current confirmed pricing (April 2026):</p>
+      <table class="decision-table">
+        <thead><tr><th>Plan</th><th>Monthly</th><th>Annual (per month)</th></tr></thead>
+        <tbody>
+          <tr><td>Starter</td><td>$36/mo</td><td>$29/mo</td></tr>
+          <tr><td><strong>Essentials</strong></td><td><strong>$59/mo</strong></td><td><strong>$49/mo</strong></td></tr>
+          <tr><td>Premium</td><td>$129/mo</td><td>$109/mo</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-emerald">
+        <strong>✅ Our proposal is accurate.</strong> The $49/mo figure in the proposal is the annual billing rate, which is what we'd recommend. No correction needed — but Amanda should understand she's committing to annual billing ($588/year) to get that rate. This was already disclosed in the proposal's "Things you should know" section.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">A</div>
+        <div class="card-header-text">
+          <h3>Still Missing from Amanda</h3>
+        </div>
+      </div>
+      <ul class="checklist">
+        <li><strong>Referral swim schools</strong> — names and contacts for the decline email and form. Currently using [placeholders].</li>
+        <li><strong>Her actual welcome email</strong> — we synthesized one, but she should review and personalize it</li>
+        <li><strong>Logo file</strong> — for HoneyBook branding. The site uses <code>SS_Logo_V2_Small.png</code> from WordPress</li>
+        <li><strong>Session pricing confirmation</strong> — her site says $50/session but our build plan says $60. Which is current?</li>
+        <li><strong>Deposit policy</strong> — her site mentions a $75 deposit covering registration + first lesson. How does this integrate with HoneyBook invoicing?</li>
+        <li><strong>Decision: annual vs. monthly billing</strong> — does she want to pay through the off-season or pause monthly?</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">B</div>
+        <div class="card-header-text">
+          <h3>Form Enhancements — Post-MVP</h3>
+        </div>
+      </div>
+      <ul>
+        <li><strong>Add Amanda's logo</strong> to the form header (currently using a wave emoji placeholder)</li>
+        <li><strong>Google Analytics / Meta Pixel</strong> — Amanda advertises via Facebook. Add tracking to measure form conversion rates.</li>
+        <li><strong>Confirmation email</strong> — the form shows a thank-you message, but a browser-sent confirmation email from the form itself (via Zapier email step) would be a nice redundancy in case HoneyBook's welcome email hits spam</li>
+        <li><strong>CAPTCHA / honeypot</strong> — spam protection for the public form. Low priority at Amanda's volume but good practice.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">C</div>
+        <div class="card-header-text">
+          <h3>HoneyBook Build Items Not Yet Started</h3>
+        </div>
+      </div>
+      <p>These are outlined in the build plan but need to be executed on Amanda's actual HoneyBook account:</p>
+      <ul class="checklist">
+        <li>Account creation and business profile setup</li>
+        <li>3 project types (Paid, Nonprofit, Water Safety)</li>
+        <li>Tags: qualified, declined, nonprofit, pool-issue, returning-client</li>
+        <li>Pipeline stages (7 stages across Opportunities and Projects)</li>
+        <li>Email Template #1 — Welcome & Policies</li>
+        <li>Email Template #2 — Water Safety Do's & Don'ts</li>
+        <li>Email Template #3 — Ready to Book?</li>
+        <li>Email Template #4 — Polite Decline with Referrals</li>
+        <li>Automation #1 — Welcome Sequence (active)</li>
+        <li>Automation #2 — Decline Flow (manual trigger for now)</li>
+        <li>Scheduler: 30-min and 60-min session types</li>
+        <li>Scheduler: Availability M–F 9–6, buffer time 30 min</li>
+        <li>SMS reminders: 24hr + 1hr before sessions</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">D</div>
+        <div class="card-header-text">
+          <h3>Zapier Free Tier Limits</h3>
+        </div>
+      </div>
+      <p>Zapier free plan: 100 tasks/month, 5 single-step zaps. At Amanda's peak-season volume (maybe 10–20 new inquiries/week), she'd use ~40–80 tasks/month. This works on the free tier during normal operation. But:</p>
+      <ul>
+        <li>If we use Paths (for qualified vs. nonprofit routing), that requires the Starter plan ($20/mo)</li>
+        <li>Alternative: two separate zaps with Filters (free tier compatible, uses 2 of 5 zap slots)</li>
+        <li>If tasks exceed 100/month (unlikely at her volume), Starter plan adds 750 tasks</li>
+      </ul>
+      <div class="alert alert-ocean">
+        <strong>Recommendation:</strong> Start on Zapier free tier with two simple zaps (one for qualified, one for nonprofit) using Filter steps. Upgrade only if volume demands it. Keep Amanda's monthly costs at $49 (HoneyBook) + $0 (Zapier) = $49/mo total.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">E</div>
+        <div class="card-header-text">
+          <h3>Data Export & Lock-in Risk</h3>
+        </div>
+      </div>
+      <p>Worth knowing but not a blocker:</p>
+      <ul>
+        <li>HoneyBook contacts export as CSV (clean, easy)</li>
+        <li>HoneyBook has <strong>no bulk file export</strong> — proposals, contracts, and project files must be downloaded individually</li>
+        <li>If Amanda ever outgrows HoneyBook, migrating contacts is easy but migrating documents/templates is manual and painful</li>
+        <li>This is a known issue across reviews but doesn't affect the initial build</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('comms',navBtn('comms'))">← 3. Comms</button>
+      <button class="ch-nav-btn" onclick="showCh('timeline',navBtn('timeline'))">5. Timeline →</button>
+    </div>
+  </div>
+
+  <!-- ========== 5. TIMELINE ========== -->
+  <div class="chapter" id="ch-timeline">
+    <div class="ch-label">Workstream 5</div>
+    <div class="ch-title">Timeline & Execution Order</div>
+    <p class="ch-lead">What to build, in what order, and what blocks what.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">⏱</div>
+        <div class="card-header-text">
+          <h3>Critical Path</h3>
+        </div>
+      </div>
+      <p>Everything depends on one thing: <strong>Amanda signing up for HoneyBook</strong> (or you creating a second trial account on her behalf). Until then, you can prep everything but can't wire anything.</p>
+
+      <div class="config-block"><strong>DAY 1 — Prep (no HB account needed)</strong>         ~2 hrs
+────────────────────────────────────────
+☐ Run the data scrub script on Amanda's xlsx
+☐ Generate honeybook-import.csv
+☐ Create Zapier account (your email for now)
+☐ Test the custom form → Zapier webhook flow
+☐ Verify webhook catches data correctly
+☐ Decide form hosting approach
+
+<strong>DAY 2 — HoneyBook Build (account needed)</strong>      ~3 hrs
+────────────────────────────────────────
+☐ Create HB account (Amanda's email)
+☐ Business profile, logo, timezone
+☐ Project types + tags + pipeline stages
+☐ Import contacts CSV (Contacts method)
+☐ Build 4 email templates
+☐ Build Automation #1 (welcome sequence)
+☐ Connect HB API key to Zapier
+☐ Wire Zapier webhook → HB "Create Client"
+☐ Set up Scheduler + session types + SMS reminders
+
+<strong>DAY 3 — Test & Demo Prep</strong>                      ~1.5 hrs
+────────────────────────────────────────
+☐ Submit test lead through custom form
+☐ Verify: form → Zapier → HB client created
+☐ Verify: HB automation fires welcome email
+☐ Check email deliverability (Gmail, Yahoo, Outlook)
+☐ Run through LOTR test suite (all 5 scenarios)
+☐ Deploy form to hosting (WordPress or Netlify)
+☐ Rehearse demo script once
+☐ Schedule demo meeting with Amanda</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">📋</div>
+        <div class="card-header-text">
+          <h3>Go-Live Checklist</h3>
+        </div>
+      </div>
+      <ul class="checklist">
+        <li>Custom intake form deployed and accessible at a public URL</li>
+        <li>Zapier webhook URL configured in form (replace TEST_MODE placeholder)</li>
+        <li>Zapier → HoneyBook connection tested with real data</li>
+        <li>HoneyBook welcome sequence automation active</li>
+        <li>112 existing contacts imported with "returning-client" tag</li>
+        <li>4 email templates built and reviewed by Amanda</li>
+        <li>Scheduler configured with correct availability</li>
+        <li>SMS reminders enabled (24hr + 1hr)</li>
+        <li>Decline messages in form have real referral swim school names</li>
+        <li>Form linked from Amanda's Facebook responses and website</li>
+        <li>Amanda's current Google Form link replaced with new form URL</li>
+        <li>End-to-end test completed: form → Zapier → HB → email → calendar</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-num">🎯</div>
+        <div class="card-header-text">
+          <h3>Open Questions for Amanda</h3>
+        </div>
+      </div>
+      <ul>
+        <li>Is your session price $50 (website) or $60 (what we've been building with)?</li>
+        <li>The $75 deposit on your website — do you want that integrated into HoneyBook invoicing, or keep it separate?</li>
+        <li>Who are your 2–3 referral swim schools for the decline message?</li>
+        <li>Do you want to use your personal phone number for texts, or set up a Google Voice business number?</li>
+        <li>Annual billing ($49/mo, $588/year) or monthly ($59/mo, pause off-season)?</li>
+        <li>Are you comfortable managing HoneyBook from the mobile app day-to-day, or do you prefer desktop?</li>
+        <li>Do you want to keep using Constant Contact for your email list, or migrate that into HoneyBook too?</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('gaps',navBtn('gaps'))">← 4. Gaps</button>
+      <div class="ch-nav-spacer"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Internal Work Plan — Garry Fenimore · Sunshine Swimming · April 2026</div>
+
+<script>
+const navMap = { overview:0, import:1, zapier:2, comms:3, gaps:4, timeline:5 };
+function showCh(id, btn) {
+  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+  document.getElementById('ch-' + id).classList.add('active');
+  document.querySelectorAll('.topbar-nav button').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: document.querySelector('.intro').offsetTop + document.querySelector('.intro').offsetHeight - 10, behavior: 'smooth' });
+}
+function navBtn(id) {
+  return document.querySelectorAll('.topbar-nav button')[navMap[id]];
+}
+</script>
+
+</body>
+</html>

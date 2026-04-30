@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swim Lesson Inquiry — Sunshine Swimming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ======================================================
+   CONFIG — Zapier Webhook URL is set in JS below
+   ====================================================== */
+
+:root {
+  --ocean-deep: #0c4a6e;
+  --ocean: #0369a1;
+  --ocean-mid: #0284c7;
+  --ocean-light: #e0f2fe;
+  --ocean-glow: #bae6fd;
+  --sky: #f0f9ff;
+  --sand: #fefce8;
+  --sand-warm: #fef9c3;
+  --coral: #f43f5e;
+  --coral-light: #fff1f2;
+  --emerald: #059669;
+  --emerald-light: #ecfdf5;
+  --ink: #0f172a;
+  --text: #334155;
+  --muted: #64748b;
+  --faint: #94a3b8;
+  --border: #e2e8f0;
+  --white: #ffffff;
+  --paper: #f8fafc;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--sky);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* === WATER BACKGROUND === */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 360px;
+  background: linear-gradient(165deg, var(--ocean-deep) 0%, var(--ocean) 40%, var(--ocean-mid) 70%, var(--ocean-glow) 100%);
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 280px; left: 0; right: 0;
+  height: 120px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23f0f9ff' d='M0,64L48,58.7C96,53,192,43,288,48C384,53,480,75,576,80C672,85,768,75,864,64C960,53,1056,43,1152,42.7C1248,43,1344,53,1392,58.7L1440,64L1440,120L0,120Z'/%3E%3C/svg%3E") no-repeat bottom;
+  background-size: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* === LAYOUT === */
+.form-shell {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* === HEADER === */
+.form-header {
+  text-align: center;
+  padding: 32px 0 28px;
+  color: var(--white);
+}
+
+.form-header .logo-area {
+  margin-bottom: 10px;
+}
+
+.form-header .logo-area img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255,255,255,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.form-header .logo-placeholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 3px solid rgba(255,255,255,0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin-bottom: 2px;
+}
+
+.form-header h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+.form-header p {
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.85);
+  max-width: 380px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* === PROGRESS BAR === */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.progress-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: all var(--transition);
+  background: var(--white);
+  color: var(--faint);
+  border: 2px solid var(--border);
+}
+
+.progress-dot.active {
+  background: var(--ocean);
+  color: var(--white);
+  border-color: var(--ocean);
+  box-shadow: 0 0 0 4px rgba(3,105,161,0.15);
+}
+
+.progress-dot.done {
+  background: var(--emerald);
+  color: var(--white);
+  border-color: var(--emerald);
+}
+
+.progress-line {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  margin: 0 6px;
+  border-radius: 3px;
+  transition: background var(--transition);
+}
+
+.progress-line.done {
+  background: var(--emerald);
+}
+
+.progress-step:last-child .progress-line { display: none; }
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+  margin-top: 6px;
+  margin-bottom: 20px;
+}
+
+.progress-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--faint);
+  text-align: center;
+  flex: 1;
+  transition: color var(--transition);
+}
+
+.progress-label.active { color: var(--ocean); }
+.progress-label.done { color: var(--emerald); }
+
+/* === CARD === */
+.form-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* === STEP PANELS === */
+.step-panel {
+  display: none;
+  padding: 28px 24px 24px;
+  animation: fadeSlideIn 0.35s ease;
+}
+
+.step-panel.active { display: block; }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.step-title {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.step-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* === FORM FIELDS === */
+.field-group {
+  margin-bottom: 20px;
+}
+
+.field-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.field-group label .required {
+  color: var(--coral);
+  margin-left: 2px;
+}
+
+.field-group label .optional {
+  font-weight: 500;
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.field-group input[type="text"],
+.field-group input[type="email"],
+.field-group input[type="tel"],
+.field-group select,
+.field-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--white);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 18px;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.field-group textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+  outline: none;
+  border-color: var(--ocean);
+  box-shadow: 0 0 0 3px rgba(3,105,161,0.1);
+}
+
+.field-group input.error,
+.field-group select.error,
+.field-group textarea.error {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px rgba(244,63,94,0.1);
+}
+
+.field-error {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--coral);
+  margin-top: 4px;
+  display: none;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--faint);
+  margin-top: 4px;
+}
+
+/* === MULTI-SELECT (checkboxes styled) === */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 2px solid var(--border);
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--transition);
+  user-select: none;
+}
+
+.checkbox-group label:hover {
+  border-color: var(--ocean-glow);
+  background: var(--ocean-light);
+}
+
+.checkbox-group input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-group input[type="checkbox"]:checked + span {
+  color: var(--ocean);
+}
+
+.checkbox-group label:has(input:checked) {
+  border-color: var(--ocean);
+  background: var(--ocean-light);
+  color: var(--ocean);
+}
+
+.check-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.checkbox-group label:has(input:checked) .check-icon {
+  background: var(--ocean);
+  border-color: var(--ocean);
+}
+
+.checkbox-group label:has(input:checked) .check-icon::after {
+  content: '✓';
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* === BUTTONS === */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.btn {
+  flex: 1;
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition);
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--ocean);
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(3,105,161,0.25);
+}
+
+.btn-primary:hover {
+  background: var(--ocean-deep);
+  box-shadow: 0 4px 16px rgba(3,105,161,0.3);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  background: var(--paper);
+  color: var(--text);
+  border: 2px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--ocean-glow);
+  color: var(--ocean);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 20px; height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: var(--white);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* === DECLINE MESSAGES === */
+.decline-message {
+  display: none;
+  padding: 28px 24px;
+  animation: fadeSlideIn 0.35s ease;
+}
+
+.decline-message.active { display: block; }
+
+.decline-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 16px;
+}
+
+.decline-icon.area { background: var(--ocean-light); }
+.decline-icon.pool { background: var(--sand); }
+
+.decline-message h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 19px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.decline-message p {
+  font-size: 14px;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.decline-message .referral-list {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin: 16px 0;
+}
+
+.decline-message .referral-list h4 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.referral-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ocean);
+}
+
+.referral-item::before {
+  content: '→';
+  color: var(--faint);
+  font-weight: 400;
+}
+
+.decline-message .restart-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ocean);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.decline-message .restart-link:hover { text-decoration: underline; }
+
+/* === THANK YOU === */
+.thank-you {
+  display: none;
+  padding: 36px 24px;
+  text-align: center;
+  animation: fadeSlideIn 0.4s ease;
+}
+
+.thank-you.active { display: block; }
+
+.thank-you .success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--emerald-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 16px;
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+.thank-you h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.thank-you p {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.thank-you .next-steps {
+  background: var(--ocean-light);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.thank-you .next-steps h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ocean-deep);
+  margin-bottom: 8px;
+}
+
+.thank-you .next-steps li {
+  font-size: 13px;
+  color: var(--ocean);
+  margin-bottom: 4px;
+  padding-left: 20px;
+  position: relative;
+  list-style: none;
+}
+
+.thank-you .next-steps li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--emerald);
+  font-weight: 700;
+}
+
+/* === NONPROFIT THANK YOU === */
+.nonprofit-thanks {
+  display: none;
+  padding: 36px 24px;
+  text-align: center;
+  animation: fadeSlideIn 0.4s ease;
+}
+
+.nonprofit-thanks.active { display: block; }
+
+.nonprofit-thanks .np-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #f5f3ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 16px;
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nonprofit-thanks h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.nonprofit-thanks p {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* === FOOTER === */
+.form-footer {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.form-footer a {
+  color: var(--ocean);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 480px) {
+  .form-shell { padding: 16px 12px 40px; }
+  .step-panel { padding: 24px 18px 20px; }
+  .form-header h1 { font-size: 23px; }
+  .progress-dot { width: 28px; height: 28px; font-size: 12px; }
+  .progress-label { font-size: 9px; }
+  .btn-row { flex-direction: column; }
+  .btn-secondary { order: 2; }
+  .btn-primary { order: 1; }
+}
+
+/* === TEST MODE BANNER === */
+.test-banner {
+  display: none;
+  background: var(--sand-warm);
+  border: 2px solid #f59e0b;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #92400e;
+  text-align: center;
+}
+
+.test-banner.active { display: block; }
+
+.test-banner button {
+  background: #f59e0b;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 8px;
+  font-family: 'Nunito', sans-serif;
+}
+</style>
+</head>
+<body>
+
+<div class="form-shell">
+
+  <!-- HEADER -->
+  <div class="form-header">
+    <div class="logo-area">
+      <div class="logo-placeholder">🏊‍♀️</div>
+    </div>
+    <h1>Sunshine Swimming</h1>
+    <p>Ready to make a splash? Fill out this quick form and I'll be in touch soon!</p>
+  </div>
+
+  <!-- TEST MODE BANNER -->
+  <div class="test-banner" id="testBanner">
+    🧪 TEST MODE — Submissions go to console, not Zapier
+    <button onclick="runTestSuite()">Run Test Suite</button>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-step">
+      <div class="progress-dot active" data-step="1">1</div>
+      <div class="progress-line"></div>
+    </div>
+    <div class="progress-step">
+      <div class="progress-dot" data-step="2">2</div>
+      <div class="progress-line"></div>
+    </div>
+    <div class="progress-step">
+      <div class="progress-dot" data-step="3">3</div>
+      <div class="progress-line"></div>
+    </div>
+    <div class="progress-step">
+      <div class="progress-dot" data-step="4">4</div>
+    </div>
+  </div>
+  <div class="progress-labels" id="progressLabels">
+    <div class="progress-label active">Getting Started</div>
+    <div class="progress-label">The Swimmer</div>
+    <div class="progress-label">About You</div>
+    <div class="progress-label">Logistics</div>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="form-card">
+
+    <!-- ============ STEP 1: ROUTING ============ -->
+    <div class="step-panel active" id="step1">
+      <div class="step-title">Let's get started! 👋</div>
+      <div class="step-subtitle">A few quick questions to make sure we're a great fit.</div>
+
+      <div class="field-group">
+        <label>Where do you live? <span class="required">*</span></label>
+        <select id="f_location" required>
+          <option value="" disabled selected>Select your area</option>
+          <option value="Bradenton">Bradenton</option>
+          <option value="Lakewood Ranch">Lakewood Ranch</option>
+          <option value="Palmetto">Palmetto</option>
+          <option value="Parrish / Ellenton">Parrish / Ellenton</option>
+          <option value="Terra Ceia">Terra Ceia</option>
+          <option value="Outside Manatee County">Outside Manatee County</option>
+        </select>
+        <div class="field-error" id="err_location">Please select your area</div>
+      </div>
+
+      <div class="field-group">
+        <label>What type of lessons are you interested in? <span class="required">*</span></label>
+        <select id="f_lessonType" required>
+          <option value="" disabled selected>Select lesson type</option>
+          <option value="Private swim lessons (paid)">Private swim lessons</option>
+          <option value="Free water safety program (nonprofit)">Free water safety program</option>
+        </select>
+        <div class="field-error" id="err_lessonType">Please select a lesson type</div>
+      </div>
+
+      <div class="field-group">
+        <label>Is your pool heated? <span class="required">*</span></label>
+        <select id="f_poolHeated" required>
+          <option value="" disabled selected>Select an option</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="I don't know">I don't know</option>
+          <option value="Using a neighborhood/clubhouse pool">Using a neighborhood/clubhouse pool</option>
+        </select>
+        <div class="field-error" id="err_poolHeated">Please select an option</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="handleStep1()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ============ STEP 2: SWIMMER INFO ============ -->
+    <div class="step-panel" id="step2">
+      <div class="step-title">Tell me about your swimmer 🐠</div>
+      <div class="step-subtitle">The more I know, the better I can prepare for our first lesson.</div>
+
+      <div class="field-group">
+        <label>Swimmer's name <span class="required">*</span></label>
+        <input type="text" id="f_swimmerName" placeholder="First name" required>
+        <div class="field-error" id="err_swimmerName">Please enter the swimmer's name</div>
+      </div>
+
+      <div class="field-group">
+        <label>How old is your swimmer? <span class="required">*</span></label>
+        <select id="f_swimmerAge" required>
+          <option value="" disabled selected>Select age range</option>
+          <option value="Under 6 months">Under 6 months</option>
+          <option value="6 months – 2 years">6 months – 2 years</option>
+          <option value="2 – 4 years">2 – 4 years</option>
+          <option value="5 – 7 years">5 – 7 years</option>
+          <option value="8+ years">8+ years</option>
+          <option value="Adult">Adult</option>
+        </select>
+        <div class="field-error" id="err_swimmerAge">Please select an age range</div>
+      </div>
+
+      <div class="field-group">
+        <label>Has your swimmer had previous lessons? <span class="required">*</span></label>
+        <select id="f_previousLessons" required>
+          <option value="" disabled selected>Select one</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="A little">A little</option>
+        </select>
+        <div class="field-error" id="err_previousLessons">Please select an option</div>
+      </div>
+
+      <div class="field-group">
+        <label>Comfort level in water <span class="required">*</span></label>
+        <select id="f_comfortLevel" required>
+          <option value="" disabled selected>1 = Very Nervous, 5 = Loves It</option>
+          <option value="1 – Very Nervous">1 – Very Nervous</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5 – Loves It">5 – Loves It</option>
+        </select>
+        <div class="field-error" id="err_comfortLevel">Please select a comfort level</div>
+      </div>
+
+      <div class="field-group">
+        <label>Medical conditions, allergies, or special needs? <span class="optional">(optional)</span></label>
+        <textarea id="f_medical" placeholder="Anything I should know to keep your child safe"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label>Prior injuries affecting swimming? <span class="optional">(optional)</span></label>
+        <input type="text" id="f_injuries" placeholder="e.g., ear tubes, recent surgery">
+      </div>
+
+      <div class="field-group">
+        <label>Additional swimmers <span class="optional">(optional)</span></label>
+        <textarea id="f_additionalSwimmers" placeholder="List names, ages, and comfort levels"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+        <button class="btn btn-primary" onclick="handleStep2()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ============ STEP 3: PARENT/CONTACT ============ -->
+    <div class="step-panel" id="step3">
+      <div class="step-title">Your contact info 📱</div>
+      <div class="step-subtitle">So I can get in touch and find your pool!</div>
+
+      <div class="field-group">
+        <label>Parent/Guardian name(s) <span class="required">*</span></label>
+        <input type="text" id="f_parentName" placeholder="Your full name" required>
+        <div class="field-error" id="err_parentName">Please enter your name</div>
+      </div>
+
+      <div class="field-group">
+        <label>Phone number <span class="required">*</span></label>
+        <input type="tel" id="f_phone" placeholder="(941) 555-1234" required>
+        <div class="field-error" id="err_phone">Please enter a valid phone number</div>
+      </div>
+
+      <div class="field-group">
+        <label>Email <span class="required">*</span></label>
+        <input type="email" id="f_email" placeholder="you@email.com" required>
+        <div class="field-error" id="err_email">Please enter a valid email address</div>
+      </div>
+
+      <div class="field-group">
+        <label>Home address <span class="required">*</span></label>
+        <textarea id="f_address" placeholder="Street address, city, zip" required></textarea>
+        <div class="field-error" id="err_address">Please enter your address</div>
+      </div>
+
+      <div class="field-group">
+        <label>Lesson location if different from home <span class="optional">(optional)</span></label>
+        <input type="text" id="f_lessonLocation" placeholder="e.g., neighborhood pool, neighbor's pool">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
+        <button class="btn btn-primary" onclick="handleStep3()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ============ STEP 4: LOGISTICS ============ -->
+    <div class="step-panel" id="step4">
+      <div class="step-title">Almost done! 🎉</div>
+      <div class="step-subtitle">Just a couple more things to help me plan.</div>
+
+      <div class="field-group">
+        <label>Preferred days/times <span class="optional">(optional)</span></label>
+        <textarea id="f_preferredTimes" placeholder="e.g., weekday mornings, Tuesday/Thursday after 3pm"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label>How did you hear about Sunshine Swimming? <span class="required">*</span></label>
+        <div class="checkbox-group" id="f_referralSource">
+          <label>
+            <input type="checkbox" name="referral" value="Word of Mouth">
+            <div class="check-icon"></div>
+            <span>Word of Mouth</span>
+          </label>
+          <label>
+            <input type="checkbox" name="referral" value="Facebook">
+            <div class="check-icon"></div>
+            <span>Facebook</span>
+          </label>
+          <label>
+            <input type="checkbox" name="referral" value="Instagram">
+            <div class="check-icon"></div>
+            <span>Instagram</span>
+          </label>
+          <label>
+            <input type="checkbox" name="referral" value="Google Search">
+            <div class="check-icon"></div>
+            <span>Google Search</span>
+          </label>
+          <label>
+            <input type="checkbox" name="referral" value="Other">
+            <div class="check-icon"></div>
+            <span>Other</span>
+          </label>
+        </div>
+        <div class="field-error" id="err_referralSource">Please select at least one option</div>
+      </div>
+
+      <div class="field-group">
+        <label>Anything else to make lessons great? <span class="optional">(optional)</span></label>
+        <textarea id="f_anythingElse" placeholder="Special requests, questions, fun facts about your kiddo..."></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(3)">← Back</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="handleSubmit()">Submit Inquiry 🏊‍♀️</button>
+      </div>
+    </div>
+
+    <!-- ============ DECLINE: OUT OF AREA ============ -->
+    <div class="decline-message" id="declineArea">
+      <div class="decline-icon area">🌎</div>
+      <h3>Thanks for your interest!</h3>
+      <p>Unfortunately, Sunshine Swimming currently serves Manatee County only. But I don't want to leave you without options!</p>
+      <div class="referral-list">
+        <h4>Recommended swim schools</h4>
+        <div class="referral-item">[Swim School A — Coming Soon]</div>
+        <div class="referral-item">[Swim School B — Coming Soon]</div>
+        <div class="referral-item">[Swim School C — Coming Soon]</div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);">Water safety is so important — I'm glad you're making it a priority! 💙</p>
+      <a class="restart-link" onclick="resetForm()">← Start over</a>
+    </div>
+
+    <!-- ============ DECLINE: POOL NOT HEATED ============ -->
+    <div class="decline-message" id="declinePool">
+      <div class="decline-icon pool">🌡️</div>
+      <h3>One thing to know about pool temps</h3>
+      <p>For the safety and comfort of young swimmers, I require a heated pool (85°F+). Cold water makes it hard to learn and isn't safe for little ones.</p>
+      <p>If you're able to heat your pool or have access to a heated pool, I'd love to hear from you!</p>
+      <p style="margin-top:12px;">
+        <strong>Text or call:</strong> <a href="tel:9412977687" style="color:var(--ocean);font-weight:700;">(941) 297-7687</a>
+      </p>
+      <a class="restart-link" onclick="resetForm()">← Start over</a>
+    </div>
+
+    <!-- ============ THANK YOU: QUALIFIED ============ -->
+    <div class="thank-you" id="thankYou">
+      <div class="success-icon">✓</div>
+      <h3>Thanks for reaching out!</h3>
+      <p>I've received your inquiry and will be in touch soon. In the meantime, check your email for some helpful information about getting ready for lessons.</p>
+      <div class="next-steps">
+        <h4>What happens next:</h4>
+        <ul>
+          <li>I'll review your info today</li>
+          <li>Expect a call from me within 1–2 days</li>
+          <li>Check your email for water safety tips</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============ THANK YOU: NONPROFIT ============ -->
+    <div class="nonprofit-thanks" id="nonprofitThanks">
+      <div class="np-icon">💜</div>
+      <h3>Thank you for your interest!</h3>
+      <p>I've received your inquiry about the free water safety program. I'll reach out soon with more information about availability and next steps.</p>
+      <p style="margin-top:12px;font-size:13px;color:var(--muted);">Water safety education is so important — thank you for caring! 💙</p>
+    </div>
+
+  </div><!-- /form-card -->
+
+  <div class="form-footer">
+    <a href="https://sunshineswimming.com" target="_blank">sunshineswimming.com</a> · Manatee County, FL
+  </div>
+
+</div><!-- /form-shell -->
+
+<script>
+// ================================================================
+// CONFIG — Set your Zapier webhook URL here
+// ================================================================
+const ZAPIER_WEBHOOK_URL = 'YOUR_ZAPIER_WEBHOOK_URL_HERE';
+
+// Set to true to enable test mode (logs to console instead of sending)
+const TEST_MODE = (ZAPIER_WEBHOOK_URL === 'YOUR_ZAPIER_WEBHOOK_URL_HERE');
+
+// ================================================================
+// STATE
+// ================================================================
+let currentStep = 1;
+
+// ================================================================
+// NAVIGATION
+// ================================================================
+function goToStep(step) {
+  // Hide all panels
+  document.querySelectorAll('.step-panel, .decline-message, .thank-you, .nonprofit-thanks').forEach(p => p.classList.remove('active'));
+
+  // Show target step
+  document.getElementById('step' + step).classList.add('active');
+  currentStep = step;
+
+  // Update progress bar
+  updateProgress(step);
+
+  // Show progress elements
+  document.getElementById('progressBar').style.display = 'flex';
+  document.getElementById('progressLabels').style.display = 'flex';
+
+  // Scroll to top of card
+  document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateProgress(step) {
+  const dots = document.querySelectorAll('.progress-dot');
+  const lines = document.querySelectorAll('.progress-line');
+  const labels = document.querySelectorAll('.progress-label');
+
+  dots.forEach((dot, i) => {
+    const s = i + 1;
+    dot.classList.remove('active', 'done');
+    if (s < step) {
+      dot.classList.add('done');
+      dot.textContent = '✓';
+    } else if (s === step) {
+      dot.classList.add('active');
+      dot.textContent = s;
+    } else {
+      dot.textContent = s;
+    }
+  });
+
+  lines.forEach((line, i) => {
+    line.classList.toggle('done', i + 1 < step);
+  });
+
+  labels.forEach((lbl, i) => {
+    lbl.classList.remove('active', 'done');
+    const s = i + 1;
+    if (s < step) lbl.classList.add('done');
+    else if (s === step) lbl.classList.add('active');
+  });
+}
+
+function hideProgress() {
+  document.getElementById('progressBar').style.display = 'none';
+  document.getElementById('progressLabels').style.display = 'none';
+}
+
+function showDecline(id) {
+  document.querySelectorAll('.step-panel, .decline-message, .thank-you, .nonprofit-thanks').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  hideProgress();
+  document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetForm() {
+  // Reset all fields
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    if (el.type === 'checkbox') el.checked = false;
+    else if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    else el.value = '';
+  });
+
+  // Clear errors
+  document.querySelectorAll('.field-error').forEach(e => e.style.display = 'none');
+  document.querySelectorAll('.error').forEach(e => e.classList.remove('error'));
+
+  // Go to step 1
+  goToStep(1);
+}
+
+// ================================================================
+// VALIDATION
+// ================================================================
+function validateField(id, validFn) {
+  const el = document.getElementById(id);
+  const errEl = document.getElementById('err_' + id.replace('f_', ''));
+  const val = el.value.trim();
+  const valid = validFn(val);
+
+  if (!valid) {
+    el.classList.add('error');
+    if (errEl) errEl.style.display = 'block';
+  } else {
+    el.classList.remove('error');
+    if (errEl) errEl.style.display = 'none';
+  }
+
+  return valid;
+}
+
+function validateRequired(id) {
+  return validateField(id, v => v.length > 0);
+}
+
+function validateEmail(id) {
+  return validateField(id, v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+}
+
+function validatePhone(id) {
+  return validateField(id, v => v.replace(/\D/g, '').length >= 7);
+}
+
+function validateCheckboxGroup() {
+  const checked = document.querySelectorAll('#f_referralSource input:checked');
+  const errEl = document.getElementById('err_referralSource');
+  if (checked.length === 0) {
+    errEl.style.display = 'block';
+    return false;
+  }
+  errEl.style.display = 'none';
+  return true;
+}
+
+// ================================================================
+// STEP HANDLERS
+// ================================================================
+function handleStep1() {
+  const v1 = validateRequired('f_location');
+  const v2 = validateRequired('f_lessonType');
+  const v3 = validateRequired('f_poolHeated');
+
+  if (!v1 || !v2 || !v3) return;
+
+  const location = document.getElementById('f_location').value;
+  const lessonType = document.getElementById('f_lessonType').value;
+  const poolHeated = document.getElementById('f_poolHeated').value;
+
+  // ROUTING: Check location
+  if (location === 'Outside Manatee County') {
+    showDecline('declineArea');
+    return;
+  }
+
+  // ROUTING: Check pool heated
+  if (poolHeated === 'No') {
+    showDecline('declinePool');
+    return;
+  }
+
+  // ROUTING: Nonprofit flow — collect basic contact then submit
+  if (lessonType === 'Free water safety program (nonprofit)') {
+    // For nonprofit, skip to step 3 for contact info, then submit with nonprofit tag
+    goToStep(3);
+    // Update step 3 title for nonprofit context
+    return;
+  }
+
+  // QUALIFIED — proceed to swimmer details
+  goToStep(2);
+}
+
+function handleStep2() {
+  const v1 = validateRequired('f_swimmerName');
+  const v2 = validateRequired('f_swimmerAge');
+  const v3 = validateRequired('f_previousLessons');
+  const v4 = validateRequired('f_comfortLevel');
+
+  if (!v1 || !v2 || !v3 || !v4) return;
+
+  goToStep(3);
+}
+
+function handleStep3() {
+  const v1 = validateRequired('f_parentName');
+  const v2 = validatePhone('f_phone');
+  const v3 = validateEmail('f_email');
+  const v4 = validateRequired('f_address');
+
+  if (!v1 || !v2 || !v3 || !v4) return;
+
+  const lessonType = document.getElementById('f_lessonType').value;
+
+  // Nonprofit flow: skip logistics, submit directly
+  if (lessonType === 'Free water safety program (nonprofit)') {
+    submitNonprofit();
+    return;
+  }
+
+  goToStep(4);
+}
+
+function handleSubmit() {
+  const v1 = validateCheckboxGroup();
+
+  if (!v1) return;
+
+  submitQualified();
+}
+
+// ================================================================
+// SUBMISSION
+// ================================================================
+function gatherData() {
+  const referralChecks = document.querySelectorAll('#f_referralSource input:checked');
+  const referrals = Array.from(referralChecks).map(c => c.value).join(', ');
+
+  return {
+    // Routing
+    location: document.getElementById('f_location').value,
+    lesson_type: document.getElementById('f_lessonType').value,
+    pool_heated: document.getElementById('f_poolHeated').value,
+
+    // Swimmer
+    swimmer_name: document.getElementById('f_swimmerName').value.trim(),
+    swimmer_age: document.getElementById('f_swimmerAge').value,
+    previous_lessons: document.getElementById('f_previousLessons').value,
+    comfort_level: document.getElementById('f_comfortLevel').value,
+    medical: document.getElementById('f_medical').value.trim(),
+    injuries: document.getElementById('f_injuries').value.trim(),
+    additional_swimmers: document.getElementById('f_additionalSwimmers').value.trim(),
+
+    // Parent
+    parent_name: document.getElementById('f_parentName').value.trim(),
+    phone: document.getElementById('f_phone').value.trim(),
+    email: document.getElementById('f_email').value.trim(),
+    address: document.getElementById('f_address').value.trim(),
+    lesson_location: document.getElementById('f_lessonLocation').value.trim(),
+
+    // Logistics
+    preferred_times: document.getElementById('f_preferredTimes').value.trim(),
+    referral_source: referrals,
+    anything_else: document.getElementById('f_anythingElse').value.trim(),
+
+    // Meta
+    submitted_at: new Date().toISOString(),
+    form_version: '1.0',
+  };
+}
+
+async function submitQualified() {
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('btn-loading');
+  btn.disabled = true;
+
+  const data = gatherData();
+  data.lead_type = 'qualified';
+  data.tag = 'qualified';
+
+  if (TEST_MODE) {
+    console.log('📋 TEST MODE — Qualified Lead Data:', data);
+    await fakeDelay(800);
+  } else {
+    try {
+      await fetch(ZAPIER_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        mode: 'no-cors'
+      });
+    } catch (err) {
+      console.error('Webhook error:', err);
+    }
+  }
+
+  btn.classList.remove('btn-loading');
+  btn.disabled = false;
+
+  // Show thank you
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('thankYou').classList.add('active');
+  hideProgress();
+  document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function submitNonprofit() {
+  const data = {
+    location: document.getElementById('f_location').value,
+    lesson_type: document.getElementById('f_lessonType').value,
+    pool_heated: document.getElementById('f_poolHeated').value,
+    parent_name: document.getElementById('f_parentName').value.trim(),
+    phone: document.getElementById('f_phone').value.trim(),
+    email: document.getElementById('f_email').value.trim(),
+    address: document.getElementById('f_address').value.trim(),
+    lesson_location: document.getElementById('f_lessonLocation').value.trim(),
+    lead_type: 'nonprofit',
+    tag: 'nonprofit',
+    submitted_at: new Date().toISOString(),
+    form_version: '1.0',
+  };
+
+  if (TEST_MODE) {
+    console.log('💜 TEST MODE — Nonprofit Lead Data:', data);
+    await fakeDelay(800);
+  } else {
+    try {
+      await fetch(ZAPIER_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        mode: 'no-cors'
+      });
+    } catch (err) {
+      console.error('Webhook error:', err);
+    }
+  }
+
+  // Show nonprofit thank you
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('nonprofitThanks').classList.add('active');
+  hideProgress();
+  document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function fakeDelay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// ================================================================
+// TEST SUITE — LOTR Themed
+// ================================================================
+function runTestSuite() {
+  const tests = [
+    {
+      name: 'Bilbo Baggins → Qualified',
+      data: { location: 'Bradenton', lessonType: 'Private swim lessons (paid)', poolHeated: 'Yes' },
+      expected: 'qualified'
+    },
+    {
+      name: 'Hamfast Gamgee → Qualified',
+      data: { location: 'Lakewood Ranch', lessonType: 'Private swim lessons (paid)', poolHeated: 'Yes' },
+      expected: 'qualified'
+    },
+    {
+      name: 'Elrond → Decline (out of area)',
+      data: { location: 'Outside Manatee County', lessonType: 'Private swim lessons (paid)', poolHeated: 'Yes' },
+      expected: 'decline-area'
+    },
+    {
+      name: 'Théoden → Decline (pool not heated)',
+      data: { location: 'Bradenton', lessonType: 'Private swim lessons (paid)', poolHeated: 'No' },
+      expected: 'decline-pool'
+    },
+    {
+      name: 'Celeborn → Nonprofit flow',
+      data: { location: 'Lakewood Ranch', lessonType: 'Free water safety program (nonprofit)', poolHeated: 'Yes' },
+      expected: 'nonprofit'
+    }
+  ];
+
+  console.log('🧪 Running Test Suite...');
+  console.log('========================');
+
+  tests.forEach(test => {
+    let result = 'qualified';
+
+    if (test.data.location === 'Outside Manatee County') {
+      result = 'decline-area';
+    } else if (test.data.poolHeated === 'No') {
+      result = 'decline-pool';
+    } else if (test.data.lessonType === 'Free water safety program (nonprofit)') {
+      result = 'nonprofit';
+    }
+
+    const pass = result === test.expected;
+    console.log(`${pass ? '✅' : '❌'} ${test.name} — Got: ${result}, Expected: ${test.expected}`);
+  });
+
+  console.log('========================');
+  console.log('🧪 Test suite complete!');
+  alert('Test suite complete! Check browser console for results.');
+}
+
+// ================================================================
+// INIT
+// ================================================================
+if (TEST_MODE) {
+  document.getElementById('testBanner').classList.add('active');
+}
+
+// Phone auto-format
+document.getElementById('f_phone').addEventListener('input', function(e) {
+  let val = e.target.value.replace(/\D/g, '');
+  if (val.length > 0) {
+    if (val.length <= 3) val = '(' + val;
+    else if (val.length <= 6) val = '(' + val.substring(0,3) + ') ' + val.substring(3);
+    else val = '(' + val.substring(0,3) + ') ' + val.substring(3,6) + '-' + val.substring(6,10);
+  }
+  e.target.value = val;
+});
+</script>
+
+</body>
+</html>

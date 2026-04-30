@@ -1,0 +1,23 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/__pycache__": true,
+    "data/raw/**": false
+  },
+  "editor.wordWrap": "on",
+  "editor.formatOnSave": true,
+  "livePreview.defaultPreviewPath": "src/form/index.html",
+  "files.associations": {
+    "*.html": "html"
+  },
+  "emmet.includeLanguages": {
+    "html": "html"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+  "search.exclude": {
+    "data/raw/**": true
+  }
+}

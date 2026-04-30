@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Preview — Water Safety Do's & Don'ts</title>
+<style>
+body { font-family: -apple-system, 'Segoe UI', sans-serif; background: #f1f5f9; margin: 0; padding: 24px; }
+.meta { max-width: 600px; margin: 0 auto 12px; font-size: 11px; color: #94a3b8; }
+.meta strong { color: #64748b; }
+.email-frame {
+  max-width: 600px; margin: 0 auto; background: #fff;
+  border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;
+}
+.email-header {
+  background: linear-gradient(135deg, #0c4a6e, #0369a1);
+  padding: 28px 32px; text-align: center; color: #fff;
+}
+.email-header h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+.email-header p { font-size: 13px; opacity: 0.8; margin: 0; }
+.email-body { padding: 28px 32px; font-size: 15px; color: #334155; line-height: 1.7; }
+.email-body p { margin-bottom: 14px; }
+.email-body h3 { font-size: 16px; color: #0f172a; margin: 20px 0 8px; }
+.email-body .emoji-h { font-size: 18px; margin-right: 4px; }
+.email-footer {
+  background: #f8fafc; border-top: 1px solid #e2e8f0;
+  padding: 16px 32px; text-align: center; font-size: 12px; color: #94a3b8;
+}
+.tvar { background: #fef3c7; padding: 1px 4px; border-radius: 3px; font-family: monospace; font-size: 13px; color: #92400e; }
+</style>
+</head>
+<body>
+
+<div class="meta">
+  <strong>Template #2:</strong> Water Safety · <strong>Trigger:</strong> 1 day after welcome · <strong>Subject:</strong> Before our first lesson — important water safety tips 🛟
+</div>
+
+<div class="email-frame">
+  <div class="email-header">
+    <h1>Sunshine Swimming</h1>
+    <p>Getting ready for lesson day! 🛟</p>
+  </div>
+  <div class="email-body">
+    <p>Hi <span class="tvar">{{client_first_name}}</span>!</p>
+
+    <p>As we get ready for <span class="tvar">{{swimmer_name}}</span>'s first lesson, here are some things that will make a big difference:</p>
+
+    <h3><span class="emoji-h">🚫</span> Please Don't Use</h3>
+    <p><strong>Life jackets, puddle jumpers, or arm floaties</strong> — I know they feel safe, but they actually teach kids the wrong body position in the water. They create a false sense of confidence and make it harder to learn real swimming skills. If your child has been using them, that's OK — we'll work through it together!</p>
+
+    <h3><span class="emoji-h">✅</span> Do This Before Lessons</h3>
+    <p><strong>Practice in the bathtub!</strong> Get your child comfortable with water on their face. Pour water gently over their head, practice blowing bubbles, let them splash. The more comfortable they are with water on their face, the faster lessons go.</p>
+
+    <p><strong>Swim diapers</strong> are required for any child not fully potty trained. Regular diapers swell up like a balloon in the pool — not fun for anyone!</p>
+
+    <p><strong>Sunscreen</strong> — apply at least 15 minutes before the lesson so it absorbs. Slippery, freshly-sunscreened kids are hard to hold onto!</p>
+
+    <h3><span class="emoji-h">👀</span> During Lessons</h3>
+    <p>You're welcome to watch! For toddlers, sometimes having a parent nearby helps them feel safe. Sometimes it doesn't — we'll figure out what works for <span class="tvar">{{swimmer_name}}</span>. If your child cries the first lesson, that's completely normal. It almost always gets better by lesson 2 or 3.</p>
+
+    <p>Questions? Just reply to this email or text me anytime.</p>
+
+    <p>— Amanda</p>
+  </div>
+  <div class="email-footer">
+    Sunshine Swimming · Manatee County, FL · sunshineswimming.com
+  </div>
+</div>
+
+</body>
+</html>

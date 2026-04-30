@@ -1,0 +1,19 @@
+# Client PII — never commit raw client data
+data/raw/
+
+# Processed data may contain PII — review before committing
+# data/processed/
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
