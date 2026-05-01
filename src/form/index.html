@@ -551,7 +551,8 @@ body::after {
   font-weight: 400;
 }
 
-.decline-message .restart-link {
+.decline-message .restart-link,
+.step-panel .restart-link {
   display: block;
   text-align: center;
   margin-top: 20px;
@@ -562,7 +563,8 @@ body::after {
   cursor: pointer;
 }
 
-.decline-message .restart-link:hover { text-decoration: underline; }
+.decline-message .restart-link:hover,
+.step-panel .restart-link:hover { text-decoration: underline; }
 
 /* === THANK YOU === */
 .thank-you {
@@ -894,6 +896,7 @@ body::after {
         <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
         <button class="btn btn-primary" onclick="handleStep2()">Continue →</button>
       </div>
+      <div style="text-align:center;margin-top:12px;"><a class="restart-link" onclick="resetForm()">Start over</a></div>
     </div>
 
     <!-- ============ STEP 3: PARENT/CONTACT ============ -->
@@ -934,6 +937,7 @@ body::after {
         <button class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
         <button class="btn btn-primary" onclick="handleStep3()">Continue →</button>
       </div>
+      <div style="text-align:center;margin-top:12px;"><a class="restart-link" onclick="resetForm()">Start over</a></div>
     </div>
 
     <!-- ============ STEP 4: LOGISTICS ============ -->
@@ -987,6 +991,7 @@ body::after {
         <button class="btn btn-secondary" onclick="goToStep(3)">← Back</button>
         <button class="btn btn-primary" id="submitBtn" onclick="handleSubmit()">Submit Inquiry 🏊‍♀️</button>
       </div>
+      <div style="text-align:center;margin-top:12px;"><a class="restart-link" onclick="resetForm()">Start over</a></div>
     </div>
 
     <!-- ============ DECLINE: OUT OF AREA ============ -->
@@ -1051,7 +1056,7 @@ body::after {
 // ================================================================
 // CONFIG — Set your Zapier webhook URL here
 // ================================================================
-const ZAPIER_WEBHOOK_URL = 'YOUR_ZAPIER_WEBHOOK_URL_HERE';
+const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/1830145/uvk2o44/';
 
 // Set to true to enable test mode (logs to console instead of sending)
 const TEST_MODE = (ZAPIER_WEBHOOK_URL === 'YOUR_ZAPIER_WEBHOOK_URL_HERE');
@@ -1284,7 +1289,7 @@ function gatherData() {
     additional_swimmers: document.getElementById('f_additionalSwimmers').value.trim(),
 
     // Parent
-    parent_name: document.getElementById('f_parentName').value.trim(),
+    full_name: document.getElementById('f_parentName').value.trim(),
     phone: document.getElementById('f_phone').value.trim(),
     email: document.getElementById('f_email').value.trim(),
     address: document.getElementById('f_address').value.trim(),
@@ -1341,7 +1346,7 @@ async function submitNonprofit() {
     location: document.getElementById('f_location').value,
     lesson_type: document.getElementById('f_lessonType').value,
     pool_heated: document.getElementById('f_poolHeated').value,
-    parent_name: document.getElementById('f_parentName').value.trim(),
+    full_name: document.getElementById('f_parentName').value.trim(),
     phone: document.getElementById('f_phone').value.trim(),
     email: document.getElementById('f_email').value.trim(),
     address: document.getElementById('f_address').value.trim(),
@@ -1440,6 +1445,38 @@ function runTestSuite() {
 if (TEST_MODE) {
   document.getElementById('testBanner').classList.add('active');
 }
+
+// Live error clearing — clear error when field becomes valid
+document.querySelectorAll('.field-group select').forEach(el => {
+  el.addEventListener('change', function() {
+    if (this.value) {
+      this.classList.remove('error');
+      const errId = 'err_' + this.id.replace('f_', '');
+      const errEl = document.getElementById(errId);
+      if (errEl) errEl.style.display = 'none';
+    }
+  });
+});
+document.querySelectorAll('.field-group input, .field-group textarea').forEach(el => {
+  el.addEventListener('input', function() {
+    if (this.value.trim()) {
+      this.classList.remove('error');
+      const errId = 'err_' + this.id.replace('f_', '');
+      const errEl = document.getElementById(errId);
+      if (errEl) errEl.style.display = 'none';
+    }
+  });
+});
+
+// Live error clearing for checkbox group
+document.querySelectorAll('#f_referralSource input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', function() {
+    const anyChecked = document.querySelectorAll('#f_referralSource input:checked').length > 0;
+    if (anyChecked) {
+      document.getElementById('err_referralSource').style.display = 'none';
+    }
+  });
+});
 
 // Phone auto-format
 document.getElementById('f_phone').addEventListener('input', function(e) {

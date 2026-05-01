@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunshine Swimming — Project Ops</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f172a;--text:#334155;--muted:#64748b;--faint:#94a3b8;--white:#fff;--paper:#f8fafc;--border:#e2e8f0;--ocean-deep:#0c4a6e;--ocean:#0369a1;--ocean-mid:#0284c7;--ocean-light:#e0f2fe;--ocean-glow:#bae6fd;--emerald:#059669;--emerald-light:#ecfdf5;--amber:#d97706;--amber-light:#fffbeb;--coral:#e11d48;--coral-light:#fff1f2;--violet:#7c3aed;--violet-light:#f5f3ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;}
+.topbar{background:#1e293b;color:var(--white);padding:14px 32px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.15);}
+.topbar-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.topbar-brand{font-family:'Fraunces',serif;font-size:15px;font-weight:700;}
+.topbar-brand span{font-weight:400;color:var(--faint);font-style:italic;}
+.topbar-nav{display:flex;gap:2px;background:rgba(255,255,255,0.06);border-radius:7px;padding:3px;flex-wrap:wrap;}
+.topbar-nav button{padding:6px 12px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,0.45);transition:all 0.2s;white-space:nowrap;font-family:'Outfit',sans-serif;}
+.topbar-nav button:hover{color:rgba(255,255,255,0.85);}
+.topbar-nav button.active{background:rgba(255,255,255,0.12);color:var(--white);}
+.main{max-width:900px;margin:0 auto;padding:0 32px;}
+.intro{padding:28px 0 20px;border-bottom:1px solid var(--border);}
+.intro h1{font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:4px;}
+.intro p{font-size:13px;color:var(--muted);max-width:640px;}
+.chapter{display:none;padding:24px 0 40px;animation:fadeIn 0.25s ease;}
+.chapter.active{display:block;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.ch-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--ocean-mid);margin-bottom:6px;}
+.ch-title{font-family:'Fraunces',serif;font-size:20px;font-weight:700;line-height:1.2;margin-bottom:16px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:14px;}
+.card h3{font-size:14px;font-weight:700;margin-bottom:8px;}
+.card h4{font-size:12px;font-weight:700;color:var(--ocean);margin:14px 0 6px;text-transform:uppercase;letter-spacing:0.5px;}
+.card p,.card li{font-size:13px;color:var(--text);line-height:1.55;}
+.card ul,.card ol{margin-left:18px;margin-top:4px;}
+.card li{margin-bottom:4px;}
+.mono{font-family:'JetBrains Mono',monospace;font-size:11px;background:#f1f5f9;padding:1px 5px;border-radius:3px;}
+.config{background:#f1f5f9;border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:var(--text);white-space:pre-wrap;}
+.alert{border-radius:8px;padding:12px 14px;margin:10px 0;font-size:12px;line-height:1.5;}
+.alert-ocean{background:var(--ocean-light);border-left:3px solid var(--ocean);color:var(--ocean-deep);}
+.alert-amber{background:var(--amber-light);border-left:3px solid var(--amber);color:#92400e;}
+.alert-coral{background:var(--coral-light);border-left:3px solid var(--coral);color:#9f1239;}
+.alert-emerald{background:var(--emerald-light);border-left:3px solid var(--emerald);color:#065f46;}
+table.spec{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;}
+table.spec th{padding:8px 10px;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:2px solid var(--border);background:#f8f9fa;text-align:left;}
+table.spec td{padding:8px 10px;border-bottom:1px solid #f1f3f5;vertical-align:top;}
+table.spec tr:last-child td{border-bottom:none;}
+.ch-nav{display:flex;justify-content:space-between;margin-top:28px;padding-top:16px;border-top:1px solid var(--border);}
+.ch-nav-btn{padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text);transition:all 0.2s;font-family:'Outfit',sans-serif;}
+.ch-nav-btn:hover{border-color:var(--ocean-mid);color:var(--ocean-mid);}
+.ch-nav-spacer{flex:1;}
+.footer{text-align:center;padding:16px 0 24px;font-size:11px;color:#94a3b8;}
+@media(max-width:768px){.main{padding:0 16px;}.topbar{padding:10px 16px;}.topbar-inner{flex-direction:column;gap:8px;}.topbar-nav{justify-content:center;}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">Project Ops <span>· Sunshine Swimming</span></div>
+    <nav class="topbar-nav" id="mainNav">
+      <button class="active" onclick="showCh('repo',this)">Repo</button>
+      <button onclick="showCh('git',this)">Git</button>
+      <button onclick="showCh('environments',this)">Environments</button>
+      <button onclick="showCh('changes',this)">Changes</button>
+      <button onclick="showCh('toolchain',this)">Toolchain</button>
+      <button onclick="showCh('rules',this)">Rules</button>
+    </nav>
+  </div>
+</div>
+
+<div class="main">
+  <div class="intro">
+    <h1>Project Ops Specification</h1>
+    <p>How we build, test, deploy, and communicate changes. Follow this or we go in circles.</p>
+  </div>
+
+  <!-- ===== REPO ===== -->
+  <div class="chapter active" id="ch-repo">
+    <div class="ch-label">Section 1</div>
+    <div class="ch-title">Repository Structure</div>
+
+    <div class="card">
+      <h3>Repo</h3>
+      <p><span class="mono">github.com/gfenimore/sunshine-swimming</span> — private repo, <span class="mono">main</span> branch only (for now).</p>
+    </div>
+
+    <div class="card">
+      <h3>Directory Layout</h3>
+      <div class="config">sunshine-swimming/
+├── index.html                         ← GitHub Pages redirect → src/form/
+├── README.md                          ← Project overview
+├── .gitignore                         ← Excludes data/raw/
+├── .vscode/settings.json              ← VS Code workspace config
+│
+├── docs/                              ← Planning & specification artifacts
+│   ├── architecture.md                ← System architecture + decision log
+│   ├── form-spec.html                 ← Intake form specification (this doc)
+│   ├── project-ops.html               ← THIS document
+│   ├── reboot-plan.html               ← Reboot work plan
+│   ├── work-plan.html                 ← Original implementation work plan
+│   ├── build-plan.html                ← Internal HoneyBook build plan
+│   └── client-proposal.html           ← Amanda's systems proposal
+│
+├── src/                               ← Source code — deployable artifacts
+│   ├── form/
+│   │   └── index.html                 ← THE intake form (single file)
+│   ├── email-templates/
+│   │   ├── 01-welcome.html            ← Email preview + copy source
+│   │   ├── 02-water-safety.html
+│   │   ├── 03-ready-to-book.html
+│   │   └── 04-decline-referral.html
+│   ├── scripts/
+│   │   ├── scrub-client-data.py       ← Real client xlsx → CSV
+│   │   └── generate-lotr-import.py    ← LOTR test data → CSV
+│   └── zapier/
+│       └── webhook-test.html          ← Webhook payload test harness
+│
+├── data/
+│   ├── raw/                           ← GITIGNORED — Amanda's real client data
+│   └── processed/                     ← Generated CSVs for HB import
+│
+└── tests/
+    └── test-scenarios.md              ← Scenario matrix + test procedures</div>
+    </div>
+
+    <div class="card">
+      <h3>File Ownership</h3>
+      <table class="spec">
+        <thead><tr><th>File/Dir</th><th>Who Edits</th><th>How</th></tr></thead>
+        <tbody>
+          <tr><td><span class="mono">src/form/index.html</span></td><td>Claude (via Filesystem MCP)</td><td>Only after spec approval. Never ad hoc.</td></tr>
+          <tr><td><span class="mono">docs/*.html</span></td><td>Claude (artifact → Garry saves to repo)</td><td>Created as chat artifacts, reviewed, then saved</td></tr>
+          <tr><td><span class="mono">src/scripts/*.py</span></td><td>Claude (via Filesystem MCP)</td><td>Direct write, tested before commit</td></tr>
+          <tr><td><span class="mono">data/raw/*</span></td><td>Garry (manual)</td><td>Uploaded by Garry, never committed</td></tr>
+          <tr><td><span class="mono">README.md</span></td><td>Claude or Garry</td><td>Updated to reflect current state</td></tr>
+          <tr><td>Zapier config</td><td>Garry (Zapier UI)</td><td>Following step-by-step from docs</td></tr>
+          <tr><td>HoneyBook config</td><td>Garry (HoneyBook UI)</td><td>Following step-by-step from docs</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ch-nav">
+      <div class="ch-nav-spacer"></div>
+      <button class="ch-nav-btn" onclick="showCh('git',navBtn('git'))">Git →</button>
+    </div>
+  </div>
+
+  <!-- ===== GIT ===== -->
+  <div class="chapter" id="ch-git">
+    <div class="ch-label">Section 2</div>
+    <div class="ch-title">Git Workflow</div>
+
+    <div class="card">
+      <h3>Branch Strategy</h3>
+      <p>Single branch: <span class="mono">main</span>. No feature branches for now — the team is one person + one AI. Branching adds overhead without value at this scale.</p>
+      <div class="alert alert-ocean"><strong>Revisit when:</strong> Amanda's project goes live and we start a second client deployment. At that point, consider <span class="mono">main</span> + <span class="mono">client/sunshine-swimming</span> branches.</div>
+    </div>
+
+    <div class="card">
+      <h3>Commit Message Format</h3>
+      <div class="config">type: short description
+
+Types:
+  feat:     New feature or capability
+  fix:      Bug fix
+  spec:     Specification document added or updated
+  docs:     Documentation (README, architecture, etc.)
+  refactor: Code restructure without behavior change
+  test:     Test data, test scripts, test harness
+  ops:      Deploy config, CI, project ops
+  data:     Data scripts or processed data
+
+Examples:
+  feat: rebuild intake form from spec v1.0
+  fix: error clearing on select fields
+  spec: add form specification document
+  ops: add GitHub Pages redirect
+  data: generate LOTR test import CSV</div>
+    </div>
+
+    <div class="card">
+      <h3>Commit Cadence</h3>
+      <table class="spec">
+        <thead><tr><th>When to Commit</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>After a spec is approved</td><td><span class="mono">spec: intake form specification v1.0</span></td></tr>
+          <tr><td>After a feature is built + tested locally</td><td><span class="mono">feat: rebuild intake form from spec</span></td></tr>
+          <tr><td>After a bug is fixed + verified</td><td><span class="mono">fix: Start Over link styling</span></td></tr>
+          <tr><td>After docs are updated</td><td><span class="mono">docs: update architecture decision log</span></td></tr>
+          <tr><td>After a test pass is completed</td><td><span class="mono">test: Stage 1 routing scenarios pass</span></td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-coral"><strong>Never commit:</strong> half-finished work, untested changes, or "WIP" commits. Every commit on <span class="mono">main</span> should be a working state.</div>
+    </div>
+
+    <div class="card">
+      <h3>Push = Deploy</h3>
+      <p>GitHub Pages is configured to serve from <span class="mono">main</span> branch, root folder. Every <span class="mono">git push</span> triggers a deploy. The live URL is:</p>
+      <div class="config">https://gfenimore.github.io/sunshine-swimming/</div>
+      <p style="margin-top:8px;">This redirects to <span class="mono">src/form/index.html</span> via the root <span class="mono">index.html</span>.</p>
+      <div class="alert alert-amber"><strong>Consequence:</strong> Pushing to main = deploying to the public URL. If Amanda has the link, she sees changes immediately. Don't push broken code.</div>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('repo',navBtn('repo'))">← Repo</button>
+      <button class="ch-nav-btn" onclick="showCh('environments',navBtn('environments'))">Environments →</button>
+    </div>
+  </div>
+
+  <!-- ===== ENVIRONMENTS ===== -->
+  <div class="chapter" id="ch-environments">
+    <div class="ch-label">Section 3</div>
+    <div class="ch-title">Environments</div>
+
+    <div class="card">
+      <h3>Three Environments</h3>
+      <table class="spec">
+        <thead><tr><th>Env</th><th>URL</th><th>Form Mode</th><th>Webhook</th><th>Who</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>DEV</strong></td>
+            <td>Local file: <span class="mono">src/form/index.html</span></td>
+            <td><span class="mono">FORM_MODE = 'dev'</span></td>
+            <td>None (console only)</td>
+            <td>Garry during development</td>
+          </tr>
+          <tr>
+            <td><strong>STAGING</strong></td>
+            <td>GitHub Pages URL</td>
+            <td><span class="mono">FORM_MODE = 'staging'</span></td>
+            <td>Zapier test webhook</td>
+            <td>Garry + Amanda for testing</td>
+          </tr>
+          <tr>
+            <td><strong>LIVE</strong></td>
+            <td>sunshineswimming.com/inquiry</td>
+            <td><span class="mono">FORM_MODE = 'live'</span></td>
+            <td>Zapier production webhook</td>
+            <td>Amanda's real clients</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Environment Switching</h3>
+      <p>The form has two config variables at the top of the script. To switch environments, update both:</p>
+      <div class="config">// DEV
+const ZAPIER_WEBHOOK_URL = 'YOUR_ZAPIER_WEBHOOK_URL_HERE';
+const FORM_MODE = 'dev';
+
+// STAGING
+const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/1830145/uvk2o44/';
+const FORM_MODE = 'staging';
+
+// LIVE
+const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/XXXXXXX/XXXXXXX/';
+const FORM_MODE = 'live';</div>
+      <div class="alert alert-amber"><strong>Current limitation:</strong> We have one file and one branch. Switching environments means editing the config and pushing. For now this is acceptable — the form is in active development, not serving real clients. When we go live, we'll need a build step or separate deployment for production.</div>
+    </div>
+
+    <div class="card">
+      <h3>Production Deployment — Vercel (Future State)</h3>
+      <p>Garry's other projects use Vercel with preview + production deployments. Before Amanda goes live, we migrate to this model:</p>
+      <table class="spec">
+        <thead><tr><th>Vercel Env</th><th>Trigger</th><th>URL</th><th>FORM_MODE</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Preview</strong></td><td>Push to any branch / PR</td><td>Auto-generated preview URL</td><td>staging</td></tr>
+          <tr><td><strong>Production</strong></td><td>Push to <span class="mono">main</span> (or manual promote)</td><td>sunshineswimming.com/inquiry</td><td>live</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px;">This gives us preview URLs for testing without touching production, and Amanda's live form only updates when we explicitly promote. Vercel environment variables handle the webhook URL and FORM_MODE switching — no more editing the file.</p>
+      <div class="alert alert-ocean"><strong>When to migrate:</strong> After the form spec is rebuilt and tested, before sharing the production URL with Amanda's clients. GitHub Pages stays as our staging environment until then.</div>
+    </div>
+
+    <div class="card">
+      <h3>Downstream Systems per Environment</h3>
+      <table class="spec">
+        <thead><tr><th>Env</th><th>Zapier</th><th>HoneyBook</th><th>Email Recipient</th></tr></thead>
+        <tbody>
+          <tr><td>DEV</td><td>None</td><td>None</td><td>Console log only</td></tr>
+          <tr><td>STAGING</td><td>Test zap (same webhook, test mode in Zapier)</td><td>Amanda's trial account (test data)</td><td>Garry's Gmail</td></tr>
+          <tr><td>LIVE</td><td>Published zap</td><td>Amanda's live account</td><td>Real clients</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('git',navBtn('git'))">← Git</button>
+      <button class="ch-nav-btn" onclick="showCh('changes',navBtn('changes'))">Changes →</button>
+    </div>
+  </div>
+
+  <!-- ===== CHANGES ===== -->
+  <div class="chapter" id="ch-changes">
+    <div class="ch-label">Section 4</div>
+    <div class="ch-title">Change Management</div>
+
+    <div class="card">
+      <h3>The Rule</h3>
+      <p style="font-size:16px;font-weight:700;color:var(--coral);text-align:center;padding:12px 0;">No code changes without an approved spec.</p>
+      <p>This is the rule that prevents us from going in circles. Every change follows this process:</p>
+    </div>
+
+    <div class="card">
+      <h3>Change Process</h3>
+      <div class="config">1. IDENTIFY   → What needs to change and why?
+2. SPEC       → Claude updates the relevant spec document
+3. REVIEW     → Garry reviews the spec change in the artifact panel
+4. APPROVE    → Garry says "approved" or requests modifications
+5. BUILD      → Claude implements exactly what the spec says
+6. TEST       → Garry tests locally (DEV mode)
+7. COMMIT     → Garry runs: git add . && git commit -m "..." && git push
+8. VERIFY     → Garry checks GitHub Pages URL to confirm deploy</div>
+    </div>
+
+    <div class="card">
+      <h3>Change Types</h3>
+      <table class="spec">
+        <thead><tr><th>Type</th><th>Spec Required?</th><th>Process</th></tr></thead>
+        <tbody>
+          <tr><td>New feature</td><td>Yes — add to form spec</td><td>Full process: spec → approve → build → test → commit</td></tr>
+          <tr><td>Bug fix</td><td>No — but describe the bug and fix before implementing</td><td>Describe → agree → fix → test → commit</td></tr>
+          <tr><td>Content change (copy, labels)</td><td>No — but confirm the exact text</td><td>State the change → agree → implement → verify</td></tr>
+          <tr><td>Config change (webhook URL, mode)</td><td>No</td><td>State what's changing → implement → verify</td></tr>
+          <tr><td>New doc/artifact</td><td>No</td><td>Create → review → save to repo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Artifact → Repo Workflow</h3>
+      <p>Claude creates artifacts in the chat. They need to get into the repo. The process:</p>
+      <ol>
+        <li>Claude creates an artifact (HTML doc, spec, plan) in the right panel</li>
+        <li>Garry reviews in the panel</li>
+        <li>If approved: Claude writes the file to Garry's filesystem via MCP</li>
+        <li>Garry commits and pushes</li>
+      </ol>
+      <div class="alert alert-ocean"><strong>Key insight:</strong> Claude has TWO file systems — the container (ephemeral, resets between sessions) and Garry's machine (via Filesystem MCP, persistent). Final deliverables must be written to Garry's machine, not just the container.</div>
+    </div>
+
+    <div class="card">
+      <h3>Communication Protocol</h3>
+      <table class="spec">
+        <thead><tr><th>Situation</th><th>What Claude Does</th></tr></thead>
+        <tbody>
+          <tr><td>Claude needs to make a code change</td><td>States what will change and why BEFORE editing. Waits for approval on anything non-trivial.</td></tr>
+          <tr><td>Claude discovers a problem</td><td>Describes the problem. Proposes a fix. Does NOT implement until Garry agrees.</td></tr>
+          <tr><td>Claude needs info about a platform (HB, Zapier)</td><td>Asks Garry to check the UI and report back. Does NOT guess based on outdated knowledge.</td></tr>
+          <tr><td>A step requires Garry to act in a browser</td><td>Gives numbered steps with exact app context (which app, which screen, which button).</td></tr>
+          <tr><td>Multiple files need changes</td><td>Lists ALL files that will change and what's changing in each BEFORE starting.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('environments',navBtn('environments'))">← Environments</button>
+      <button class="ch-nav-btn" onclick="showCh('toolchain',navBtn('toolchain'))">Toolchain →</button>
+    </div>
+  </div>
+
+  <!-- ===== TOOLCHAIN ===== -->
+  <div class="chapter" id="ch-toolchain">
+    <div class="ch-label">Section 5</div>
+    <div class="ch-title">Toolchain</div>
+
+    <div class="card">
+      <h3>Development Tools</h3>
+      <table class="spec">
+        <thead><tr><th>Tool</th><th>Purpose</th><th>Access</th></tr></thead>
+        <tbody>
+          <tr><td><strong>VS Code</strong></td><td>View/edit files locally, Live Preview for form testing</td><td>Garry's machine</td></tr>
+          <tr><td><strong>Claude.ai</strong></td><td>Spec creation, code generation, planning, artifacts</td><td>This chat</td></tr>
+          <tr><td><strong>Filesystem MCP</strong></td><td>Claude reads/writes files on Garry's machine</td><td>Connected</td></tr>
+          <tr><td><strong>Git MCP</strong></td><td>Claude can read repo contents from GitHub</td><td>Connected (read-only useful)</td></tr>
+          <tr><td><strong>Git CLI</strong></td><td>Garry commits and pushes from PowerShell</td><td>Garry's machine</td></tr>
+          <tr><td><strong>GitHub Pages</strong></td><td>Auto-deploys on push to main</td><td>gfenimore.github.io/sunshine-swimming</td></tr>
+          <tr><td><strong>Chrome/Edge</strong></td><td>Test the form, inspect console, mobile emulation</td><td>Garry's machine</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Platform Tools (Garry operates manually)</h3>
+      <table class="spec">
+        <thead><tr><th>Tool</th><th>Purpose</th><th>Why Manual</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Zapier</strong></td><td>Webhook catch → HB client + project creation</td><td>No API access from Claude's environment</td></tr>
+          <tr><td><strong>HoneyBook</strong></td><td>CRM, email templates, automations, scheduler</td><td>No API; Claude's knowledge of the UI is unreliable</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-amber"><strong>Future opportunity:</strong> Claude in Chrome (browsing agent) could potentially automate Zapier and HoneyBook configuration. Investigate after the POC is stable.</div>
+    </div>
+
+    <div class="card">
+      <h3>Testing Tools</h3>
+      <table class="spec">
+        <thead><tr><th>What</th><th>How</th></tr></thead>
+        <tbody>
+          <tr><td>Form routing logic</td><td>DEV mode in browser. Visual inspection + console test suite.</td></tr>
+          <tr><td>Form validation</td><td>DEV mode. Manually trigger errors, verify clearing behavior.</td></tr>
+          <tr><td>Webhook payload</td><td>STAGING mode. Submit form → check Zapier task history.</td></tr>
+          <tr><td>HoneyBook integration</td><td>STAGING mode. Submit form → check HB for client + project.</td></tr>
+          <tr><td>Email delivery</td><td>STAGING mode. Submit form → check Garry's Gmail.</td></tr>
+          <tr><td>Mobile layout</td><td>Chrome DevTools → device emulation, or Garry's actual phone.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('changes',navBtn('changes'))">← Changes</button>
+      <button class="ch-nav-btn" onclick="showCh('rules',navBtn('rules'))">Rules →</button>
+    </div>
+  </div>
+
+  <!-- ===== RULES ===== -->
+  <div class="chapter" id="ch-rules">
+    <div class="ch-label">Section 6</div>
+    <div class="ch-title">Operating Rules</div>
+
+    <div class="card">
+      <h3>Rules for Claude</h3>
+      <ol>
+        <li><strong>Spec before code.</strong> No form changes without an approved spec. No exceptions.</li>
+        <li><strong>State what you'll change before changing it.</strong> List files, describe changes, get a "go" before editing.</li>
+        <li><strong>Don't guess about platform UIs.</strong> If you don't know what a Zapier or HoneyBook screen looks like, ask Garry to screenshot it.</li>
+        <li><strong>Write to Garry's filesystem, not just the container.</strong> The container resets. Garry's machine persists.</li>
+        <li><strong>Use artifacts for reviewable content.</strong> Specs, plans, and docs go in the right panel — not inline in chat.</li>
+        <li><strong>One thing at a time.</strong> Don't batch 5 changes in one edit. Each change is discrete, testable, and committable.</li>
+        <li><strong>Field names are sacred.</strong> Never rename a webhook payload field without explicit discussion. Zapier mappings break silently.</li>
+        <li><strong>Admit when you don't know.</strong> "I'm not sure how HoneyBook handles this" is better than a wrong answer that wastes 2 hours.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Rules for Garry</h3>
+      <ol>
+        <li><strong>Test locally before pushing.</strong> Open the file in the browser, verify the change works, then commit.</li>
+        <li><strong>Commit after every verified change.</strong> Don't accumulate uncommitted changes across sessions.</li>
+        <li><strong>Screenshot when stuck.</strong> A screenshot of the actual UI is worth 1000 words of description.</li>
+        <li><strong>Push back on Claude.</strong> If instructions don't make sense or reference things that don't exist, say so immediately.</li>
+        <li><strong>One environment at a time.</strong> Don't test in STAGING while also making DEV changes. Finish one, commit, then switch.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Rules for Both</h3>
+      <ol>
+        <li><strong>Never skip testing.</strong> Every change gets verified before the next change starts.</li>
+        <li><strong>Document surprises.</strong> When a platform does something unexpected, add it to <span class="mono">docs/architecture.md</span> decision log.</li>
+        <li><strong>Protect Amanda's data.</strong> Real client data never goes in git. Test data uses LOTR names. Garry's Gmail for test emails, never Amanda's until go-live.</li>
+        <li><strong>When in doubt, stop and align.</strong> 5 minutes of discussion saves 2 hours of rework.</li>
+      </ol>
+    </div>
+
+    <div class="card" style="background:var(--emerald-light);border-color:var(--emerald);">
+      <h3 style="color:var(--emerald);">✅ Approval</h3>
+      <p>Review all 6 sections. When approved, this becomes our operating agreement. I'll save it to <span class="mono">docs/project-ops.html</span> in the repo.</p>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('toolchain',navBtn('toolchain'))">← Toolchain</button>
+      <div class="ch-nav-spacer"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Project Ops v1.0 — Sunshine Swimming · May 2026</div>
+
+<script>
+const navMap={repo:0,git:1,environments:2,changes:3,toolchain:4,rules:5};
+function showCh(id,btn){
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  document.getElementById('ch-'+id).classList.add('active');
+  document.querySelectorAll('.topbar-nav button').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  window.scrollTo({top:document.querySelector('.intro').offsetTop+document.querySelector('.intro').offsetHeight-10,behavior:'smooth'});
+}
+function navBtn(id){return document.querySelectorAll('.topbar-nav button')[navMap[id]];}
+</script>
+</body>
+</html>

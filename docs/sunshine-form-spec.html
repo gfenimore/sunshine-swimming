@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunshine Swimming — Intake Form Specification</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f172a;--text:#334155;--muted:#64748b;--faint:#94a3b8;--white:#fff;--paper:#f8fafc;--border:#e2e8f0;--ocean-deep:#0c4a6e;--ocean:#0369a1;--ocean-mid:#0284c7;--ocean-light:#e0f2fe;--ocean-glow:#bae6fd;--emerald:#059669;--emerald-light:#ecfdf5;--amber:#d97706;--amber-light:#fffbeb;--coral:#e11d48;--coral-light:#fff1f2;--violet:#7c3aed;--violet-light:#f5f3ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;}
+.topbar{background:var(--ocean-deep);color:var(--white);padding:14px 32px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.15);}
+.topbar-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.topbar-brand{font-family:'Fraunces',serif;font-size:15px;font-weight:700;}
+.topbar-brand span{font-weight:400;color:var(--ocean-glow);font-style:italic;}
+.topbar-nav{display:flex;gap:2px;background:rgba(255,255,255,0.08);border-radius:7px;padding:3px;flex-wrap:wrap;}
+.topbar-nav button{padding:6px 12px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,0.5);transition:all 0.2s;white-space:nowrap;font-family:'Outfit',sans-serif;}
+.topbar-nav button:hover{color:rgba(255,255,255,0.85);}
+.topbar-nav button.active{background:rgba(255,255,255,0.15);color:var(--white);}
+.main{max-width:900px;margin:0 auto;padding:0 32px;}
+.intro{padding:28px 0 20px;border-bottom:1px solid var(--border);}
+.intro h1{font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:4px;}
+.intro p{font-size:13px;color:var(--muted);max-width:640px;}
+.chapter{display:none;padding:24px 0 40px;animation:fadeIn 0.25s ease;}
+.chapter.active{display:block;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.ch-label{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--ocean-mid);margin-bottom:6px;}
+.ch-title{font-family:'Fraunces',serif;font-size:20px;font-weight:700;line-height:1.2;margin-bottom:16px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:14px;}
+.card h3{font-size:14px;font-weight:700;margin-bottom:8px;}
+.card h4{font-size:12px;font-weight:700;color:var(--ocean);margin:14px 0 6px;text-transform:uppercase;letter-spacing:0.5px;}
+.card p,.card li{font-size:13px;color:var(--text);line-height:1.55;}
+.card ul,.card ol{margin-left:18px;margin-top:4px;}
+.card li{margin-bottom:4px;}
+table.spec{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;}
+table.spec th{padding:8px 10px;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:2px solid var(--border);background:#f8f9fa;text-align:left;}
+table.spec td{padding:8px 10px;border-bottom:1px solid #f1f3f5;vertical-align:top;}
+table.spec tr:last-child td{border-bottom:none;}
+.mono{font-family:'JetBrains Mono',monospace;font-size:11px;background:#f1f5f9;padding:1px 5px;border-radius:3px;}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;}
+.tag-req{background:var(--coral-light);color:var(--coral);}
+.tag-opt{background:#f1f5f9;color:var(--muted);}
+.alert{border-radius:8px;padding:12px 14px;margin:10px 0;font-size:12px;line-height:1.5;}
+.alert-ocean{background:var(--ocean-light);border-left:3px solid var(--ocean);color:var(--ocean-deep);}
+.alert-amber{background:var(--amber-light);border-left:3px solid var(--amber);color:#92400e;}
+.config{background:#f1f5f9;border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:var(--text);white-space:pre-wrap;}
+.ch-nav{display:flex;justify-content:space-between;margin-top:28px;padding-top:16px;border-top:1px solid var(--border);}
+.ch-nav-btn{padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text);transition:all 0.2s;font-family:'Outfit',sans-serif;}
+.ch-nav-btn:hover{border-color:var(--ocean-mid);color:var(--ocean-mid);}
+.ch-nav-spacer{flex:1;}
+.footer{text-align:center;padding:16px 0 24px;font-size:11px;color:#94a3b8;}
+@media(max-width:768px){.main{padding:0 16px;}.topbar{padding:10px 16px;}.topbar-inner{flex-direction:column;gap:8px;}.topbar-nav{justify-content:center;}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">Sunshine Swimming <span>· Form Spec v1.0</span></div>
+    <nav class="topbar-nav" id="mainNav">
+      <button class="active" onclick="showCh('overview',this)">Overview</button>
+      <button onclick="showCh('layout',this)">Layout</button>
+      <button onclick="showCh('fields',this)">Fields</button>
+      <button onclick="showCh('routing',this)">Routing</button>
+      <button onclick="showCh('validation',this)">Validation</button>
+      <button onclick="showCh('ux',this)">UX Behaviors</button>
+      <button onclick="showCh('submission',this)">Submission</button>
+      <button onclick="showCh('config',this)">Config</button>
+    </nav>
+  </div>
+</div>
+
+<div class="main">
+  <div class="intro">
+    <h1>Intake Form Specification</h1>
+    <p>Complete spec for the Sunshine Swimming custom intake form. Approve each section, then I rebuild from scratch to match exactly. No ad hoc changes.</p>
+  </div>
+
+  <!-- ===== OVERVIEW ===== -->
+  <div class="chapter active" id="ch-overview">
+    <div class="ch-label">Section 1</div>
+    <div class="ch-title">Overview</div>
+
+    <div class="card">
+      <h3>Purpose</h3>
+      <p>A mobile-first, multi-step HTML form that qualifies swim lesson leads before they reach HoneyBook. Unqualified leads are declined inline with a warm message. Qualified leads are submitted to a Zapier webhook.</p>
+    </div>
+
+    <div class="card">
+      <h3>Technical Constraints</h3>
+      <ul>
+        <li>Single self-contained HTML file (no build tools, no framework)</li>
+        <li>No external dependencies except Google Fonts</li>
+        <li>Hostable anywhere: GitHub Pages, Netlify, WordPress embed</li>
+        <li>Zapier webhook URL configurable via a single variable at top of script</li>
+        <li>Test mode auto-enables when webhook URL is the placeholder value</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Branding</h3>
+      <ul>
+        <li>Color palette: ocean blues (#0c4a6e → #bae6fd), white card, light sky background</li>
+        <li>Fonts: Fraunces (serif, headings), Nunito (sans, body/fields)</li>
+        <li>Tone: warm, friendly, personal — swim coach for toddlers, not enterprise SaaS</li>
+        <li>Logo: placeholder emoji (🏊‍♀️) until Amanda provides her logo file</li>
+        <li>Wave SVG divider between header gradient and form body</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Webhook Payload Field Names</h3>
+      <p>These are the JSON keys sent to Zapier. They must match exactly what Zapier sees.</p>
+      <div class="config">full_name          → Parent/Guardian name
+email              → Email address
+phone              → Phone number
+address            → Home address
+swimmer_name       → Swimmer's first name
+swimmer_age        → Age range dropdown value
+previous_lessons   → Yes / No / A little
+comfort_level      → 1-5 scale dropdown value
+medical            → Medical/allergies (optional)
+injuries           → Prior injuries (optional)
+additional_swimmers→ Additional swimmers (optional)
+lesson_location    → Alt lesson location (optional)
+location           → Service area dropdown value
+lesson_type        → Paid or nonprofit
+pool_heated        → Yes / No / I don't know / Neighborhood
+preferred_times    → Schedule preferences (optional)
+referral_source    → How heard (comma-separated)
+anything_else      → Open notes (optional)
+lead_type          → "qualified" or "nonprofit"
+tag                → same as lead_type
+submitted_at       → ISO timestamp
+form_version       → "1.0"</div>
+    </div>
+
+    <div class="ch-nav">
+      <div class="ch-nav-spacer"></div>
+      <button class="ch-nav-btn" onclick="showCh('layout',navBtn('layout'))">Layout →</button>
+    </div>
+  </div>
+
+  <!-- ===== LAYOUT ===== -->
+  <div class="chapter" id="ch-layout">
+    <div class="ch-label">Section 2</div>
+    <div class="ch-title">Page Layout & Structure</div>
+
+    <div class="card">
+      <h3>Page Structure (top to bottom)</h3>
+      <ol>
+        <li><strong>Header</strong> — logo, "Sunshine Swimming" title, tagline. White text on ocean gradient background.</li>
+        <li><strong>Test Mode Banner</strong> — yellow bar, only visible when webhook URL is placeholder. Shows "TEST MODE" and operating mode indicator.</li>
+        <li><strong>Progress Indicator</strong> — sticky inside the form card header. Simple "Step N of 4" text in upper right corner of the card. Clean, minimal, no dots/lines/labels. Follows Material Design linear stepper pattern (text-only variant).</li>
+        <li><strong>Form Card</strong> — white card with rounded corners and shadow. Contains one step panel at a time. Progress indicator is pinned to the top of the card so it remains visible when scrolling on mobile.</li>
+        <li><strong>Footer</strong> — "sunshineswimming.com · Manatee County, FL" link.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Progress Indicator Detail</h3>
+      <table class="spec">
+        <thead><tr><th>Behavior</th><th>Spec</th></tr></thead>
+        <tbody>
+          <tr><td>Format</td><td>"Step 1 of 4" — right-aligned, inside the card, above the step title</td></tr>
+          <tr><td>Font</td><td>12px, 600 weight, muted gray color</td></tr>
+          <tr><td>Updates</td><td>Changes to match current step number. Nonprofit flow shows "Step 1 of 2" then "Step 2 of 2".</td></tr>
+          <tr><td>Hidden</td><td>On decline screens and thank-you screens</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-ocean"><strong>Design reference:</strong> Google Material Design — <a href="https://m3.material.io/components/stepper" target="_blank">Linear stepper (text-only)</a>. We're using the minimal variant: no icons, no connecting lines, just a text label indicating position.</div>
+    </div>
+
+    <div class="card">
+      <h3>Step Panels (inside the Form Card)</h3>
+      <p>Only one panel is visible at a time. Panels animate in with a fade+slide-up.</p>
+      <table class="spec">
+        <thead><tr><th>Panel</th><th>ID</th><th>Visible When</th></tr></thead>
+        <tbody>
+          <tr><td>Step 1: Routing</td><td><span class="mono">step1</span></td><td>Initial state + after "Start over"</td></tr>
+          <tr><td>Step 2: Swimmer</td><td><span class="mono">step2</span></td><td>Qualified paid lead passes Step 1</td></tr>
+          <tr><td>Step 3: Contact</td><td><span class="mono">step3</span></td><td>After Step 2 (paid) or directly after Step 1 (nonprofit)</td></tr>
+          <tr><td>Step 4: Logistics</td><td><span class="mono">step4</span></td><td>After Step 3 (paid only)</td></tr>
+          <tr><td>Decline: Area</td><td><span class="mono">declineArea</span></td><td>Location = "Outside Manatee County"</td></tr>
+          <tr><td>Decline: Pool</td><td><span class="mono">declinePool</span></td><td>Pool heated = "No"</td></tr>
+          <tr><td>Thank You: Qualified</td><td><span class="mono">thankYou</span></td><td>After successful qualified submission</td></tr>
+          <tr><td>Thank You: Nonprofit</td><td><span class="mono">nonprofitThanks</span></td><td>After successful nonprofit submission</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Progress Indicator States</h3>
+      <table class="spec">
+        <thead><tr><th>Current Panel</th><th>Indicator Text</th></tr></thead>
+        <tbody>
+          <tr><td>Step 1 (paid flow)</td><td>"Step 1 of 4"</td></tr>
+          <tr><td>Step 2 (paid flow)</td><td>"Step 2 of 4"</td></tr>
+          <tr><td>Step 3 (paid flow)</td><td>"Step 3 of 4"</td></tr>
+          <tr><td>Step 4 (paid flow)</td><td>"Step 4 of 4"</td></tr>
+          <tr><td>Step 1 (nonprofit flow)</td><td>"Step 1 of 2"</td></tr>
+          <tr><td>Step 3 (nonprofit flow, used as step 2)</td><td>"Step 2 of 2"</td></tr>
+          <tr><td>Decline / Thank you screens</td><td>Hidden</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Button Row (per step)</h3>
+      <table class="spec">
+        <thead><tr><th>Step</th><th>Left Button</th><th>Right Button</th><th>Below Buttons</th></tr></thead>
+        <tbody>
+          <tr><td>Step 1</td><td>—</td><td>Continue →</td><td>—</td></tr>
+          <tr><td>Step 2</td><td>← Back</td><td>Continue →</td><td>"Start over" link</td></tr>
+          <tr><td>Step 3</td><td>← Back</td><td>Continue →</td><td>"Start over" link</td></tr>
+          <tr><td>Step 4</td><td>← Back</td><td>Submit Inquiry 🏊‍♀️</td><td>"Start over" link</td></tr>
+          <tr><td>Decline screens</td><td colspan="3">"← Start over" link (centered)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Mobile Behavior (≤480px)</h3>
+      <ul>
+        <li>Buttons stack vertically: primary on top, secondary below</li>
+        <li>Progress dots shrink to 28px</li>
+        <li>Progress labels shrink to 9px</li>
+        <li>Card padding reduces to 24px × 18px</li>
+        <li>"Start over" link remains below buttons, centered</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('overview',navBtn('overview'))">← Overview</button>
+      <button class="ch-nav-btn" onclick="showCh('fields',navBtn('fields'))">Fields →</button>
+    </div>
+  </div>
+
+  <!-- ===== FIELDS ===== -->
+  <div class="chapter" id="ch-fields">
+    <div class="ch-label">Section 3</div>
+    <div class="ch-title">Field Definitions</div>
+
+    <div class="card">
+      <h3>Step 1 — Getting Started (Routing)</h3>
+      <table class="spec">
+        <thead><tr><th>Label</th><th>Type</th><th>ID</th><th>Webhook Key</th><th>Required</th><th>Options / Placeholder</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Where do you live?</td>
+            <td>Select</td>
+            <td><span class="mono">f_location</span></td>
+            <td><span class="mono">location</span></td>
+            <td><span class="tag tag-req">Required</span></td>
+            <td>Bradenton, Lakewood Ranch, Palmetto, Parrish / Ellenton, Terra Ceia, Outside Manatee County</td>
+          </tr>
+          <tr>
+            <td>What type of lessons are you interested in?</td>
+            <td>Select</td>
+            <td><span class="mono">f_lessonType</span></td>
+            <td><span class="mono">lesson_type</span></td>
+            <td><span class="tag tag-req">Required</span></td>
+            <td>Private swim lessons (paid), Free water safety program (nonprofit)</td>
+          </tr>
+          <tr>
+            <td>Is your pool heated?</td>
+            <td>Select</td>
+            <td><span class="mono">f_poolHeated</span></td>
+            <td><span class="mono">pool_heated</span></td>
+            <td><span class="tag tag-req">Required</span></td>
+            <td>Yes, No, I don't know, Using a neighborhood/clubhouse pool</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Step 2 — The Swimmer</h3>
+      <table class="spec">
+        <thead><tr><th>Label</th><th>Type</th><th>ID</th><th>Webhook Key</th><th>Required</th><th>Options / Placeholder</th></tr></thead>
+        <tbody>
+          <tr><td>Swimmer's name</td><td>Text</td><td><span class="mono">f_swimmerName</span></td><td><span class="mono">swimmer_name</span></td><td><span class="tag tag-req">Required</span></td><td>Placeholder: "First name"</td></tr>
+          <tr><td>How old is your swimmer?</td><td>Select</td><td><span class="mono">f_swimmerAge</span></td><td><span class="mono">swimmer_age</span></td><td><span class="tag tag-req">Required</span></td><td>Under 6 months, 6 months – 2 years, 2 – 4 years, 5 – 7 years, 8+ years, Adult</td></tr>
+          <tr><td>Has your swimmer had previous lessons?</td><td>Select</td><td><span class="mono">f_previousLessons</span></td><td><span class="mono">previous_lessons</span></td><td><span class="tag tag-req">Required</span></td><td>Yes, No, A little</td></tr>
+          <tr><td>Comfort level in water</td><td>Select</td><td><span class="mono">f_comfortLevel</span></td><td><span class="mono">comfort_level</span></td><td><span class="tag tag-req">Required</span></td><td>1 – Very Nervous, 2, 3, 4, 5 – Loves It</td></tr>
+          <tr><td>Medical conditions, allergies, or special needs?</td><td>Textarea</td><td><span class="mono">f_medical</span></td><td><span class="mono">medical</span></td><td><span class="tag tag-opt">Optional</span></td><td>Placeholder: "Anything I should know to keep your child safe"</td></tr>
+          <tr><td>Prior injuries affecting swimming?</td><td>Text</td><td><span class="mono">f_injuries</span></td><td><span class="mono">injuries</span></td><td><span class="tag tag-opt">Optional</span></td><td>Placeholder: "e.g., ear tubes, recent surgery"</td></tr>
+          <tr><td>Additional swimmers</td><td>Textarea</td><td><span class="mono">f_additionalSwimmers</span></td><td><span class="mono">additional_swimmers</span></td><td><span class="tag tag-opt">Optional</span></td><td>Placeholder: "List names, ages, and comfort levels"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Step 3 — About You (Contact Info)</h3>
+      <table class="spec">
+        <thead><tr><th>Label</th><th>Type</th><th>ID</th><th>Webhook Key</th><th>Required</th><th>Options / Placeholder</th></tr></thead>
+        <tbody>
+          <tr><td>Parent/Guardian name(s)</td><td>Text</td><td><span class="mono">f_parentName</span></td><td><span class="mono">full_name</span></td><td><span class="tag tag-req">Required</span></td><td>Placeholder: "Your full name"</td></tr>
+          <tr><td>Phone number</td><td>Tel</td><td><span class="mono">f_phone</span></td><td><span class="mono">phone</span></td><td><span class="tag tag-req">Required</span></td><td>Placeholder: "(941) 555-1234". Auto-formats on input.</td></tr>
+          <tr><td>Email</td><td>Email</td><td><span class="mono">f_email</span></td><td><span class="mono">email</span></td><td><span class="tag tag-req">Required</span></td><td>Placeholder: "you@email.com"</td></tr>
+          <tr><td>Home address</td><td>Textarea</td><td><span class="mono">f_address</span></td><td><span class="mono">address</span></td><td><span class="tag tag-req">Required</span></td><td>Placeholder: "Street address, city, zip"</td></tr>
+          <tr><td>Lesson location if different from home</td><td>Text</td><td><span class="mono">f_lessonLocation</span></td><td><span class="mono">lesson_location</span></td><td><span class="tag tag-opt">Optional</span></td><td>Placeholder: "e.g., neighborhood pool, neighbor's pool"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Step 4 — Logistics</h3>
+      <table class="spec">
+        <thead><tr><th>Label</th><th>Type</th><th>ID</th><th>Webhook Key</th><th>Required</th><th>Options / Placeholder</th></tr></thead>
+        <tbody>
+          <tr><td>Preferred days/times</td><td>Grid selector</td><td><span class="mono">f_preferredTimes</span></td><td><span class="mono">preferred_times</span></td><td><span class="tag tag-opt">Optional</span></td><td>Row 1: Mon, Tue, Wed, Thu, Fri (toggleable pills). Row 2: Morning, Afternoon, Evening (toggleable pills). Multiple selections allowed in each row. Sent as structured string, e.g. "Days: Mon, Wed, Fri | Times: Morning, Afternoon"</td></tr>
+          <tr><td>How did you hear about Sunshine Swimming?</td><td>Checkbox group</td><td><span class="mono">f_referralSource</span></td><td><span class="mono">referral_source</span></td><td><span class="tag tag-req">Required</span></td><td>Word of Mouth, Facebook, Instagram, Google Search, Other. Multi-select. Sent as comma-separated string.</td></tr>
+          <tr><td>Anything else to make lessons great?</td><td>Textarea</td><td><span class="mono">f_anythingElse</span></td><td><span class="mono">anything_else</span></td><td><span class="tag tag-opt">Optional</span></td><td>Placeholder: "Special requests, questions, fun facts about your kiddo..."</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('layout',navBtn('layout'))">← Layout</button>
+      <button class="ch-nav-btn" onclick="showCh('routing',navBtn('routing'))">Routing →</button>
+    </div>
+  </div>
+
+  <!-- ===== ROUTING ===== -->
+  <div class="chapter" id="ch-routing">
+    <div class="ch-label">Section 4</div>
+    <div class="ch-title">Routing Logic</div>
+
+    <div class="card">
+      <h3>Decision Tree (evaluated on Step 1 "Continue" click)</h3>
+      <div class="config">IF location = "Outside Manatee County"
+  → Show declineArea panel
+  → Hide progress bar
+  → NO webhook fires
+  → STOP
+
+ELSE IF pool_heated = "No"
+  → Show declinePool panel
+  → Hide progress bar
+  → NO webhook fires
+  → STOP
+
+ELSE IF lesson_type = "Free water safety program (nonprofit)"
+  → Skip Step 2 (swimmer details)
+  → Go directly to Step 3 (contact info)
+  → On Step 3 submit: send to webhook with lead_type = "nonprofit"
+  → Show nonprofitThanks panel
+  → STOP
+
+ELSE (qualified paid lead)
+  → Go to Step 2 → Step 3 → Step 4
+  → On Step 4 submit: send to webhook with lead_type = "qualified"
+  → Show thankYou panel
+  → STOP</div>
+      <div class="alert alert-ocean"><strong>Key rule:</strong> Routing is evaluated in the order above. Location is checked first, then pool, then lesson type. A lead that is outside the area AND has an unheated pool gets the area decline, not the pool decline.</div>
+    </div>
+
+    <div class="card">
+      <h3>Decline: Outside Service Area</h3>
+      <ul>
+        <li>Icon: 🌎 in a light blue circle</li>
+        <li>Heading: "Thanks for your interest!"</li>
+        <li>Body: "Unfortunately, Sunshine Swimming currently serves Manatee County only. But I don't want to leave you without options!"</li>
+        <li>Referral list box with 3 placeholder swim schools</li>
+        <li>Footer: "Water safety is so important — I'm glad you're making it a priority! 💙"</li>
+        <li>"← Start over" link at bottom</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Decline: Pool Not Heated</h3>
+      <ul>
+        <li>Icon: 🌡️ in a sand-colored circle</li>
+        <li>Heading: "One thing to know about pool temps"</li>
+        <li>Body: explains 85°F requirement, invites them to reach out if they can heat it</li>
+        <li>Amanda's phone number as a clickable link: (941) 297-7687</li>
+        <li>"← Start over" link at bottom</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Thank You: Qualified</h3>
+      <ul>
+        <li>Green checkmark icon with pop-in animation</li>
+        <li>Heading: "Thanks for reaching out!"</li>
+        <li>Body: "I've received your inquiry and will be in touch soon..."</li>
+        <li>"What happens next" box with 3 items</li>
+        <li>No "Start over" — submission is final</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Thank You: Nonprofit</h3>
+      <ul>
+        <li>Purple heart icon (💜) with pop-in animation</li>
+        <li>Heading: "Thank you for your interest!"</li>
+        <li>Body about the free water safety program</li>
+        <li>No "Start over" — submission is final</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('fields',navBtn('fields'))">← Fields</button>
+      <button class="ch-nav-btn" onclick="showCh('validation',navBtn('validation'))">Validation →</button>
+    </div>
+  </div>
+
+  <!-- ===== VALIDATION ===== -->
+  <div class="chapter" id="ch-validation">
+    <div class="ch-label">Section 5</div>
+    <div class="ch-title">Validation Rules</div>
+
+    <div class="card">
+      <h3>When Validation Runs</h3>
+      <p>Validation runs <strong>on click of Continue / Submit</strong>. All required fields on the current step are validated simultaneously. If any fail, the step does not advance.</p>
+    </div>
+
+    <div class="card">
+      <h3>Error Display</h3>
+      <table class="spec">
+        <thead><tr><th>Behavior</th><th>Spec</th></tr></thead>
+        <tbody>
+          <tr><td>Error border</td><td>Field border turns coral red (#f43f5e), with a 3px coral glow ring</td></tr>
+          <tr><td>Error message</td><td>Red text appears below the field (12px, 600 weight)</td></tr>
+          <tr><td>Multiple errors</td><td>All failing fields show errors simultaneously</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Error Clearing</h3>
+      <table class="spec">
+        <thead><tr><th>Field Type</th><th>Clears When</th><th>Event</th></tr></thead>
+        <tbody>
+          <tr><td>Select (dropdown)</td><td>User selects a non-placeholder option</td><td><span class="mono">change</span></td></tr>
+          <tr><td>Text / Tel / Email input</td><td>User types a non-empty value</td><td><span class="mono">input</span></td></tr>
+          <tr><td>Textarea</td><td>User types a non-empty value</td><td><span class="mono">input</span></td></tr>
+          <tr><td>Checkbox group</td><td>User checks at least one box</td><td><span class="mono">change</span></td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-amber"><strong>Rule:</strong> Error clears ONLY when the field becomes valid (has a value). Clicking into an empty field and clicking away does NOT clear the error. This prevents misleading UX.</div>
+    </div>
+
+    <div class="card">
+      <h3>Validation Rules per Field</h3>
+      <table class="spec">
+        <thead><tr><th>Field</th><th>Rule</th><th>Error Message</th></tr></thead>
+        <tbody>
+          <tr><td>f_location</td><td>Value must not be empty</td><td>"Please select your area"</td></tr>
+          <tr><td>f_lessonType</td><td>Value must not be empty</td><td>"Please select a lesson type"</td></tr>
+          <tr><td>f_poolHeated</td><td>Value must not be empty</td><td>"Please select an option"</td></tr>
+          <tr><td>f_swimmerName</td><td>Trimmed value length > 0</td><td>"Please enter the swimmer's name"</td></tr>
+          <tr><td>f_swimmerAge</td><td>Value must not be empty</td><td>"Please select an age range"</td></tr>
+          <tr><td>f_previousLessons</td><td>Value must not be empty</td><td>"Please select an option"</td></tr>
+          <tr><td>f_comfortLevel</td><td>Value must not be empty</td><td>"Please select a comfort level"</td></tr>
+          <tr><td>f_parentName</td><td>Trimmed value length > 0</td><td>"Please enter your name"</td></tr>
+          <tr><td>f_phone</td><td>Digits extracted ≥ 7</td><td>"Please enter a valid phone number"</td></tr>
+          <tr><td>f_email</td><td>Matches: <span class="mono">/^[^\s@]+@[^\s@]+\.[^\s@]+$/</span></td><td>"Please enter a valid email address"</td></tr>
+          <tr><td>f_address</td><td>Trimmed value length > 0</td><td>"Please enter your address"</td></tr>
+          <tr><td>f_referralSource</td><td>At least 1 checkbox checked</td><td>"Please select at least one option"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('routing',navBtn('routing'))">← Routing</button>
+      <button class="ch-nav-btn" onclick="showCh('ux',navBtn('ux'))">UX Behaviors →</button>
+    </div>
+  </div>
+
+  <!-- ===== UX BEHAVIORS ===== -->
+  <div class="chapter" id="ch-ux">
+    <div class="ch-label">Section 6</div>
+    <div class="ch-title">UX Behaviors</div>
+
+    <div class="card">
+      <h3>"Start Over" Behavior</h3>
+      <table class="spec">
+        <thead><tr><th>Behavior</th><th>Spec</th></tr></thead>
+        <tbody>
+          <tr><td>Appears on</td><td>Steps 2, 3, 4, and both decline screens</td></tr>
+          <tr><td>Does NOT appear on</td><td>Step 1 (no need — it's already the start), thank-you screens (submission is final)</td></tr>
+          <tr><td>Visual</td><td>Ocean blue text link, centered below the button row, 14px, 600 weight. Underline on hover.</td></tr>
+          <tr><td>On click</td><td>1. Reset ALL fields across ALL steps to empty/default<br>2. Clear ALL error states<br>3. Uncheck ALL checkboxes<br>4. Navigate to Step 1<br>5. Restore progress bar to initial state</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Phone Number Auto-Formatting</h3>
+      <p>On every keystroke in the phone field, digits are extracted and reformatted:</p>
+      <ul>
+        <li>1-3 digits: <span class="mono">(XXX</span></li>
+        <li>4-6 digits: <span class="mono">(XXX) XXX</span></li>
+        <li>7+ digits: <span class="mono">(XXX) XXX-XXXX</span> (standard US format)</li>
+        <li>No max digit limit — international numbers or extensions are accepted as-is</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Step Navigation</h3>
+      <table class="spec">
+        <thead><tr><th>Behavior</th><th>Spec</th></tr></thead>
+        <tbody>
+          <tr><td>Forward (Continue)</td><td>Validates current step first. Only advances if all required fields pass.</td></tr>
+          <tr><td>Back (← Back)</td><td>No validation. Previous step's data is preserved (not cleared).</td></tr>
+          <tr><td>Scroll</td><td>On every step change, smooth-scroll to top of the form card.</td></tr>
+          <tr><td>Animation</td><td>New step panel fades in + slides up (0.35s ease).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Submit Button Loading State</h3>
+      <ul>
+        <li>On click: button text becomes invisible, a white spinner appears centered</li>
+        <li>Button is disabled during submission</li>
+        <li>After webhook call completes (success or failure): spinner removed, button re-enabled</li>
+        <li>On success: navigate to thank-you panel</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Checkbox Group Styling</h3>
+      <ul>
+        <li>Each option is a pill-shaped label with a checkbox icon</li>
+        <li>Unchecked: gray border, gray text, white background</li>
+        <li>Hover: light blue background, blue-gray border</li>
+        <li>Checked: ocean blue border, light blue background, blue text, blue checkmark in icon</li>
+        <li>Multiple can be selected simultaneously</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('validation',navBtn('validation'))">← Validation</button>
+      <button class="ch-nav-btn" onclick="showCh('submission',navBtn('submission'))">Submission →</button>
+    </div>
+  </div>
+
+  <!-- ===== SUBMISSION ===== -->
+  <div class="chapter" id="ch-submission">
+    <div class="ch-label">Section 7</div>
+    <div class="ch-title">Submission Logic</div>
+
+    <div class="card">
+      <h3>Qualified Lead Submission</h3>
+      <ol>
+        <li>Gather all field values into a JSON object (using webhook key names from Section 1)</li>
+        <li>Add <span class="mono">lead_type: "qualified"</span> and <span class="mono">tag: "qualified"</span></li>
+        <li>Add <span class="mono">submitted_at</span> (ISO timestamp) and <span class="mono">form_version: "1.0"</span></li>
+        <li>If TEST_MODE: log to console, fake 800ms delay, then show thank-you</li>
+        <li>If live: POST to ZAPIER_WEBHOOK_URL with <span class="mono">Content-Type: application/json</span> and <span class="mono">mode: 'no-cors'</span></li>
+        <li>On completion: show thankYou panel, hide progress bar</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Nonprofit Lead Submission</h3>
+      <ol>
+        <li>Gather ONLY: location, lesson_type, pool_heated, full_name, phone, email, address, lesson_location</li>
+        <li>Add <span class="mono">lead_type: "nonprofit"</span> and <span class="mono">tag: "nonprofit"</span></li>
+        <li>Add <span class="mono">submitted_at</span> and <span class="mono">form_version</span></li>
+        <li>Swimmer fields are NOT included (they were never shown)</li>
+        <li>Submit to same webhook URL</li>
+        <li>On completion: show nonprofitThanks panel, hide progress bar</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>Declined Leads</h3>
+      <p>Declined leads are NEVER submitted. No webhook fires. No data leaves the browser. The decline screen is shown inline within the form card.</p>
+    </div>
+
+    <div class="card">
+      <h3>Amanda's Review Access</h3>
+      <p>When we share the form with Amanda for testing, she needs to be able to review the policies and content embedded in the form (welcome text, decline messages, referral list, pool temperature requirements). The testing instructions we provide Amanda must include:</p>
+      <ul>
+        <li>A checklist of every message/policy in the form for her to approve or edit</li>
+        <li>Clear instructions on how to request changes (reply to email, or shared doc)</li>
+        <li>Specific callout of the session price ($50 vs $60 — needs her confirmation)</li>
+        <li>Placeholder referral swim schools — she must provide real names</li>
+        <li>Amanda's phone number on the pool decline screen — confirm it's correct</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('ux',navBtn('ux'))">← UX Behaviors</button>
+      <button class="ch-nav-btn" onclick="showCh('config',navBtn('config'))">Config →</button>
+    </div>
+  </div>
+
+  <!-- ===== CONFIG ===== -->
+  <div class="chapter" id="ch-config">
+    <div class="ch-label">Section 8</div>
+    <div class="ch-title">Configuration & Test Mode</div>
+
+    <div class="card">
+      <h3>Configurable Variables</h3>
+      <div class="config">// Top of the &lt;script&gt; block:
+const ZAPIER_WEBHOOK_URL = 'YOUR_ZAPIER_WEBHOOK_URL_HERE';
+const FORM_MODE = 'dev'; // 'dev' | 'staging' | 'live'</div>
+      <p style="margin-top:8px;">Two variables to set. <span class="mono">FORM_MODE</span> controls the banner and logging behavior. <span class="mono">ZAPIER_WEBHOOK_URL</span> controls where data is sent. Both must be updated together when moving between environments.</p>
+    </div>
+
+    <div class="card">
+      <h3>Operating Modes</h3>
+      <p>The form has three distinct operating modes. The mode is determined by the webhook URL configuration.</p>
+      <table class="spec">
+        <thead><tr><th>Mode</th><th>When</th><th>Who Uses It</th><th>Behavior</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>DEV Mode</strong></td>
+            <td>Webhook URL = placeholder string<br><span class="mono">'YOUR_ZAPIER_WEBHOOK_URL_HERE'</span></td>
+            <td>Garry, during development</td>
+            <td>Yellow banner: "🧪 DEV MODE". Submissions log to browser console only. "Run Test Suite" button available. No data leaves the browser. All routing/validation works normally.</td>
+          </tr>
+          <tr>
+            <td><strong>STAGING Mode</strong></td>
+            <td>Webhook URL = Zapier test webhook URL</td>
+            <td>Garry + Amanda, during testing</td>
+            <td>Blue banner: "🔵 STAGING — Test submissions go to Zapier test environment". Data DOES submit to Zapier. Used for end-to-end testing before go-live. Amanda uses this to verify the form feels right and review content.</td>
+          </tr>
+          <tr>
+            <td><strong>LIVE Mode</strong></td>
+            <td>Webhook URL = Zapier production webhook URL</td>
+            <td>Amanda's real clients</td>
+            <td>No banner. No test indicators. Clean production form. Data submits to the live Zapier zap connected to Amanda's HoneyBook.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Mode Detection Logic</h3>
+      <div class="config">const ZAPIER_WEBHOOK_URL = '...';
+
+// Mode detection
+const DEV_MODE = (ZAPIER_WEBHOOK_URL === 'YOUR_ZAPIER_WEBHOOK_URL_HERE');
+const STAGING_MODE = ZAPIER_WEBHOOK_URL.includes('/hooks/catch/') 
+                     && ZAPIER_WEBHOOK_URL.includes('test');
+// LIVE_MODE = !DEV_MODE && !STAGING_MODE</div>
+      <div class="alert alert-amber"><strong>Open question:</strong> Zapier doesn't distinguish test vs production webhook URLs natively. We may need a separate config flag like <span class="mono">const FORM_MODE = 'dev' | 'staging' | 'live'</span> instead of auto-detecting from the URL. To be decided during implementation.</div>
+    </div>
+
+    <div class="card">
+      <h3>DEV Mode Test Suite (console-only)</h3>
+      <p>The "Run Test Suite" button (DEV mode only) evaluates 5 routing scenarios and logs pass/fail:</p>
+      <table class="spec">
+        <thead><tr><th>Test</th><th>Input</th><th>Expected</th></tr></thead>
+        <tbody>
+          <tr><td>Bilbo → Qualified</td><td>Bradenton, Paid, Heated</td><td>qualified</td></tr>
+          <tr><td>Hamfast → Qualified</td><td>LWR, Paid, Heated</td><td>qualified</td></tr>
+          <tr><td>Elrond → Decline</td><td>Outside, Paid, Heated</td><td>decline-area</td></tr>
+          <tr><td>Théoden → Decline</td><td>Bradenton, Paid, No heat</td><td>decline-pool</td></tr>
+          <tr><td>Celeborn → Nonprofit</td><td>LWR, Nonprofit, Heated</td><td>nonprofit</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="background:var(--emerald-light);border-color:var(--emerald);">
+      <h3 style="color:var(--emerald);">✅ Approval Checklist</h3>
+      <p>Review each section. When approved, I rebuild the form from scratch to match this spec exactly.</p>
+      <ul style="margin-top:8px;">
+        <li>☐ Section 1: Overview — field names, branding, constraints</li>
+        <li>☐ Section 2: Layout — page structure, progress bar, buttons</li>
+        <li>☐ Section 3: Fields — every field defined with types and IDs</li>
+        <li>☐ Section 4: Routing — decision tree, decline screens, thank-you screens</li>
+        <li>☐ Section 5: Validation — rules, error display, error clearing</li>
+        <li>☐ Section 6: UX — Start Over, phone formatting, navigation, loading</li>
+        <li>☐ Section 7: Submission — qualified vs nonprofit payloads</li>
+        <li>☐ Section 8: Config — webhook URL, test mode, test suite</li>
+      </ul>
+    </div>
+
+    <div class="ch-nav">
+      <button class="ch-nav-btn" onclick="showCh('submission',navBtn('submission'))">← Submission</button>
+      <div class="ch-nav-spacer"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Form Specification v1.0 — Sunshine Swimming · May 2026</div>
+
+<script>
+const navMap={overview:0,layout:1,fields:2,routing:3,validation:4,ux:5,submission:6,config:7};
+function showCh(id,btn){
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  document.getElementById('ch-'+id).classList.add('active');
+  document.querySelectorAll('.topbar-nav button').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  window.scrollTo({top:document.querySelector('.intro').offsetTop+document.querySelector('.intro').offsetHeight-10,behavior:'smooth'});
+}
+function navBtn(id){return document.querySelectorAll('.topbar-nav button')[navMap[id]];}
+</script>
+</body>
+</html>
