@@ -147,7 +147,7 @@ textarea.q-input{min-height:65px;resize:vertical;}
     <div class="card" data-rv="decline-pool"><div class="card-top"><div class="card-info"><h3>Pool not heated decline message <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">"For the safety and comfort of young swimmers, I require a heated pool (85°F+). Cold water makes it really hard for little ones to learn — and it's not safe for infants and toddlers."</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
 
     <!-- Questions folded in as content cards -->
-    <div class="card" data-rv="q-referral-schools"><div class="card-top"><div class="card-info"><h3>Referral swim schools <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">The decline screen needs 2-3 real swim schools you refer families to. Currently using placeholders.</div></div></div><textarea class="q-input" placeholder="Name + phone or website, one per line"></textarea><div class="q-hint">These appear on the out-of-area decline screen</div></div>
+    <div class="card" data-rv="q-referral-schools"><div class="card-top"><div class="card-info"><h3>Referral swim schools <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">The decline screen needs 2-3 real swim schools you refer families to. Currently using placeholders.</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">I'll provide</button><button class="seg-btn" onclick="rvSel(this,'change')">Not needed</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Name + phone or website, one per line"></textarea></div></div>
 
     <hr class="divider">
     <div class="section-heading"><span class="section-label">Scenario testing</span><span class="section-count" id="s1-sc-count">0/7 tested</span></div>
@@ -179,7 +179,7 @@ textarea.q-input{min-height:65px;resize:vertical;}
 
     <div class="card" data-rv="comfort-scale"><div class="card-top"><div class="card-info"><h3>Comfort level scale <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">1 — Very Nervous, 2 — A Little Uneasy, 3 — Getting There, 4 — Pretty Comfortable, 5 — Loves It!</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
 
-    <div class="card" data-rv="q-minage"><div class="card-top"><div class="card-info"><h3>Minimum swimmer age <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">What's the youngest swimmer you'll take? Should the form automatically decline leads under a certain age?</div></div></div><input class="q-input" type="text" placeholder="e.g., 6 months"><div class="q-hint">If yes, we'll add an automatic decline for that age range</div></div>
+    <div class="card" data-rv="q-minage"><div class="card-top"><div class="card-info"><h3>Minimum swimmer age <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">What's the youngest swimmer you'll take? Should the form automatically decline leads under a certain age?</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="e.g., 6 months minimum, decline younger"></textarea></div></div>
 
     <hr class="divider">
     <div class="section-heading"><span class="section-label">Scenario testing</span><span class="section-count" id="s2-sc-count">0/4 tested</span></div>
@@ -199,11 +199,6 @@ textarea.q-input{min-height:65px;resize:vertical;}
        STEP 3: Contact Info
        ══════════════════════════════════════════════ -->
   <div class="step-page" data-step="3">
-    <div class="section-heading"><span class="section-label">Content review</span><span class="section-count" id="s3-rv-count">0/1 reviewed</span></div>
-
-    <div class="card" data-rv="q-price"><div class="card-top"><div class="card-info"><h3>Lesson pricing <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">What do you charge per 30-minute lesson? (Not shown on the form, but needed for the welcome email.)</div></div></div><input class="q-input" type="text" placeholder="e.g., $60"></div>
-
-    <hr class="divider">
     <div class="section-heading"><span class="section-label">Scenario testing</span><span class="section-count" id="s3-sc-count">0/4 tested</span></div>
 
     <div class="card" data-sc="t12"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">12</div><div><div class="sc-cat">Happy path</div><h3>Fill contact info and advance <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Pass Steps 1–2. On Step 3: parent "Sarah Johnson", phone "9415551234", email "sarah@email.com", address "123 Main St, Bradenton 34208." Continue.</div><div class="sc-expected"><strong>Expected:</strong> Advances to Step 4. Header: "Almost done!" / "Step 4 of 4."</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
@@ -221,13 +216,11 @@ textarea.q-input{min-height:65px;resize:vertical;}
        STEP 4: Logistics
        ══════════════════════════════════════════════ -->
   <div class="step-page" data-step="4">
-    <div class="section-heading"><span class="section-label">Content review</span><span class="section-count" id="s4-rv-count">0/3 reviewed</span></div>
+    <div class="section-heading"><span class="section-label">Content review</span><span class="section-count" id="s4-rv-count">0/2 reviewed</span></div>
 
     <div class="card" data-rv="referral-sources"><div class="card-top"><div class="card-info"><h3>"How did you hear about us" options <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">Word of Mouth, Facebook, Instagram, Google Search, Other</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
 
     <div class="card" data-rv="thankyou-msg"><div class="card-top"><div class="card-info"><h3>Thank you message <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">"Thanks for reaching out! I've received your inquiry and will be in touch soon. In the meantime, check your email for some helpful information about getting ready for lessons. Can't wait to meet your swimmer!"</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
-
-    <div class="card" data-rv="q-anything"><div class="card-top"><div class="card-info"><h3>Anything else? <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">Wording that doesn't sound like you, missing questions, things that felt off — anything I should change?</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">All good</button><button class="seg-btn" onclick="rvSel(this,'change')">Have feedback</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Tell me what's on your mind..."></textarea></div></div>
 
     <hr class="divider">
     <div class="section-heading"><span class="section-label">Scenario testing</span><span class="section-count" id="s4-sc-count">0/3 tested</span></div>
@@ -331,44 +324,35 @@ function updateAll() {
     const page = document.querySelector(`.step-page[data-step="${step}"]`);
     const rvCards = page.querySelectorAll('.card[data-rv]');
     const scCards = page.querySelectorAll('.card[data-sc]');
-    const qInputs = page.querySelectorAll('.q-input');
 
     let rvDone = 0;
     rvCards.forEach(c => { if (c.classList.contains('state-approved') || c.classList.contains('state-change')) rvDone++; });
-
-    let qDone = 0;
-    qInputs.forEach(q => {
-      const card = q.closest('.card[data-rv]');
-      if (!card) return;
-      if (!card.querySelector('.seg-toggle')) {
-        if (q.value.trim()) { qDone++; card.classList.add('state-approved'); card.querySelector('.pill').className='pill pill-approved'; card.querySelector('.pill').textContent='Answered'; }
-        else { card.classList.remove('state-approved'); card.querySelector('.pill').className='pill pill-unreviewed'; card.querySelector('.pill').textContent='Unreviewed'; }
-      }
-    });
 
     let scDone = 0;
     scCards.forEach(c => { if (c.classList.contains('state-pass') || c.classList.contains('state-fail')) scDone++; });
 
     const rvTotal = rvCards.length;
     const scTotal = scCards.length;
-    const totalRvDone = rvDone + qDone;
     const total = rvTotal + scTotal;
-    const done = totalRvDone + scDone;
+    const done = rvDone + scDone;
 
     // Per-section progress counters
     const rvCountEl = document.getElementById('s' + step + '-rv-count');
     const scCountEl = document.getElementById('s' + step + '-sc-count');
-    if (rvCountEl) rvCountEl.textContent = totalRvDone + '/' + rvTotal + ' reviewed';
+    if (rvCountEl) rvCountEl.textContent = rvDone + '/' + rvTotal + ' reviewed';
     if (scCountEl) scCountEl.textContent = scDone + '/' + scTotal + ' tested';
 
-    // Stepper tab status — show split counts
+    // Stepper tab status
     const tab = document.querySelectorAll('.step-tab')[step - 1];
     const statusEl = tab.querySelector('.step-tab-status');
     tab.classList.remove('complete');
     if (done === 0) {
       statusEl.textContent = 'Not started';
     } else if (done < total) {
-      statusEl.textContent = 'Content: ' + totalRvDone + '/' + rvTotal + ' · Tests: ' + scDone + '/' + scTotal;
+      const parts = [];
+      if (rvTotal > 0) parts.push('Content: ' + rvDone + '/' + rvTotal);
+      if (scTotal > 0) parts.push('Tests: ' + scDone + '/' + scTotal);
+      statusEl.textContent = parts.join(' · ');
     } else {
       statusEl.textContent = 'Complete';
       tab.classList.add('complete');
@@ -379,11 +363,6 @@ function updateAll() {
     if (navBtn) navBtn.disabled = (done < total);
   });
 }
-
-// Wire question inputs to re-evaluate
-document.querySelectorAll('.q-input').forEach(q => {
-  q.addEventListener('input', updateAll);
-});
 
 /* ── SUBMIT (mailto) ── */
 function submitFeedback() {
@@ -398,15 +377,12 @@ function submitFeedback() {
       const isApproved = card.classList.contains('state-approved');
       const isChange = card.classList.contains('state-change');
       const ta = card.querySelector('.card-textarea textarea');
-      const qi = card.querySelector('.q-input');
       const note = ta ? ta.value.trim() : '';
-      const answer = qi ? qi.value.trim() : '';
       lines.push('');
       lines.push('[Content] ' + name);
-      if (isApproved && !answer) lines.push('  ✓ Approved');
+      if (isApproved) lines.push('  ✓ Approved');
       if (isChange) lines.push('  ⚠ Change requested');
       if (note) lines.push('  Details: ' + note);
-      if (answer) lines.push('  Answer: ' + answer);
     });
 
     page.querySelectorAll('.card[data-sc]').forEach(card => {
