@@ -173,13 +173,11 @@ textarea.q-input{min-height:65px;resize:vertical;}
        STEP 2: The Swimmer
        ══════════════════════════════════════════════ -->
   <div class="step-page" data-step="2">
-    <div class="section-heading"><span class="section-label">Content review</span><span class="section-count" id="s2-rv-count">0/3 reviewed</span></div>
+    <div class="section-heading"><span class="section-label">Content review</span><span class="section-count" id="s2-rv-count">0/2 reviewed</span></div>
 
     <div class="card" data-rv="age-ranges"><div class="card-top"><div class="card-info"><h3>Swimmer age ranges <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">Under 6 months, 6 months – 2 years, 2 – 4 years, 5 – 7 years, 8+ years, Adult</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
 
     <div class="card" data-rv="comfort-scale"><div class="card-top"><div class="card-info"><h3>Comfort level scale <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">1 — Very Nervous, 2 — A Little Uneasy, 3 — Getting There, 4 — Pretty Comfortable, 5 — Loves It!</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
-
-    <div class="card" data-rv="q-minage"><div class="card-top"><div class="card-info"><h3>Minimum swimmer age <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">What's the youngest swimmer you'll take? Should the form automatically decline leads under a certain age?</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="e.g., 6 months minimum, decline younger"></textarea></div></div>
 
     <hr class="divider">
     <div class="section-heading"><span class="section-label">Scenario testing</span><span class="section-count" id="s2-sc-count">0/4 tested</span></div>
@@ -235,8 +233,8 @@ textarea.q-input{min-height:65px;resize:vertical;}
   </div>
 
   <div class="submit-ok" id="submitOk">
-    <h3>Feedback sent!</h3>
-    <p>Thanks Amanda! I'll review everything and follow up with any questions. You're done here.</p>
+    <h3>Feedback copied!</h3>
+    <p>Your review has been copied to your clipboard. Please text or email it to Garry — just paste and send!</p>
   </div>
 </div>
 
@@ -364,7 +362,7 @@ function updateAll() {
   });
 }
 
-/* ── SUBMIT (mailto) ── */
+/* ── SUBMIT (clipboard) ── */
 function submitFeedback() {
   const lines = ['SUNSHINE SWIMMING — FORM REVIEW FEEDBACK', 'Submitted: ' + new Date().toLocaleString(), ''];
 
@@ -399,12 +397,22 @@ function submitFeedback() {
     lines.push('');
   });
 
-  const body = encodeURIComponent(lines.join('\n'));
-  const subject = encodeURIComponent('Sunshine Swimming — Form Review Feedback');
-  window.location.href = 'mailto:gfenimore@gmail.com?subject=' + subject + '&body=' + body;
-
-  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('on'));
-  document.getElementById('submitOk').classList.add('on');
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    document.querySelectorAll('.step-page').forEach(p => p.classList.remove('on'));
+    document.getElementById('submitOk').classList.add('on');
+  }).catch(() => {
+    // Fallback for browsers that block clipboard
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:-9999px;';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    document.querySelectorAll('.step-page').forEach(p => p.classList.remove('on'));
+    document.getElementById('submitOk').classList.add('on');
+  });
 }
 
 updateAll();
