@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunshine Swimming — Test & Review Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ocean-deep:#0c4a6e;--ocean:#0369a1;--ocean-mid:#0284c7;--ocean-light:#e0f2fe;--ocean-glow:#bae6fd;--sky:#f0f9ff;--ink:#1e293b;--text:#334155;--muted:#64748b;--light-muted:#94a3b8;--white:#fff;--border:#e2e8f0;--emerald:#059669;--emerald-light:#ecfdf5;--emerald-border:#6ee7b7;--coral:#dc2626;--coral-light:#fef2f2;--coral-border:#fca5a5;--amber:#d97706;--amber-light:#fffbeb;--amber-border:#fcd34d;--neutral-bg:#f1f5f9;--radius:12px;--radius-sm:8px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--sky);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+.header{background:linear-gradient(135deg,var(--ocean-deep) 0%,var(--ocean) 60%,var(--ocean-mid) 100%);padding:28px 24px;text-align:center;color:var(--white);}
+.header h1{font-family:'Fraunces',serif;font-size:22px;font-weight:700;margin-bottom:4px;}
+.header p{font-size:13px;color:var(--ocean-glow);}
+
+/* ── STEPPER BAR ── */
+.stepper-bar{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;padding:0 24px;}
+.stepper-inner{max-width:700px;margin:0 auto;display:flex;}
+.step-tab{flex:1;padding:14px 12px 12px;text-align:center;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;font-family:'Outfit',sans-serif;}
+.step-tab:hover{background:var(--neutral-bg);}
+.step-tab.active{border-bottom-color:var(--ocean-mid);}
+.step-tab-label{font-size:13px;font-weight:600;color:var(--ink);}
+.step-tab-status{font-size:11px;color:var(--light-muted);margin-top:1px;}
+.step-tab.complete .step-tab-status{color:var(--emerald);font-weight:600;}
+
+.wrap{max-width:700px;margin:0 auto;padding:24px 20px 60px;}
+.step-page{display:none;}.step-page.on{display:block;}
+
+.intro-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:24px;}
+.intro-card h2{font-family:'Fraunces',serif;font-size:17px;font-weight:700;margin-bottom:6px;}
+.intro-card p{font-size:13px;color:var(--text);line-height:1.55;}
+.intro-card a{color:var(--ocean);font-weight:600;text-decoration:none;}
+
+/* ── SECTION HEADINGS & DIVIDER ── */
+.section-heading{display:flex;align-items:baseline;justify-content:space-between;margin:24px 0 12px;padding-left:2px;}
+.section-heading:first-child{margin-top:0;}
+.section-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ocean-mid);}
+.section-count{font-size:12px;font-weight:600;color:var(--light-muted);}
+.divider{border:none;border-top:1px solid var(--border);margin:28px 0;}
+
+/* ── CARD BASE ── */
+.card{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px;transition:border-color 0.2s;}
+.card.state-approved,.card.state-pass{border-color:var(--emerald-border);}
+.card.state-change{border-color:var(--amber-border);}
+.card.state-fail{border-color:var(--coral-border);}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.card-info{flex:1;min-width:0;}
+.card-info h3{font-size:14px;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.card-info .desc{font-size:12.5px;color:var(--muted);line-height:1.4;}
+
+/* ── PILLS ── */
+.pill{display:inline-block;padding:2px 10px;border-radius:12px;font-size:10.5px;font-weight:700;letter-spacing:0.3px;white-space:nowrap;}
+.pill-unreviewed,.pill-untested{background:var(--neutral-bg);color:var(--muted);}
+.pill-approved,.pill-pass{background:var(--emerald-light);color:var(--emerald);}
+.pill-change{background:var(--amber-light);color:var(--amber);}
+.pill-fail{background:var(--coral-light);color:var(--coral);}
+
+/* ── SEGMENTED TOGGLE ── */
+.seg-toggle{display:flex;border:1.5px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;flex-shrink:0;}
+.seg-btn{padding:7px 16px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;background:var(--white);color:var(--muted);font-family:'Outfit',sans-serif;transition:all 0.15s;border-right:1px solid var(--border);}
+.seg-btn:last-child{border-right:none;}
+.seg-btn:hover{background:var(--neutral-bg);}
+.seg-btn.sel-approve,.seg-btn.sel-pass{background:var(--emerald-light);color:var(--emerald);}
+.seg-btn.sel-change{background:var(--amber-light);color:var(--amber);}
+.seg-btn.sel-fail{background:var(--coral-light);color:var(--coral);}
+
+.clear-link{display:none;font-size:12px;color:var(--muted);cursor:pointer;margin-top:8px;text-decoration:underline;font-family:'Outfit',sans-serif;border:none;background:none;padding:0;}
+.clear-link.on{display:inline-block;}
+
+.card-textarea{display:none;margin-top:10px;}
+.card-textarea.on{display:block;}
+.card-textarea textarea{width:100%;min-height:65px;padding:10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-size:13px;resize:vertical;color:var(--ink);}
+.card-textarea textarea:focus{outline:none;border-color:var(--ocean-mid);}
+
+/* ── SCENARIO-SPECIFIC ── */
+.sc-num{width:26px;height:26px;border-radius:50%;background:var(--ocean-light);color:var(--ocean);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;font-family:'Fraunces',serif;margin-right:10px;margin-top:2px;}
+.sc-cat{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+.sc-steps{font-size:12.5px;color:var(--text);line-height:1.45;margin-top:4px;}
+.sc-expected{margin-top:8px;font-size:12px;padding:8px 10px;border-radius:var(--radius-sm);background:var(--ocean-light);color:var(--ocean-deep);line-height:1.4;}
+.sc-expected strong{font-weight:700;}
+
+/* ── QUESTION CARDS ── */
+.q-input{width:100%;padding:10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-size:13px;color:var(--ink);margin-top:6px;}
+.q-input:focus{outline:none;border-color:var(--ocean-mid);}
+textarea.q-input{min-height:65px;resize:vertical;}
+.q-hint{font-size:11px;color:var(--muted);margin-top:3px;}
+
+/* ── NAV BUTTONS ── */
+.nav-row{display:flex;justify-content:space-between;margin-top:28px;padding-top:18px;border-top:1px solid var(--border);}
+.btn-nav{padding:10px 22px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;}
+.btn-back{background:var(--white);color:var(--text);border:1.5px solid var(--border);}
+.btn-back:hover{border-color:var(--ocean-mid);color:var(--ocean);}
+.btn-next{background:linear-gradient(135deg,var(--ocean) 0%,var(--ocean-mid) 100%);color:var(--white);border:none;box-shadow:0 2px 8px rgba(3,105,161,0.25);}
+.btn-next:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 16px rgba(3,105,161,0.35);}
+.btn-next:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.btn-submit-final{background:linear-gradient(135deg,var(--emerald) 0%,#10b981 100%);color:var(--white);border:none;box-shadow:0 2px 8px rgba(5,150,105,0.25);}
+.btn-submit-final:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 16px rgba(5,150,105,0.35);}
+.btn-submit-final:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.nav-spacer{flex:1;}
+
+.submit-ok{display:none;padding:20px;background:var(--emerald-light);border:1px solid var(--emerald-border);border-radius:var(--radius);text-align:center;margin-top:20px;}
+.submit-ok.on{display:block;}
+.submit-ok h3{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--emerald);margin-bottom:4px;}
+.submit-ok p{font-size:13px;color:var(--text);}
+
+.footer{text-align:center;padding:20px;font-size:11px;color:var(--light-muted);}
+@media(max-width:480px){.wrap{padding:16px 14px 48px;}.card-top{flex-direction:column;}.seg-toggle{width:100%;}.seg-btn{flex:1;text-align:center;}.step-tab{padding:10px 6px 8px;}.step-tab-label{font-size:12px;}}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Test & Review Guide</h1>
+  <p>Sunshine Swimming Intake Form — v0.1 Review</p>
+</div>
+
+<div class="wrap">
+  <div class="intro-card" id="introCard">
+    <h2>Hi Amanda! Here's how this works:</h2>
+    <p><a href="intake-form.html" target="_blank">Open the intake form</a> in another tab. Then work through each step below — review the content, run the test scenarios, and answer any questions. Complete everything on a step to unlock the next one. When you finish Step 4, you'll submit it all to me in one click.</p>
+  </div>
+</div>
+
+<!-- ── STEPPER BAR ── -->
+<div class="stepper-bar">
+  <div class="stepper-inner" id="stepperBar">
+    <div class="step-tab active" onclick="goStep(1)"><div class="step-tab-label">Step 1</div><div class="step-tab-status">Not started</div></div>
+    <div class="step-tab" onclick="goStep(2)"><div class="step-tab-label">Step 2</div><div class="step-tab-status">Not started</div></div>
+    <div class="step-tab" onclick="goStep(3)"><div class="step-tab-label">Step 3</div><div class="step-tab-status">Not started</div></div>
+    <div class="step-tab" onclick="goStep(4)"><div class="step-tab-label">Step 4</div><div class="step-tab-status">Not started</div></div>
+  </div>
+</div>
+
+<div class="wrap" id="mainWrap">
+  <!-- STEP 1: Getting Started (Routing) -->
+  <div class="step-page on" data-step="1">
+    <div class="section-heading"><span class="section-label">Content review</span><span class="section-count" id="s1-rv-count">0/6 reviewed</span></div>
+
+    <div class="card" data-rv="svc-area"><div class="card-top"><div class="card-info"><h3>Service area list <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">Bradenton, Lakewood Ranch, Palmetto, Parrish / Ellenton, Terra Ceia, Outside Manatee County</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
+
+    <div class="card" data-rv="pool-opts"><div class="card-top"><div class="card-info"><h3>Pool heated options <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">Yes, No, I don't know, Using a neighborhood/clubhouse pool</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
+
+    <div class="card" data-rv="lesson-types"><div class="card-top"><div class="card-info"><h3>Lesson type options <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">Private swim lessons (paid), Free water safety program (nonprofit)</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
+
+    <div class="card" data-rv="decline-area"><div class="card-top"><div class="card-info"><h3>Out-of-area decline message <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">"Unfortunately, Sunshine Swimming currently serves Manatee County only. I wish I could be everywhere, but keeping my route tight means I can give each family my full energy!"</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
+
+    <div class="card" data-rv="decline-pool"><div class="card-top"><div class="card-info"><h3>Pool not heated decline message <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">"For the safety and comfort of young swimmers, I require a heated pool (85°F+). Cold water makes it really hard for little ones to learn — and it's not safe for infants and toddlers."</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
+
+    <!-- Questions folded in as content cards -->
+    <div class="card" data-rv="q-referral-schools"><div class="card-top"><div class="card-info"><h3>Referral swim schools <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">The decline screen needs 2-3 real swim schools you refer families to. Currently using placeholders.</div></div></div><textarea class="q-input" placeholder="Name + phone or website, one per line"></textarea><div class="q-hint">These appear on the out-of-area decline screen</div></div>
+
+    <hr class="divider">
+    <div class="section-heading"><span class="section-label">Scenario testing</span><span class="section-count" id="s1-sc-count">0/7 tested</span></div>
+
+    <div class="card" data-sc="t1"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">1</div><div><div class="sc-cat">Happy path</div><h3>Qualified lead passes Step 1 <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Select: Bradenton, Private lessons, Pool heated = Yes. The Continue button should become enabled. Click Continue.</div><div class="sc-expected"><strong>Expected:</strong> Form advances to Step 2. Header reads "Tell me about your swimmer" with "Step 2 of 4."</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t2"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">2</div><div><div class="sc-cat">Decline flow</div><h3>Outside service area <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Reload the form. Select: Outside Manatee County, Private lessons, Pool heated = Yes. Click Continue.</div><div class="sc-expected"><strong>Expected:</strong> Decline screen with map emoji, "Thanks for your interest!" heading, referral school list, and "Start over" button.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t3"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">3</div><div><div class="sc-cat">Decline flow</div><h3>Pool not heated <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Reload the form. Select: Bradenton, Private lessons, Pool heated = No. Click Continue.</div><div class="sc-expected"><strong>Expected:</strong> Pool temperature decline screen with thermometer emoji, 85°F message, and "Start over" button.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t4"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">4</div><div><div class="sc-cat">Decline flow</div><h3>Start over resets form <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Reload the form. Select: Outside Manatee County, Private lessons, Pool heated = Yes. Click Continue. Then click "Start over."</div><div class="sc-expected"><strong>Expected:</strong> Returns to Step 1. All dropdowns reset to placeholder. Continue button disabled.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t5"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">5</div><div><div class="sc-cat">Validation</div><h3>Continue disabled until all fields filled <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Reload the form. Without selecting anything, look at Continue. Select dropdowns one by one.</div><div class="sc-expected"><strong>Expected:</strong> Button stays disabled until all 3 dropdowns have a value.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t6"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">6</div><div><div class="sc-cat">Edge case</div><h3>"I don't know" pool answer qualifies <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Reload. Select: Lakewood Ranch, Private lessons, "I don't know." Click Continue.</div><div class="sc-expected"><strong>Expected:</strong> Advances to Step 2. Not a decline.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t7"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">7</div><div><div class="sc-cat">Edge case</div><h3>Neighborhood pool qualifies <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Reload. Select: Palmetto, Private lessons, "Using a neighborhood/clubhouse pool." Click Continue.</div><div class="sc-expected"><strong>Expected:</strong> Advances to Step 2.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="nav-row"><div class="nav-spacer"></div><button class="btn-nav btn-next" id="nav1" disabled onclick="goStep(2)">Next step →</button></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       STEP 2: The Swimmer
+       ══════════════════════════════════════════════ -->
+  <div class="step-page" data-step="2">
+    <div class="section-heading"><span class="section-label">Content review</span><span class="section-count" id="s2-rv-count">0/3 reviewed</span></div>
+
+    <div class="card" data-rv="age-ranges"><div class="card-top"><div class="card-info"><h3>Swimmer age ranges <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">Under 6 months, 6 months – 2 years, 2 – 4 years, 5 – 7 years, 8+ years, Adult</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
+
+    <div class="card" data-rv="comfort-scale"><div class="card-top"><div class="card-info"><h3>Comfort level scale <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">1 — Very Nervous, 2 — A Little Uneasy, 3 — Getting There, 4 — Pretty Comfortable, 5 — Loves It!</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
+
+    <div class="card" data-rv="q-minage"><div class="card-top"><div class="card-info"><h3>Minimum swimmer age <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">What's the youngest swimmer you'll take? Should the form automatically decline leads under a certain age?</div></div></div><input class="q-input" type="text" placeholder="e.g., 6 months"><div class="q-hint">If yes, we'll add an automatic decline for that age range</div></div>
+
+    <hr class="divider">
+    <div class="section-heading"><span class="section-label">Scenario testing</span><span class="section-count" id="s2-sc-count">0/4 tested</span></div>
+
+    <div class="card" data-sc="t8"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">8</div><div><div class="sc-cat">Happy path</div><h3>Fill swimmer info and advance <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Select: Bradenton, Private lessons, Yes. On Step 2, enter swimmer name "Rosie", age "2 – 4 years", previous lessons "No", comfort "2." Click Continue.</div><div class="sc-expected"><strong>Expected:</strong> Advances to Step 3. Header: "Your contact info" / "Step 3 of 4."</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t9"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">9</div><div><div class="sc-cat">Validation</div><h3>Continue disabled without required fields <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Pass Step 1 (Bradenton, Paid, Yes). On Step 2, leave all fields blank.</div><div class="sc-expected"><strong>Expected:</strong> Continue disabled. Fill just name — still disabled. Fill all 4 required — enables.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t10"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">10</div><div><div class="sc-cat">Edge case</div><h3>Adult swimmer completes normally <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Pass Step 1. On Step 2: name "Dave", age "Adult", lessons "A little", comfort "3." Continue.</div><div class="sc-expected"><strong>Expected:</strong> Advances to Step 3. Adult is valid.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t11"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">11</div><div><div class="sc-cat">Navigation</div><h3>Back to Step 1 preserves data <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Pass Step 1 (Lakewood Ranch, Paid, Yes). On Step 2, enter name "Rosie", age "2 – 4." Click Back.</div><div class="sc-expected"><strong>Expected:</strong> Step 1 still shows LWR/Paid/Yes. Click Continue — Step 2 still has "Rosie" / "2 – 4 years."</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="nav-row"><button class="btn-nav btn-back" onclick="goStep(1)">← Back</button><button class="btn-nav btn-next" id="nav2" disabled onclick="goStep(3)">Next step →</button></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       STEP 3: Contact Info
+       ══════════════════════════════════════════════ -->
+  <div class="step-page" data-step="3">
+    <div class="section-heading"><span class="section-label">Content review</span><span class="section-count" id="s3-rv-count">0/1 reviewed</span></div>
+
+    <div class="card" data-rv="q-price"><div class="card-top"><div class="card-info"><h3>Lesson pricing <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">What do you charge per 30-minute lesson? (Not shown on the form, but needed for the welcome email.)</div></div></div><input class="q-input" type="text" placeholder="e.g., $60"></div>
+
+    <hr class="divider">
+    <div class="section-heading"><span class="section-label">Scenario testing</span><span class="section-count" id="s3-sc-count">0/4 tested</span></div>
+
+    <div class="card" data-sc="t12"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">12</div><div><div class="sc-cat">Happy path</div><h3>Fill contact info and advance <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Pass Steps 1–2. On Step 3: parent "Sarah Johnson", phone "9415551234", email "sarah@email.com", address "123 Main St, Bradenton 34208." Continue.</div><div class="sc-expected"><strong>Expected:</strong> Advances to Step 4. Header: "Almost done!" / "Step 4 of 4."</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t13"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">13</div><div><div class="sc-cat">Validation</div><h3>Bad email keeps button disabled <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Pass Steps 1–2. On Step 3: parent name, phone "9415551234", address — but type "abc" for email.</div><div class="sc-expected"><strong>Expected:</strong> Continue stays disabled. Fix to "abc@test.com" — enables.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t14"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">14</div><div><div class="sc-cat">Validation</div><h3>Short phone keeps button disabled <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Pass Steps 1–2. On Step 3: parent name, email "test@test.com", address — type "555" for phone.</div><div class="sc-expected"><strong>Expected:</strong> Continue stays disabled. Enter "9415551234" — enables.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t15"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">15</div><div><div class="sc-cat">UX behavior</div><h3>Phone auto-formats as typed <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Pass Steps 1–2. On Step 3, type "9415551234" into the phone field.</div><div class="sc-expected"><strong>Expected:</strong> Displays as "(941) 555-1234" automatically.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="nav-row"><button class="btn-nav btn-back" onclick="goStep(2)">← Back</button><button class="btn-nav btn-next" id="nav3" disabled onclick="goStep(4)">Next step →</button></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       STEP 4: Logistics
+       ══════════════════════════════════════════════ -->
+  <div class="step-page" data-step="4">
+    <div class="section-heading"><span class="section-label">Content review</span><span class="section-count" id="s4-rv-count">0/3 reviewed</span></div>
+
+    <div class="card" data-rv="referral-sources"><div class="card-top"><div class="card-info"><h3>"How did you hear about us" options <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">Word of Mouth, Facebook, Instagram, Google Search, Other</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
+
+    <div class="card" data-rv="thankyou-msg"><div class="card-top"><div class="card-info"><h3>Thank you message <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">"Thanks for reaching out! I've received your inquiry and will be in touch soon. In the meantime, check your email for some helpful information about getting ready for lessons. Can't wait to meet your swimmer!"</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">Approved</button><button class="seg-btn" onclick="rvSel(this,'change')">Make change</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the change you'd like..."></textarea></div></div>
+
+    <div class="card" data-rv="q-anything"><div class="card-top"><div class="card-info"><h3>Anything else? <span class="pill pill-unreviewed">Unreviewed</span></h3><div class="desc">Wording that doesn't sound like you, missing questions, things that felt off — anything I should change?</div></div><div class="seg-toggle"><button class="seg-btn" onclick="rvSel(this,'approved')">All good</button><button class="seg-btn" onclick="rvSel(this,'change')">Have feedback</button></div></div><button class="clear-link" onclick="rvClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Tell me what's on your mind..."></textarea></div></div>
+
+    <hr class="divider">
+    <div class="section-heading"><span class="section-label">Scenario testing</span><span class="section-count" id="s4-sc-count">0/3 tested</span></div>
+
+    <div class="card" data-sc="t16"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">16</div><div><div class="sc-cat">Happy path</div><h3>Full submission — end to end <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Pass Steps 1–3 with valid data. On Step 4, check a few day/time boxes, select "Word of Mouth." Click Submit.</div><div class="sc-expected"><strong>Expected:</strong> Spinner briefly, then thank-you screen with swimmer emoji and confetti.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t17"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">17</div><div><div class="sc-cat">Validation</div><h3>Submit disabled without referral source <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Pass Steps 1–3. On Step 4, do NOT select any "How did you hear" option.</div><div class="sc-expected"><strong>Expected:</strong> Submit disabled. Select "Facebook" — enables.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="card" data-sc="t18"><div class="card-top"><div class="card-info" style="display:flex;align-items:flex-start;"><div class="sc-num">18</div><div><div class="sc-cat">UX behavior</div><h3>Schedule grid checkboxes work <span class="pill pill-untested">Untested</span></h3><div class="sc-steps">Start fresh. Pass Steps 1–3. On Step 4, check Mon AM and Wed PM. Type "before 11" in Mon notes.</div><div class="sc-expected"><strong>Expected:</strong> Checkboxes toggle. Notes field accepts text. Feels responsive.</div></div></div><div class="seg-toggle"><button class="seg-btn" onclick="scSel(this,'pass')">Pass</button><button class="seg-btn" onclick="scSel(this,'fail')">Fail</button></div></div><button class="clear-link" onclick="scClr(this)">Clear selection</button><div class="card-textarea"><textarea placeholder="Describe the issue..."></textarea></div></div>
+
+    <div class="nav-row"><button class="btn-nav btn-back" onclick="goStep(3)">← Back</button><button class="btn-nav btn-submit-final" id="nav4" disabled onclick="submitFeedback()">Submit all →</button></div>
+  </div>
+
+  <div class="submit-ok" id="submitOk">
+    <h3>Feedback sent!</h3>
+    <p>Thanks Amanda! I'll review everything and follow up with any questions. You're done here.</p>
+  </div>
+</div>
+
+<div class="footer">Sunshine Swimming · Test & Review Guide · May 2026</div>
+
+<script>
+let currentStep = 1;
+
+function goStep(n) {
+  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('on'));
+  document.querySelector(`.step-page[data-step="${n}"]`).classList.add('on');
+  currentStep = n;
+  document.querySelectorAll('.step-tab').forEach((t, i) => t.classList.toggle('active', i + 1 === n));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateAll();
+}
+
+/* ── CONTENT REVIEW ── */
+function rvSel(btn, type) {
+  const card = btn.closest('.card');
+  const pill = card.querySelector('.pill');
+  card.querySelectorAll('.seg-btn').forEach(b => b.className = 'seg-btn');
+  card.className = 'card';
+  if (type === 'approved') {
+    card.classList.add('state-approved');
+    btn.classList.add('sel-approve');
+    pill.className = 'pill pill-approved'; pill.textContent = 'Approved';
+    card.querySelector('.card-textarea').classList.remove('on');
+  } else {
+    card.classList.add('state-change');
+    btn.classList.add('sel-change');
+    pill.className = 'pill pill-change'; pill.textContent = 'Change requested';
+    card.querySelector('.card-textarea').classList.add('on');
+    card.querySelector('.card-textarea textarea').focus();
+  }
+  card.querySelector('.clear-link').classList.add('on');
+  updateAll();
+}
+function rvClr(link) {
+  const card = link.closest('.card');
+  card.className = 'card';
+  card.querySelectorAll('.seg-btn').forEach(b => b.className = 'seg-btn');
+  card.querySelector('.pill').className = 'pill pill-unreviewed';
+  card.querySelector('.pill').textContent = 'Unreviewed';
+  link.classList.remove('on');
+  card.querySelector('.card-textarea').classList.remove('on');
+  updateAll();
+}
+
+/* ── SCENARIO TESTING ── */
+function scSel(btn, type) {
+  const card = btn.closest('.card');
+  const pill = card.querySelector('.pill');
+  card.querySelectorAll('.seg-btn').forEach(b => b.className = 'seg-btn');
+  card.className = 'card';
+  if (type === 'pass') {
+    card.classList.add('state-pass');
+    btn.classList.add('sel-pass');
+    pill.className = 'pill pill-pass'; pill.textContent = 'Passed';
+    card.querySelector('.card-textarea').classList.remove('on');
+  } else {
+    card.classList.add('state-fail');
+    btn.classList.add('sel-fail');
+    pill.className = 'pill pill-fail'; pill.textContent = 'Failed';
+    card.querySelector('.card-textarea').classList.add('on');
+    card.querySelector('.card-textarea textarea').focus();
+  }
+  card.querySelector('.clear-link').classList.add('on');
+  updateAll();
+}
+function scClr(link) {
+  const card = link.closest('.card');
+  card.className = 'card';
+  card.querySelectorAll('.seg-btn').forEach(b => b.className = 'seg-btn');
+  card.querySelector('.pill').className = 'pill pill-untested';
+  card.querySelector('.pill').textContent = 'Untested';
+  link.classList.remove('on');
+  card.querySelector('.card-textarea').classList.remove('on');
+  updateAll();
+}
+
+/* ── PROGRESS & GATING ── */
+function updateAll() {
+  [1,2,3,4].forEach(step => {
+    const page = document.querySelector(`.step-page[data-step="${step}"]`);
+    const rvCards = page.querySelectorAll('.card[data-rv]');
+    const scCards = page.querySelectorAll('.card[data-sc]');
+    const qInputs = page.querySelectorAll('.q-input');
+
+    let rvDone = 0;
+    rvCards.forEach(c => { if (c.classList.contains('state-approved') || c.classList.contains('state-change')) rvDone++; });
+
+    let qDone = 0;
+    qInputs.forEach(q => {
+      const card = q.closest('.card[data-rv]');
+      if (!card) return;
+      if (!card.querySelector('.seg-toggle')) {
+        if (q.value.trim()) { qDone++; card.classList.add('state-approved'); card.querySelector('.pill').className='pill pill-approved'; card.querySelector('.pill').textContent='Answered'; }
+        else { card.classList.remove('state-approved'); card.querySelector('.pill').className='pill pill-unreviewed'; card.querySelector('.pill').textContent='Unreviewed'; }
+      }
+    });
+
+    let scDone = 0;
+    scCards.forEach(c => { if (c.classList.contains('state-pass') || c.classList.contains('state-fail')) scDone++; });
+
+    const rvTotal = rvCards.length;
+    const scTotal = scCards.length;
+    const totalRvDone = rvDone + qDone;
+    const total = rvTotal + scTotal;
+    const done = totalRvDone + scDone;
+
+    // Per-section progress counters
+    const rvCountEl = document.getElementById('s' + step + '-rv-count');
+    const scCountEl = document.getElementById('s' + step + '-sc-count');
+    if (rvCountEl) rvCountEl.textContent = totalRvDone + '/' + rvTotal + ' reviewed';
+    if (scCountEl) scCountEl.textContent = scDone + '/' + scTotal + ' tested';
+
+    // Stepper tab status — show split counts
+    const tab = document.querySelectorAll('.step-tab')[step - 1];
+    const statusEl = tab.querySelector('.step-tab-status');
+    tab.classList.remove('complete');
+    if (done === 0) {
+      statusEl.textContent = 'Not started';
+    } else if (done < total) {
+      statusEl.textContent = 'Content: ' + totalRvDone + '/' + rvTotal + ' · Tests: ' + scDone + '/' + scTotal;
+    } else {
+      statusEl.textContent = 'Complete';
+      tab.classList.add('complete');
+    }
+
+    // Nav button gating
+    const navBtn = document.getElementById('nav' + step);
+    if (navBtn) navBtn.disabled = (done < total);
+  });
+}
+
+// Wire question inputs to re-evaluate
+document.querySelectorAll('.q-input').forEach(q => {
+  q.addEventListener('input', updateAll);
+});
+
+/* ── SUBMIT (mailto) ── */
+function submitFeedback() {
+  const lines = ['SUNSHINE SWIMMING — FORM REVIEW FEEDBACK', 'Submitted: ' + new Date().toLocaleString(), ''];
+
+  [1,2,3,4].forEach(step => {
+    const page = document.querySelector(`.step-page[data-step="${step}"]`);
+    lines.push('═══ STEP ' + step + ' ═══');
+
+    page.querySelectorAll('.card[data-rv]').forEach(card => {
+      const name = card.querySelector('h3').childNodes[0].textContent.trim();
+      const isApproved = card.classList.contains('state-approved');
+      const isChange = card.classList.contains('state-change');
+      const ta = card.querySelector('.card-textarea textarea');
+      const qi = card.querySelector('.q-input');
+      const note = ta ? ta.value.trim() : '';
+      const answer = qi ? qi.value.trim() : '';
+      lines.push('');
+      lines.push('[Content] ' + name);
+      if (isApproved && !answer) lines.push('  ✓ Approved');
+      if (isChange) lines.push('  ⚠ Change requested');
+      if (note) lines.push('  Details: ' + note);
+      if (answer) lines.push('  Answer: ' + answer);
+    });
+
+    page.querySelectorAll('.card[data-sc]').forEach(card => {
+      const name = card.querySelector('h3').childNodes[0].textContent.trim();
+      const cat = card.querySelector('.sc-cat').textContent;
+      const isPass = card.classList.contains('state-pass');
+      const isFail = card.classList.contains('state-fail');
+      const ta = card.querySelector('.card-textarea textarea');
+      const note = ta ? ta.value.trim() : '';
+      lines.push('');
+      lines.push('[' + cat + '] ' + name + ' → ' + (isPass ? '✓ Pass' : isFail ? '✗ FAIL' : '— Skipped'));
+      if (note) lines.push('  Issue: ' + note);
+    });
+    lines.push('');
+  });
+
+  const body = encodeURIComponent(lines.join('\n'));
+  const subject = encodeURIComponent('Sunshine Swimming — Form Review Feedback');
+  window.location.href = 'mailto:gfenimore@gmail.com?subject=' + subject + '&body=' + body;
+
+  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('on'));
+  document.getElementById('submitOk').classList.add('on');
+}
+
+updateAll();
+</script>
+</body>
+</html>

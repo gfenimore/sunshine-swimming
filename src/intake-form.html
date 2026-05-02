@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sunshine Swimming — Swim Lesson Inquiry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ocean-deep: #0c4a6e;
+  --ocean: #0369a1;
+  --ocean-mid: #0284c7;
+  --ocean-light: #e0f2fe;
+  --ocean-glow: #bae6fd;
+  --sky: #f0f9ff;
+  --sand: #fef9f3;
+  --ink: #1e293b;
+  --text: #334155;
+  --muted: #64748b;
+  --light-muted: #94a3b8;
+  --white: #ffffff;
+  --border: #e2e8f0;
+  --border-focus: #0284c7;
+  --emerald: #059669;
+  --emerald-light: #ecfdf5;
+  --coral: #e11d48;
+  --coral-light: #fff1f2;
+  --amber: #d97706;
+  --amber-light: #fffbeb;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: linear-gradient(168deg, var(--sky) 0%, var(--sand) 40%, var(--sky) 100%);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(3,105,161,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(186,230,253,0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at 60% 80%, rgba(3,132,193,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── TEST MODE BANNER ── */
+.test-banner {
+  display: none;
+  background: var(--amber);
+  color: var(--white);
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  position: relative;
+  z-index: 60;
+}
+.test-banner.visible { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.test-banner .mode-label {
+  background: rgba(0,0,0,0.15);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+/* ── HEADER ── */
+.form-header {
+  background: linear-gradient(135deg, var(--ocean-deep) 0%, var(--ocean) 60%, var(--ocean-mid) 100%);
+  padding: 32px 24px 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.form-header::before {
+  content: '';
+  position: absolute;
+  top: -40%; left: -20%; right: -20%; bottom: -40%;
+  background:
+    radial-gradient(circle at 30% 70%, rgba(255,255,255,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 70% 30%, rgba(186,230,253,0.08) 0%, transparent 40%);
+  pointer-events: none;
+}
+.form-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--ocean-glow), rgba(186,230,253,0.3), var(--ocean-glow));
+}
+.header-wave { font-size: 36px; margin-bottom: 8px; display: block; }
+.header-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(22px, 5vw, 28px);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+  position: relative;
+}
+.header-sub {
+  font-size: 14px;
+  color: var(--ocean-glow);
+  font-weight: 400;
+  position: relative;
+  letter-spacing: 0.2px;
+}
+
+/* ── STEP HEADER (sticky) ── */
+.step-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--sky);
+  padding: 16px 0 12px;
+}
+.step-title {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.step-indicator {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.step-subtitle {
+  font-size: 13.5px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* ── FORM CONTAINER ── */
+.form-wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 8px 20px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── STEPS ── */
+.form-step { display: none; animation: stepIn 0.35s ease; }
+.form-step.active { display: block; }
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── FORM FIELDS ── */
+.field-group { margin-bottom: 20px; }
+.field-label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.field-label .required { color: var(--coral); margin-left: 2px; }
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--white);
+  transition: all var(--transition);
+  -webkit-appearance: none;
+  appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(3,132,193,0.1);
+}
+input::placeholder, textarea::placeholder { color: var(--light-muted); font-size: 14px; }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+textarea { resize: vertical; min-height: 80px; }
+.field-error { border-color: var(--coral) !important; box-shadow: 0 0 0 3px rgba(225,29,72,0.08) !important; }
+.error-msg { font-size: 12px; color: var(--coral); margin-top: 4px; display: none; }
+.error-msg.visible { display: block; }
+
+/* ── PILL TOGGLES ── */
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.pill-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--white);
+  transition: all var(--transition);
+  user-select: none;
+}
+.pill-toggle:hover { border-color: var(--ocean-mid); }
+.pill-toggle.selected {
+  border-color: var(--ocean);
+  background: var(--ocean-light);
+  color: var(--ocean-deep);
+}
+.pill-toggle .pill-check {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  flex-shrink: 0;
+  font-size: 10px;
+  color: transparent;
+}
+.pill-toggle.selected .pill-check {
+  border-color: var(--ocean);
+  background: var(--ocean);
+  color: var(--white);
+}
+
+/* ── SCHEDULE GRID ── */
+.sched-grid {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  width: 100%;
+}
+.sched-grid table { width: 100%; border-collapse: collapse; }
+.sched-grid th {
+  background: var(--sky);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 8px 4px;
+  text-align: center;
+}
+.sched-grid th:first-child { width: 44px; text-align: right; padding-right: 8px; }
+.sched-grid td {
+  text-align: center;
+  padding: 6px 4px;
+  border-top: 1px solid var(--border);
+}
+.sched-grid td:not(:first-child) { border-left: 1px solid var(--border); }
+.sched-grid td:first-child {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--light-muted);
+  text-align: right;
+  padding-right: 8px;
+}
+.sched-grid input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--ocean-mid);
+}
+.sched-grid .note-row td { padding: 3px; }
+.sched-grid .note-row input[type="text"] {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 11px;
+  text-align: center;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  outline: none;
+  padding: 4px 2px;
+}
+.sched-grid .note-row input[type="text"]::placeholder {
+  color: var(--light-muted);
+  font-size: 10px;
+}
+
+/* ── BUTTONS ── */
+.btn-row { display: flex; gap: 12px; margin-top: 28px; }
+.btn {
+  flex: 1;
+  padding: 14px 24px;
+  border-radius: var(--radius-sm);
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition);
+  text-align: center;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--ocean) 0%, var(--ocean-mid) 100%);
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(3,105,161,0.25);
+}
+.btn-primary:hover { box-shadow: 0 4px 16px rgba(3,105,161,0.35); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-secondary {
+  background: var(--white);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--ocean-mid); color: var(--ocean); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.btn-submit {
+  background: linear-gradient(135deg, var(--emerald) 0%, #10b981 100%);
+  box-shadow: 0 2px 8px rgba(5,150,105,0.25);
+}
+.btn-submit:hover { box-shadow: 0 4px 16px rgba(5,150,105,0.35); transform: translateY(-1px); }
+
+/* ── DECLINE CARDS ── */
+.decline-card {
+  display: none;
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  animation: stepIn 0.35s ease;
+  margin-top: 24px;
+}
+.decline-card.visible { display: block; }
+.decline-icon { font-size: 40px; margin-bottom: 12px; }
+.decline-title {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.decline-msg { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 16px; }
+.decline-referral {
+  background: var(--sky);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-top: 12px;
+  text-align: left;
+}
+.decline-referral-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ocean);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.decline-referral a {
+  display: block;
+  font-size: 13.5px;
+  color: var(--ocean);
+  text-decoration: none;
+  padding: 4px 0;
+  font-weight: 500;
+}
+.btn-restart {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ocean);
+  background: var(--ocean-light);
+  border: 1.5px solid var(--ocean-glow);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: all var(--transition);
+}
+.btn-restart:hover { background: var(--ocean-glow); }
+
+/* ── THANK YOU ── */
+.thankyou-card { display: none; text-align: center; padding: 40px 24px; animation: stepIn 0.4s ease; }
+.thankyou-card.visible { display: block; }
+.thankyou-icon { font-size: 52px; margin-bottom: 16px; display: block; }
+.thankyou-title {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.thankyou-msg { font-size: 15px; color: var(--text); line-height: 1.65; max-width: 420px; margin: 0 auto; }
+.thankyou-card .confetti { font-size: 28px; display: inline-block; animation: pop 0.5s ease 0.3s both; }
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.3) rotate(-20deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+/* ── SPINNER ── */
+.spinner { display: none; width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3); border-top-color: var(--white); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto; }
+.spinner.visible { display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── FOOTER ── */
+.form-footer { text-align: center; padding: 20px 24px 28px; font-size: 11px; color: var(--light-muted); }
+.form-footer a { color: var(--ocean-mid); text-decoration: none; }
+
+/* ── TEST PANEL ── */
+.test-panel {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: var(--white);
+  border: 2px solid var(--amber);
+  border-radius: var(--radius);
+  padding: 16px;
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+  max-width: 320px;
+  width: calc(100vw - 32px);
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.test-panel.visible { display: block; }
+.test-panel h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; color: var(--ink); }
+.test-btn {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--white);
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  color: var(--text);
+  transition: all 0.15s;
+}
+.test-btn:hover { border-color: var(--ocean); background: var(--ocean-light); }
+.test-btn .test-route { font-size: 10px; font-weight: 700; display: inline-block; padding: 1px 6px; border-radius: 3px; margin-left: 4px; }
+.test-btn .route-qual { background: var(--emerald-light); color: var(--emerald); }
+.test-btn .route-decline { background: var(--coral-light); color: var(--coral); }
+.test-btn .route-nonprofit { background: #f5f3ff; color: #7c3aed; }
+.test-fab {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  width: 48px;
+  height: 48px;
+  background: var(--amber);
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  z-index: 99;
+  display: none;
+}
+.test-fab.visible { display: flex; align-items: center; justify-content: center; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 480px) {
+  .form-header { padding: 24px 20px 22px; }
+  .form-wrap { padding: 8px 16px 36px; }
+  .step-title { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TEST MODE BANNER -->
+<div class="test-banner" id="testBanner">
+  🧪 TEST MODE <span class="mode-label" id="modeLabel">No webhook configured</span>
+</div>
+
+<!-- HEADER -->
+<div class="form-header">
+  <span class="header-wave">🌊</span>
+  <div class="header-title">Sunshine Swimming</div>
+  <div class="header-sub">Swim Lesson Inquiry</div>
+</div>
+
+<div class="form-wrap">
+  <form id="intakeForm" novalidate>
+
+    <!-- ══════════ STEP 1: ROUTING ══════════ -->
+    <div class="form-step active" data-step="1">
+      <div class="step-header">
+        <div class="step-title">Let's get started! 👋</div>
+        <div class="step-indicator">Step 1 of 4</div>
+      </div>
+      <div class="step-subtitle">A few quick questions to make sure we're a great fit for your family.</div>
+
+      <div class="field-group">
+        <label class="field-label" for="location">Where do you live? <span class="required">*</span></label>
+        <select id="location" name="location" required>
+          <option value="" disabled selected>Select your area</option>
+          <option value="Bradenton">Bradenton</option>
+          <option value="Lakewood Ranch">Lakewood Ranch</option>
+          <option value="Palmetto">Palmetto</option>
+          <option value="Parrish / Ellenton">Parrish / Ellenton</option>
+          <option value="Terra Ceia">Terra Ceia</option>
+          <option value="Outside Manatee County">Outside Manatee County</option>
+        </select>
+        <div class="error-msg" id="err-location">Please select your area</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="lessonType">What type of lessons are you interested in? <span class="required">*</span></label>
+        <select id="lessonType" name="lessonType" required>
+          <option value="" disabled selected>Select lesson type</option>
+          <option value="Private swim lessons (paid)">Private swim lessons (paid)</option>
+          <option value="Free water safety program (nonprofit)">Free water safety program (nonprofit)</option>
+        </select>
+        <div class="error-msg" id="err-lessonType">Please select a lesson type</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="poolHeated">Is your pool heated? <span class="required">*</span></label>
+        <select id="poolHeated" name="poolHeated" required>
+          <option value="" disabled selected>Select an option</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="I don't know">I don't know</option>
+          <option value="Using a neighborhood/clubhouse pool">Using a neighborhood/clubhouse pool</option>
+        </select>
+        <div class="error-msg" id="err-poolHeated">Please select an option</div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" id="btnStep1">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══════════ STEP 2: SWIMMER ══════════ -->
+    <div class="form-step" data-step="2">
+      <div class="step-header">
+        <div class="step-title">Tell me about your swimmer 🏊‍♀️</div>
+        <div class="step-indicator">Step 2 of 4</div>
+      </div>
+      <div class="step-subtitle">The more I know, the better I can prepare for our first lesson together.</div>
+
+      <div class="field-group">
+        <label class="field-label" for="swimmerName">Swimmer's name <span class="required">*</span></label>
+        <input type="text" id="swimmerName" name="swimmerName" placeholder="First and last name" required>
+        <div class="error-msg" id="err-swimmerName">Please enter the swimmer's name</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="swimmerAge">How old is your swimmer? <span class="required">*</span></label>
+        <select id="swimmerAge" name="swimmerAge" required>
+          <option value="" disabled selected>Select age range</option>
+          <option value="Under 6 months">Under 6 months</option>
+          <option value="6 months – 2 years">6 months – 2 years</option>
+          <option value="2 – 4 years">2 – 4 years</option>
+          <option value="5 – 7 years">5 – 7 years</option>
+          <option value="8+ years">8+ years</option>
+          <option value="Adult">Adult</option>
+        </select>
+        <div class="error-msg" id="err-swimmerAge">Please select an age range</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="previousLessons">Has your swimmer had previous lessons? <span class="required">*</span></label>
+        <select id="previousLessons" name="previousLessons" required>
+          <option value="" disabled selected>Select an option</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="A little">A little</option>
+        </select>
+        <div class="error-msg" id="err-previousLessons">Please select an option</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="comfortLevel">Comfort level in water <span class="required">*</span></label>
+        <select id="comfortLevel" name="comfortLevel" required>
+          <option value="" disabled selected>1 = Very nervous, 5 = Loves it</option>
+          <option value="1">1 — Very Nervous</option>
+          <option value="2">2 — A Little Uneasy</option>
+          <option value="3">3 — Getting There</option>
+          <option value="4">4 — Pretty Comfortable</option>
+          <option value="5">5 — Loves It!</option>
+        </select>
+        <div class="error-msg" id="err-comfortLevel">Please select a comfort level</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="medicalConditions">Medical conditions, allergies, or special needs?</label>
+        <textarea id="medicalConditions" name="medicalConditions" placeholder="Anything I should know to keep your child safe" rows="3"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="priorInjuries">Prior injuries affecting swimming?</label>
+        <input type="text" id="priorInjuries" name="priorInjuries" placeholder="e.g., ear tubes, recent surgery">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="additionalSwimmers">Additional swimmers?</label>
+        <textarea id="additionalSwimmers" name="additionalSwimmers" placeholder="List names, ages, and comfort levels" rows="3"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="btnBack2">← Back</button>
+        <button type="button" class="btn btn-primary" id="btnStep2">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══════════ STEP 3: PARENT / CONTACT ══════════ -->
+    <div class="form-step" data-step="3">
+      <div class="step-header">
+        <div class="step-title">Your contact info 📱</div>
+        <div class="step-indicator">Step 3 of 4</div>
+      </div>
+      <div class="step-subtitle">So I can reach out and get you on the calendar!</div>
+
+      <div class="field-group">
+        <label class="field-label" for="parentName">Parent/Guardian name(s) <span class="required">*</span></label>
+        <input type="text" id="parentName" name="parentName" placeholder="e.g., Sarah & Mike Johnson" required>
+        <div class="error-msg" id="err-parentName">Please enter parent/guardian name(s)</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="phone">Phone number <span class="required">*</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="(941) 555-1234" required>
+        <div class="error-msg" id="err-phone">Please enter a valid phone number</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="email">Email <span class="required">*</span></label>
+        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        <div class="error-msg" id="err-email">Please enter a valid email address</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="homeAddress">Home address <span class="required">*</span></label>
+        <textarea id="homeAddress" name="homeAddress" placeholder="Full street address, city, and zip" rows="2" required></textarea>
+        <div class="error-msg" id="err-homeAddress">Please enter your home address</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="lessonLocation">Lesson location (if different from home)</label>
+        <input type="text" id="lessonLocation" name="lessonLocation" placeholder="e.g., neighborhood pool, neighbor's pool">
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="btnBack3">← Back</button>
+        <button type="button" class="btn btn-primary" id="btnStep3">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══════════ STEP 4: LOGISTICS ══════════ -->
+    <div class="form-step" data-step="4">
+      <div class="step-header">
+        <div class="step-title">Almost done! 🎉</div>
+        <div class="step-indicator">Step 4 of 4</div>
+      </div>
+      <div class="step-subtitle">Just a few more details to help me plan our lessons.</div>
+
+      <div class="field-group">
+        <label class="field-label">When works best for you?</label>
+        <div class="sched-grid" id="schedGrid">
+          <table>
+            <thead>
+              <tr><th></th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>AM</td>
+                <td><input type="checkbox" data-day="Mon" data-time="AM"></td>
+                <td><input type="checkbox" data-day="Tue" data-time="AM"></td>
+                <td><input type="checkbox" data-day="Wed" data-time="AM"></td>
+                <td><input type="checkbox" data-day="Thu" data-time="AM"></td>
+                <td><input type="checkbox" data-day="Fri" data-time="AM"></td>
+              </tr>
+              <tr>
+                <td>PM</td>
+                <td><input type="checkbox" data-day="Mon" data-time="PM"></td>
+                <td><input type="checkbox" data-day="Tue" data-time="PM"></td>
+                <td><input type="checkbox" data-day="Wed" data-time="PM"></td>
+                <td><input type="checkbox" data-day="Thu" data-time="PM"></td>
+                <td><input type="checkbox" data-day="Fri" data-time="PM"></td>
+              </tr>
+              <tr class="note-row">
+                <td style="font-size:10px;">notes</td>
+                <td><input type="text" id="note-Mon" placeholder="e.g. before 11"></td>
+                <td><input type="text" id="note-Tue" placeholder=""></td>
+                <td><input type="text" id="note-Wed" placeholder=""></td>
+                <td><input type="text" id="note-Thu" placeholder=""></td>
+                <td><input type="text" id="note-Fri" placeholder=""></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">How did you hear about Sunshine Swimming? <span class="required">*</span></label>
+        <div class="pill-group" id="referralSource">
+          <span class="pill-toggle" data-val="Word of Mouth"><span class="pill-check">✓</span> Word of Mouth</span>
+          <span class="pill-toggle" data-val="Facebook"><span class="pill-check">✓</span> Facebook</span>
+          <span class="pill-toggle" data-val="Instagram"><span class="pill-check">✓</span> Instagram</span>
+          <span class="pill-toggle" data-val="Google Search"><span class="pill-check">✓</span> Google Search</span>
+          <span class="pill-toggle" data-val="Other"><span class="pill-check">✓</span> Other</span>
+        </div>
+        <div class="error-msg" id="err-referral">Please select at least one option</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="anythingElse">Anything else to make lessons great?</label>
+        <textarea id="anythingElse" name="anythingElse" placeholder="Special requests, fears to know about, favorite pool toys — anything helps!" rows="3"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="btnBack4">← Back</button>
+        <button type="button" class="btn btn-submit" id="submitBtn">
+          <span id="submitText">Submit Inquiry ✨</span>
+          <div class="spinner" id="submitSpinner"></div>
+        </button>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- ══════════ DECLINE: OUT OF AREA ══════════ -->
+  <div class="decline-card" id="declineArea">
+    <div class="decline-icon">🗺️</div>
+    <div class="decline-title">Thanks for your interest!</div>
+    <div class="decline-msg">Unfortunately, Sunshine Swimming currently serves Manatee County only. I wish I could be everywhere, but keeping my route tight means I can give each family my full energy!</div>
+    <div class="decline-referral">
+      <div class="decline-referral-title">Swim schools near you</div>
+      <a href="#">SwimKids of Sarasota — (941) 555-0101</a>
+      <a href="#">Aqua Tots Swim Schools — (813) 555-0202</a>
+      <a href="#">SafeSplash Swim School — (727) 555-0303</a>
+    </div>
+    <button class="btn-restart" id="restartArea">← Start over</button>
+  </div>
+
+  <!-- ══════════ DECLINE: POOL NOT HEATED ══════════ -->
+  <div class="decline-card" id="declinePool">
+    <div class="decline-icon">🌡️</div>
+    <div class="decline-title">Pool temperature matters!</div>
+    <div class="decline-msg">For the safety and comfort of young swimmers, I require a heated pool (85°F+). Cold water makes it really hard for little ones to learn — and it's not safe for infants and toddlers.<br><br>If you're able to heat your pool or have access to a heated pool nearby, I'd love to hear from you! Feel free to reach out directly.</div>
+    <button class="btn-restart" id="restartPool">← Start over</button>
+  </div>
+
+  <!-- ══════════ THANK YOU ══════════ -->
+  <div class="thankyou-card" id="thankYou">
+    <span class="thankyou-icon">🏊‍♀️</span>
+    <div class="thankyou-title">Thanks for reaching out! <span class="confetti">🎉</span></div>
+    <div class="thankyou-msg">I've received your inquiry and will be in touch soon. In the meantime, check your email for some helpful information about getting ready for lessons.<br><br>Can't wait to meet your swimmer! 💙</div>
+  </div>
+</div>
+
+<div class="form-footer">
+  © 2026 Sunshine Swimming · Manatee County, FL
+</div>
+
+<!-- TEST FAB -->
+<button class="test-fab" id="testFab">🧪</button>
+<div class="test-panel" id="testPanel">
+  <h4>🧪 Load Test Data</h4>
+  <button class="test-btn" data-key="frodo"><strong>Frodo Baggins</strong> — Bradenton, Paid <span class="test-route route-qual">✓ Qualified</span></button>
+  <button class="test-btn" data-key="sam"><strong>Samwise Gamgee</strong> — LWR, Paid <span class="test-route route-qual">✓ Qualified</span></button>
+  <button class="test-btn" data-key="pippin"><strong>Pippin Took</strong> — Parrish, Paid <span class="test-route route-qual">✓ Qualified</span></button>
+  <button class="test-btn" data-key="merry"><strong>Merry Brandybuck</strong> — Palmetto, Paid <span class="test-route route-qual">✓ Qualified</span></button>
+  <button class="test-btn" data-key="gandalf"><strong>Gandalf Grey</strong> — Bradenton, Adult <span class="test-route route-qual">✓ Qualified</span></button>
+  <button class="test-btn" data-key="arwen"><strong>Arwen Undómiel</strong> — Outside (St. Pete) <span class="test-route route-decline">✗ Out of Area</span></button>
+  <button class="test-btn" data-key="eowyn"><strong>Éowyn</strong> — Bradenton, No Heat <span class="test-route route-decline">✗ Pool Not Heated</span></button>
+  <button class="test-btn" data-key="galadriel"><strong>Galadriel</strong> — LWR, Nonprofit <span class="test-route route-nonprofit">→ Nonprofit</span></button>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   CONFIGURATION
+   ═══════════════════════════════════════════ */
+const WEBHOOK_URL = 'YOUR_ZAPIER_WEBHOOK_URL_HERE';
+const TEST_MODE = (WEBHOOK_URL === 'YOUR_ZAPIER_WEBHOOK_URL_HERE');
+
+/* ── INIT ── */
+if (TEST_MODE) {
+  document.getElementById('testBanner').classList.add('visible');
+  document.getElementById('testFab').classList.add('visible');
+  document.getElementById('modeLabel').textContent = 'No webhook configured';
+} else {
+  document.getElementById('modeLabel').textContent = 'Live — webhook active';
+}
+
+let currentStep = 1;
+
+/* ── EVENT LISTENERS ── */
+document.getElementById('btnStep1').addEventListener('click', handleStep1);
+document.getElementById('btnStep2').addEventListener('click', handleStep2);
+document.getElementById('btnStep3').addEventListener('click', handleStep3);
+document.getElementById('btnBack2').addEventListener('click', () => goToStep(1));
+document.getElementById('btnBack3').addEventListener('click', () => goToStep(2));
+document.getElementById('btnBack4').addEventListener('click', () => goToStep(3));
+document.getElementById('submitBtn').addEventListener('click', handleSubmit);
+document.getElementById('restartArea').addEventListener('click', restartForm);
+document.getElementById('restartPool').addEventListener('click', restartForm);
+document.getElementById('testFab').addEventListener('click', toggleTestPanel);
+
+// Pill toggles — delegated click
+document.querySelectorAll('.pill-group').forEach(group => {
+  group.addEventListener('click', (e) => {
+    const pill = e.target.closest('.pill-toggle');
+    if (!pill) return;
+    pill.classList.toggle('selected');
+    checkStepReady();
+  });
+});
+
+// Test data buttons — delegated
+document.getElementById('testPanel').addEventListener('click', (e) => {
+  const btn = e.target.closest('.test-btn');
+  if (!btn) return;
+  loadTestData(btn.dataset.key);
+});
+
+// Close test panel on outside click
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('testPanel');
+  const fab = document.getElementById('testFab');
+  if (panel.classList.contains('visible') && !panel.contains(e.target) && !fab.contains(e.target)) {
+    panel.classList.remove('visible');
+  }
+});
+
+/* ── PHONE AUTO-FORMAT ── */
+document.getElementById('phone').addEventListener('input', function() {
+  let digits = this.value.replace(/\D/g, '');
+  let formatted = '';
+  if (digits.length > 0) formatted = '(' + digits.substring(0, 3);
+  if (digits.length >= 4) formatted += ') ' + digits.substring(3, 6);
+  if (digits.length >= 7) formatted += '-' + digits.substring(6);
+  this.value = formatted;
+  checkStepReady();
+});
+
+/* ── BUTTON STATE MANAGEMENT ── */
+const stepFields = {
+  1: { selects: ['location','lessonType','poolHeated'], inputs: [], pills: [] },
+  2: { selects: ['swimmerAge','previousLessons','comfortLevel'], inputs: ['swimmerName'], pills: [] },
+  3: { selects: [], inputs: ['parentName','phone','email','homeAddress'], pills: [] },
+  4: { selects: [], inputs: [], pills: ['referralSource'] }
+};
+const stepButtons = { 1:'btnStep1', 2:'btnStep2', 3:'btnStep3', 4:'submitBtn' };
+
+function checkStepReady() {
+  const cfg = stepFields[currentStep];
+  if (!cfg) return;
+  let ready = true;
+  cfg.selects.forEach(id => { if (!document.getElementById(id).value) ready = false; });
+  cfg.inputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) ready = false;
+    if (id === 'email' && el.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim())) ready = false;
+    if (id === 'phone' && el.value.replace(/\D/g,'').length < 7) ready = false;
+  });
+  cfg.pills.forEach(groupId => {
+    if (document.querySelectorAll('#' + groupId + ' .pill-toggle.selected').length === 0) ready = false;
+  });
+  const btn = document.getElementById(stepButtons[currentStep]);
+  if (btn) btn.disabled = !ready;
+}
+
+// Wire all form fields to re-check button state
+document.querySelectorAll('select, input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(el => {
+  el.addEventListener('input', checkStepReady);
+  el.addEventListener('change', checkStepReady);
+});
+
+// Initial state — disable all step buttons
+Object.values(stepButtons).forEach(id => { document.getElementById(id).disabled = true; });
+
+/* ── NAVIGATION ── */
+function goToStep(step) {
+  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.form-step[data-step="${step}"]`).classList.add('active');
+  currentStep = step;
+  updateStepIndicators();
+  checkStepReady();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateStepIndicators() {
+  const lessonType = document.getElementById('lessonType').value;
+  const isNonprofit = lessonType.toLowerCase().includes('nonprofit');
+  document.querySelectorAll('.form-step .step-indicator').forEach(ind => {
+    const step = parseInt(ind.closest('.form-step').dataset.step);
+    if (isNonprofit) {
+      const nStep = step === 1 ? 1 : 2;
+      ind.textContent = `Step ${nStep} of 2`;
+    } else {
+      ind.textContent = `Step ${step} of 4`;
+    }
+  });
+}
+
+/* ── VALIDATION ── */
+function clearErrors() {
+  document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+  document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('visible'));
+}
+function showError(id) {
+  const el = document.getElementById(id);
+  const err = document.getElementById('err-' + id);
+  if (el) el.classList.add('field-error');
+  if (err) err.classList.add('visible');
+}
+function validateRequired(id) {
+  const el = document.getElementById(id);
+  if (!el || !el.value.trim()) { showError(id); return false; }
+  return true;
+}
+function validateEmail(id) {
+  const el = document.getElementById(id);
+  if (!el || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim())) { showError(id); return false; }
+  return true;
+}
+function validatePhone(id) {
+  const digits = document.getElementById(id).value.replace(/\D/g, '');
+  if (digits.length < 7) { showError(id); return false; }
+  return true;
+}
+
+/* ── STEP HANDLERS ── */
+function handleStep1() {
+  clearErrors();
+  let ok = true;
+  if (!validateRequired('location')) ok = false;
+  if (!validateRequired('lessonType')) ok = false;
+  if (!validateRequired('poolHeated')) ok = false;
+  if (!ok) return;
+
+  if (document.getElementById('location').value === 'Outside Manatee County') { showDecline('declineArea'); return; }
+  if (document.getElementById('poolHeated').value === 'No') { showDecline('declinePool'); return; }
+
+  goToStep(2);
+}
+
+function handleStep2() {
+  clearErrors();
+  let ok = true;
+  if (!validateRequired('swimmerName')) ok = false;
+  if (!validateRequired('swimmerAge')) ok = false;
+  if (!validateRequired('previousLessons')) ok = false;
+  if (!validateRequired('comfortLevel')) ok = false;
+  if (!ok) return;
+  goToStep(3);
+}
+
+function handleStep3() {
+  clearErrors();
+  let ok = true;
+  if (!validateRequired('parentName')) ok = false;
+  if (!validatePhone('phone')) ok = false;
+  if (!validateEmail('email')) ok = false;
+  if (!validateRequired('homeAddress')) ok = false;
+  if (!ok) return;
+  goToStep(4);
+}
+
+function showDecline(id) {
+  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('visible');
+}
+
+function restartForm() {
+  document.querySelectorAll('.decline-card').forEach(d => d.classList.remove('visible'));
+  document.getElementById('thankYou').classList.remove('visible');
+  document.getElementById('intakeForm').reset();
+  document.querySelectorAll('.pill-toggle').forEach(p => p.classList.remove('selected'));
+  clearErrors();
+  goToStep(1);
+}
+
+/* ── SUBMIT ── */
+async function handleSubmit() {
+  clearErrors();
+  const selected = document.querySelectorAll('#referralSource .pill-toggle.selected');
+  if (selected.length === 0) {
+    document.getElementById('err-referral').classList.add('visible');
+    return;
+  }
+
+  const referral = Array.from(selected).map(p => p.dataset.val);
+
+  // Build schedule string from checkbox grid
+  const days = ['Mon','Tue','Wed','Thu','Fri'];
+  const schedParts = [];
+  days.forEach(day => {
+    const am = document.querySelector(`#schedGrid input[data-day="${day}"][data-time="AM"]`).checked;
+    const pm = document.querySelector(`#schedGrid input[data-day="${day}"][data-time="PM"]`).checked;
+    const note = (document.getElementById('note-' + day).value || '').trim();
+    if (am || pm || note) {
+      let times = [];
+      if (am) times.push('AM');
+      if (pm) times.push('PM');
+      let entry = day;
+      if (times.length) entry += ' ' + times.join('/');
+      if (note) entry += ' (' + note + ')';
+      schedParts.push(entry);
+    }
+  });
+  const preferredSchedule = schedParts.join(', ');
+
+  const lessonType = document.getElementById('lessonType').value;
+  const isNonprofit = lessonType.toLowerCase().includes('nonprofit');
+
+  const formData = {
+    location: document.getElementById('location').value,
+    lessonType,
+    poolHeated: document.getElementById('poolHeated').value,
+    leadType: isNonprofit ? 'nonprofit' : 'qualified',
+    swimmerName: document.getElementById('swimmerName').value.trim(),
+    swimmerAge: document.getElementById('swimmerAge').value,
+    previousLessons: document.getElementById('previousLessons').value,
+    comfortLevel: document.getElementById('comfortLevel').value,
+    medicalConditions: document.getElementById('medicalConditions').value.trim(),
+    priorInjuries: document.getElementById('priorInjuries').value.trim(),
+    additionalSwimmers: document.getElementById('additionalSwimmers').value.trim(),
+    parentName: document.getElementById('parentName').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    homeAddress: document.getElementById('homeAddress').value.trim(),
+    lessonLocation: document.getElementById('lessonLocation').value.trim(),
+    preferredTimes: preferredSchedule,
+    referralSource: referral.join(', '),
+    anythingElse: document.getElementById('anythingElse').value.trim(),
+    submittedAt: new Date().toISOString(),
+  };
+
+  const btn = document.getElementById('submitBtn');
+  const txt = document.getElementById('submitText');
+  const spin = document.getElementById('submitSpinner');
+  btn.disabled = true;
+  txt.style.display = 'none';
+  spin.classList.add('visible');
+
+  try {
+    if (!TEST_MODE) {
+      await fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, mode: 'no-cors', body: JSON.stringify(formData) });
+    } else {
+      console.log('📋 [TEST] Webhook payload:', JSON.stringify(formData, null, 2));
+      await new Promise(r => setTimeout(r, 800));
+    }
+  } catch (err) { console.error('Webhook error:', err); }
+
+  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('thankYou').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── TEST MODE ── */
+function toggleTestPanel() { document.getElementById('testPanel').classList.toggle('visible'); }
+
+const testData = {
+  frodo: { location:'Bradenton', lessonType:'Private swim lessons (paid)', poolHeated:'Yes', swimmerName:'Frodo Baggins', swimmerAge:'2 – 4 years', previousLessons:'No', comfortLevel:'2', medicalConditions:'', priorInjuries:'', additionalSwimmers:'', parentName:'Bilbo Baggins', phone:'9415551111', email:'bilbo@theshire.com', homeAddress:'5750 12th Street S, Bradenton 34208', lessonLocation:'', sched:{Mon:['AM'],Wed:['AM']}, schedNotes:{}, referral:['Word of Mouth'], anythingElse:'Frodo loves splashing but is nervous about putting his face in.' },
+  sam: { location:'Lakewood Ranch', lessonType:'Private swim lessons (paid)', poolHeated:'Yes', swimmerName:'Samwise Gamgee', swimmerAge:'6 months – 2 years', previousLessons:'No', comfortLevel:'3', medicalConditions:'', priorInjuries:'', additionalSwimmers:'', parentName:'Hamfast Gamgee', phone:'9415552222', email:'hamfast@theshire.com', homeAddress:'16539 Arbor Ridge Trail, Lakewood Ranch 34211', lessonLocation:'', sched:{Tue:['PM'],Thu:['PM']}, schedNotes:{}, referral:['Facebook'], anythingElse:'Sam is a brave little hobbit!' },
+  pippin: { location:'Parrish / Ellenton', lessonType:'Private swim lessons (paid)', poolHeated:'Using a neighborhood/clubhouse pool', swimmerName:'Pippin Took', swimmerAge:'2 – 4 years', previousLessons:'A little', comfortLevel:'4', medicalConditions:'', priorInjuries:'', additionalSwimmers:'', parentName:'Paladin Took', phone:'9415553333', email:'paladin@theshire.com', homeAddress:'10632 High Noon Trail, Parrish 34219', lessonLocation:'Neighborhood clubhouse pool', sched:{Tue:['AM'],Thu:['AM']}, schedNotes:{Tue:'before 11'}, referral:['Word of Mouth','Facebook'], anythingElse:'Pippin is always hungry — snack breaks may be needed!' },
+  merry: { location:'Palmetto', lessonType:'Private swim lessons (paid)', poolHeated:'Yes', swimmerName:'Merry Brandybuck', swimmerAge:'5 – 7 years', previousLessons:'Yes', comfortLevel:'4', medicalConditions:'', priorInjuries:'', additionalSwimmers:'', parentName:'Saradoc Brandybuck', phone:'9415554444', email:'saradoc@buckland.com', homeAddress:'1011 14th St W, Palmetto 34221', lessonLocation:'', sched:{}, schedNotes:{}, referral:['Instagram'], anythingElse:'' },
+  gandalf: { location:'Bradenton', lessonType:'Private swim lessons (paid)', poolHeated:'Yes', swimmerName:'Gandalf Grey', swimmerAge:'Adult', previousLessons:'A little', comfortLevel:'3', medicalConditions:'', priorInjuries:'Old shoulder injury', additionalSwimmers:'', parentName:'Gandalf Grey', phone:'9415555555', email:'gandalf@istari.com', homeAddress:'2543 River Preserve Ct, Bradenton 34208', lessonLocation:'', sched:{Mon:['AM'],Tue:['AM'],Wed:['AM'],Thu:['AM'],Fri:['AM']}, schedNotes:{Mon:'early, 6-7am'}, referral:['Google Search'], anythingElse:'Training for a triathlon.' },
+  arwen: { location:'Outside Manatee County', lessonType:'Private swim lessons (paid)', poolHeated:'Yes', swimmerName:'Arwen Undómiel', swimmerAge:'2 – 4 years', previousLessons:'No', comfortLevel:'2', medicalConditions:'', priorInjuries:'', additionalSwimmers:'', parentName:'Elrond', phone:'7275556666', email:'elrond@rivendell.com', homeAddress:'5356 35th Terrace N, St Petersburg 33710', lessonLocation:'', sched:{}, schedNotes:{}, referral:['Word of Mouth'], anythingElse:'' },
+  eowyn: { location:'Bradenton', lessonType:'Private swim lessons (paid)', poolHeated:'No', swimmerName:'Éowyn', swimmerAge:'2 – 4 years', previousLessons:'No', comfortLevel:'1', medicalConditions:'', priorInjuries:'', additionalSwimmers:'', parentName:'Théoden', phone:'9415557777', email:'theoden@rohan.com', homeAddress:'3605 Riverview Blvd, Bradenton 34205', lessonLocation:'', sched:{}, schedNotes:{}, referral:['Facebook'], anythingElse:'' },
+  galadriel: { location:'Lakewood Ranch', lessonType:'Free water safety program (nonprofit)', poolHeated:'Yes', swimmerName:'Galadriel', swimmerAge:'6 months – 2 years', previousLessons:'No', comfortLevel:'3', medicalConditions:'', priorInjuries:'', additionalSwimmers:'', parentName:'Celeborn', phone:'9415558888', email:'celeborn@lorien.com', homeAddress:'14231 Cattle Egret Pl, Lakewood Ranch 34202', lessonLocation:'', sched:{Mon:['PM'],Wed:['PM'],Fri:['PM']}, schedNotes:{}, referral:['Facebook','Word of Mouth'], anythingElse:'Interested in the water safety program for our community.' }
+};
+
+function loadTestData(key) {
+  restartForm();
+  const d = testData[key];
+  if (!d) return;
+  document.getElementById('location').value = d.location;
+  document.getElementById('lessonType').value = d.lessonType;
+  document.getElementById('poolHeated').value = d.poolHeated;
+  document.getElementById('swimmerName').value = d.swimmerName;
+  document.getElementById('swimmerAge').value = d.swimmerAge;
+  document.getElementById('previousLessons').value = d.previousLessons;
+  document.getElementById('comfortLevel').value = d.comfortLevel;
+  document.getElementById('medicalConditions').value = d.medicalConditions;
+  document.getElementById('priorInjuries').value = d.priorInjuries;
+  document.getElementById('additionalSwimmers').value = d.additionalSwimmers;
+  document.getElementById('parentName').value = d.parentName;
+  const phoneInput = document.getElementById('phone');
+  phoneInput.value = d.phone;
+  phoneInput.dispatchEvent(new Event('input'));
+  document.getElementById('email').value = d.email;
+  document.getElementById('homeAddress').value = d.homeAddress;
+  document.getElementById('lessonLocation').value = d.lessonLocation;
+  // Schedule grid
+  if (d.sched) {
+    Object.entries(d.sched).forEach(([day, times]) => {
+      times.forEach(t => {
+        const cb = document.querySelector(`#schedGrid input[data-day="${day}"][data-time="${t}"]`);
+        if (cb) cb.checked = true;
+      });
+    });
+  }
+  if (d.schedNotes) {
+    Object.entries(d.schedNotes).forEach(([day, note]) => {
+      const inp = document.getElementById('note-' + day);
+      if (inp) inp.value = note;
+    });
+  }
+  d.referral.forEach(v => { const p = document.querySelector(`#referralSource .pill-toggle[data-val="${v}"]`); if(p) p.classList.add('selected'); });
+  document.getElementById('anythingElse').value = d.anythingElse;
+  toggleTestPanel();
+  console.log(`🧪 Loaded: ${d.swimmerName} (${key})`);
+}
+</script>
+</body>
+</html>
