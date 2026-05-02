@@ -233,8 +233,8 @@ textarea.q-input{min-height:65px;resize:vertical;}
   </div>
 
   <div class="submit-ok" id="submitOk">
-    <h3>Feedback copied!</h3>
-    <p>Your review has been copied to your clipboard. Please text or email it to Garry — just paste and send!</p>
+    <h3>Review submitted!</h3>
+    <p>Thanks Amanda! Your email app should have opened with the feedback ready to send. Just hit send and you're done!</p>
   </div>
 </div>
 
@@ -362,7 +362,7 @@ function updateAll() {
   });
 }
 
-/* ── SUBMIT (clipboard) ── */
+/* ── SUBMIT (mailto) ── */
 function submitFeedback() {
   const lines = ['SUNSHINE SWIMMING — FORM REVIEW FEEDBACK', 'Submitted: ' + new Date().toLocaleString(), ''];
 
@@ -376,7 +376,6 @@ function submitFeedback() {
       const isChange = card.classList.contains('state-change');
       const ta = card.querySelector('.card-textarea textarea');
       const note = ta ? ta.value.trim() : '';
-      lines.push('');
       lines.push('[Content] ' + name);
       if (isApproved) lines.push('  ✓ Approved');
       if (isChange) lines.push('  ⚠ Change requested');
@@ -390,29 +389,18 @@ function submitFeedback() {
       const isFail = card.classList.contains('state-fail');
       const ta = card.querySelector('.card-textarea textarea');
       const note = ta ? ta.value.trim() : '';
-      lines.push('');
       lines.push('[' + cat + '] ' + name + ' → ' + (isPass ? '✓ Pass' : isFail ? '✗ FAIL' : '— Skipped'));
       if (note) lines.push('  Issue: ' + note);
     });
     lines.push('');
   });
 
-  const text = lines.join('\n');
-  navigator.clipboard.writeText(text).then(() => {
-    document.querySelectorAll('.step-page').forEach(p => p.classList.remove('on'));
-    document.getElementById('submitOk').classList.add('on');
-  }).catch(() => {
-    // Fallback for browsers that block clipboard
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.cssText = 'position:fixed;top:-9999px;';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    document.querySelectorAll('.step-page').forEach(p => p.classList.remove('on'));
-    document.getElementById('submitOk').classList.add('on');
-  });
+  const body = encodeURIComponent(lines.join('\n'));
+  const subject = encodeURIComponent('Sunshine Swimming — Form Review Feedback');
+  window.location.href = 'mailto:gfenimore@gmail.com?subject=' + subject + '&body=' + body;
+
+  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('on'));
+  document.getElementById('submitOk').classList.add('on');
 }
 
 updateAll();
